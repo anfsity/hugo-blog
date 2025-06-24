@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Algorithm on Anfsity</title>
+        <link>http://localhost:1313/categories/algorithm/</link>
+        <description>Recent content in Algorithm on Anfsity</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en</language>
+        <copyright>Anfsity</copyright>
+        <lastBuildDate>Tue, 24 Jun 2025 22:35:59 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/algorithm/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>GCD and LCM</title>
+        <link>http://localhost:1313/p/gcd-and-lcm/</link>
+        <pubDate>Tue, 24 Jun 2025 22:35:59 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/gcd-and-lcm/</guid>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool.
+— Joseph Roux&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我们要证明的等式是：
+&lt;/p&gt;
+$$
+\gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c)) = \operatorname{lcm}(a, \gcd(b,c))
+$$
+&lt;hr&gt;
+&lt;h2 id=&#34;基础唯一分解定理算术基本定理&#34;&gt;基础：唯一分解定理（算术基本定理）
+&lt;/h2&gt;&lt;p&gt;证明的关键在于使用唯一分解定理。该定理指出，任何大于 1 的整数都可以唯一地分解为素数的乘积（不考虑顺序）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;形式一：&lt;/strong&gt;
+对于 $\forall n \in \mathbb{Z}, n &gt; 1$，存在唯一的不同素数集合 $\{p_1, \dots, p_k\}$ 和唯一的正整数指数集合 $\{\alpha_1, \dots, \alpha_k\}$ 使得：
+&lt;/p&gt;
+$$
+n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i}
+$$
+&lt;p&gt;&lt;strong&gt;形式二（更适用于证明）：&lt;/strong&gt;
+对于 $\forall n \in \mathbb{Z}, n &gt; 1$，其分解可以写成包含所有素数的形式：
+&lt;/p&gt;
+$$
+n = \prod_{p \text{ prime}} p^{\nu_p(n)}
+$$
+&lt;p&gt;
+其中 $\nu_p(n)$ 是素数 $p$ 在 $n$ 分解中的（非负）指数。对于给定的 $n$，只有有限个 $\nu_p(n)$ 大于 0。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;使用素数指数表示-gcd-和-lcm&#34;&gt;使用素数指数表示 GCD 和 LCM
+&lt;/h2&gt;&lt;p&gt;根据唯一分解定理，我们可以通过比较整数分解中每个素数 $p$ 的指数来计算最大公约数 (gcd) 和最小公倍数 (lcm)：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对于任意素数 $p$：
+&lt;ul&gt;
+&lt;li&gt;$p$ 在 $\gcd(x, y)$ 中的指数是 $\nu_p(\gcd(x, y)) = \min(\nu_p(x), \nu_p(y))$&lt;/li&gt;
+&lt;li&gt;$p$ 在 $\operatorname{lcm}(x, y)$ 中的指数是 $\nu_p(\operatorname{lcm}(x, y)) = \max(\nu_p(x), \nu_p(y))$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;例子：&lt;/strong&gt;
+设 $a = 12 = 2^2 \cdot 3^1 \cdot 5^0$
+设 $b = 30 = 2^1 \cdot 3^1 \cdot 5^1$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;计算 $\gcd(12, 30)$:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;素数 2: 指数 $\min(2, 1) = 1$&lt;/li&gt;
+&lt;li&gt;素数 3: 指数 $\min(1, 1) = 1$&lt;/li&gt;
+&lt;li&gt;素数 5: 指数 $\min(0, 1) = 0$&lt;/li&gt;
+&lt;li&gt;所以 $\gcd(12, 30) = 2^1 \cdot 3^1 \cdot 5^0 = 6$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;计算 $\operatorname{lcm}(12, 30)$:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;素数 2: 指数 $\max(2, 1) = 2$&lt;/li&gt;
+&lt;li&gt;素数 3: 指数 $\max(1, 1) = 1$&lt;/li&gt;
+&lt;li&gt;素数 5: 指数 $\max(0, 1) = 1$&lt;/li&gt;
+&lt;li&gt;所以 $\operatorname{lcm}(12, 30) = 2^2 \cdot 3^1 \cdot 5^1 = 60$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;证明过程&#34;&gt;证明过程
+&lt;/h2&gt;&lt;p&gt;我们的策略是证明对于任意素数 $p$，它在等式左边 (LHS) 和右边 (RHS) 的指数都相等。根据唯一分解定理，如果所有素数的指数都对应相等，则这两个数必然相等。&lt;/p&gt;
+&lt;p&gt;设对于任意素数 $p$，其在 $a, b, c$ 中的指数分别为 $\alpha = \nu_p(a)$, $\beta = \nu_p(b)$, $\gamma = \nu_p(c)$。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 计算 LHS 中 $p$ 的指数：&lt;/strong&gt;
+LHS = $\gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c))$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$p$ 在 $\operatorname{lcm}(a,b)$ 中的指数为 $\max(\alpha, \beta)$。&lt;/li&gt;
+&lt;li&gt;$p$ 在 $\operatorname{lcm}(a,c)$ 中的指数为 $\max(\alpha, \gamma)$。&lt;/li&gt;
+&lt;li&gt;根据 gcd 的指数规则， $p$ 在 LHS 中的指数为：
+$$ \nu_p(\text{LHS}) = \min(\max(\alpha, \beta), \max(\alpha, \gamma)) $$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;2. 计算 RHS 中 $p$ 的指数：&lt;/strong&gt;
+RHS = $\operatorname{lcm}(a, \gcd(b,c))$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$p$ 在 $\gcd(b,c)$ 中的指数为 $\min(\beta, \gamma)$。&lt;/li&gt;
+&lt;li&gt;根据 lcm 的指数规则，$p$ 在 RHS 中的指数为：
+$$ \nu_p(\text{RHS}) = \max(\alpha, \min(\beta, \gamma)) $$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;3. 证明指数相等：&lt;/strong&gt;
+我们需要证明 $\nu_p(\text{LHS}) = \nu_p(\text{RHS})$，即：
+&lt;/p&gt;
+$$ \min(\max(\alpha, \beta), \max(\alpha, \gamma)) = \max(\alpha, \min(\beta, \gamma)) $$
+&lt;p&gt;
+这个等式是 $\min$ 和 $\max$ 运算的一个基本性质，称为分配律。这里用到的是 &lt;strong&gt;max 对 min 的分配律&lt;/strong&gt;:
+&lt;/p&gt;
+$$ \max(x, \min(y, z)) = \min(\max(x, y), \max(x, z)) $$
+&lt;p&gt;
+令 $x = \alpha$, $y = \beta$, $z = \gamma$，我们直接应用此分配律：
+&lt;/p&gt;
+$$ \max(\alpha, \min(\beta, \gamma)) = \min(\max(\alpha, \beta), \max(\alpha, \gamma)) $$
+&lt;p&gt;
+这表明 $\nu_p(\text{RHS}) = \nu_p(\text{LHS})$。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt;
+由于对于任意素数 $p$，它在等式两边的指数都相等，根据唯一分解定理，这两个表达式代表的整数必然相等。&lt;/p&gt;
+&lt;p&gt;因此，原等式 $\gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c)) = \operatorname{lcm}(a, \gcd(b,c))$ 成立。&lt;/p&gt;
+&lt;p&gt;$Q.E.D.$&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;算术基本定理及其证明&#34;&gt;算术基本定理及其证明
+&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;算术基本定理 (Fundamental Theorem of Arithmetic):&lt;/strong&gt;
+任何大于 1 的整数 $n$ 都可以被唯一地分解成有限个素数的乘积（不考虑因子的顺序）。
+即：对于任意整数 $n &gt; 1$，存在唯一的不同素数集合 $\{p_1, \dots, p_k\}$ 和唯一的正整数组 $\{\alpha_1, \dots, \alpha_k\}$ 使得：
+&lt;/p&gt;
+$$ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i} $$
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;证明&#34;&gt;证明
+&lt;/h2&gt;&lt;p&gt;证明分为两部分：存在性和唯一性。&lt;/p&gt;
+&lt;h3 id=&#34;第一部分存在性证明强归纳法&#34;&gt;第一部分：存在性证明（强归纳法）
+&lt;/h3&gt;&lt;p&gt;我们要证明任何整数 $n &gt; 1$ 都可以写成素数的乘积。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;基础情况:&lt;/strong&gt; 当 $n=2$ 时，2 本身是素数，已是素数乘积。成立。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;归纳假设:&lt;/strong&gt; 假设对于所有满足 $1 &lt; k &lt; n$ 的整数 $k$，$k$ 都可以表示成素数的乘积。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;归纳步骤:&lt;/strong&gt; 考虑整数 $n$：
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;情况 A:&lt;/strong&gt; 如果 $n$ 是素数，则它已是素数乘积。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情况 B:&lt;/strong&gt; 如果 $n$ 是合数，则 $n = a \cdot b$，其中 $1 &lt; a &lt; n$ 且 $1 &lt; b &lt; n$。根据归纳假设，$a$ 和 $b$ 都可以写成素数乘积：
+$$ a = p_1 p_2 \cdots p_r $$
+$$ b = q_1 q_2 \cdots q_s $$
+其中所有 $p_i, q_j$ 都是素数。那么：
+$$ n = a \cdot b = (p_1 \cdots p_r)(q_1 \cdots q_s) $$
+这表明 $n$ 也可以写成素数的乘积。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;根据强归纳法，存在性得证。&lt;/p&gt;
+&lt;h3 id=&#34;第二部分唯一性证明使用欧几里得引理和反证法&#34;&gt;第二部分：唯一性证明（使用欧几里得引理和反证法）
+&lt;/h3&gt;&lt;p&gt;我们需要用到一个关键引理：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;欧几里得引理 (Euclid&amp;rsquo;s Lemma):&lt;/strong&gt;
+如果素数 $p$ 整除乘积 $ab$ (记作 $p | ab$)，那么 $p$ 必须整除 $a$ 或 $p$ 必须整除 $b$ (即 $p | a$ 或 $p | b$)。
+&lt;em&gt;推论:&lt;/em&gt; 如果素数 $p$ 整除 $a_1 a_2 \cdots a_k$，则 $p$ 至少整除其中一个 $a_i$。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;证明唯一性（反证法）：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;假设:&lt;/strong&gt; 假设存在大于 1 的整数拥有至少两种不同的素数分解。根据良序原则（最小数原理），必然存在一个&lt;em&gt;最小&lt;/em&gt;的这样的整数，记为 $n$。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分析 $n$:&lt;/strong&gt; 设 $n$ 有两种不同的分解：
+$$ n = p_1 p_2 \cdots p_r = q_1 q_2 \cdots q_s $$
+其中 $p_i$ 和 $q_j$ 都是素数，并且作为多重集（考虑重复次数） $\{p_1, \dots, p_r\} \neq \{q_1, \dots, q_s\}$。由于 $n$ 是最小的反例，任何小于 $n$ 的整数 $m &gt; 1$ 的素数分解是唯一的。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;应用引理:&lt;/strong&gt; 考虑 $p_1$。显然 $p_1 | n$，所以 $p_1 | (q_1 q_2 \cdots q_s)$。根据欧几里得引理的推论，$p_1$ 必须整除某个 $q_j$。因为 $p_1$ 和 $q_j$ 都是素数，这只可能在 $p_1 = q_j$ 时发生。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;约去公共因子:&lt;/strong&gt; 不失一般性，重排 $q$ 使得 $p_1 = q_1$。等式两边同除以 $p_1$：
+$$ \frac{n}{p_1} = p_2 p_3 \cdots p_r = q_2 q_3 \cdots q_s $$&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;导出矛盾:&lt;/strong&gt; 令 $m = n/p_1$。因为 $n$ 是合数（否则分解唯一），所以 $1 &lt; m &lt; n$。我们得到了整数 $m$ 的两种分解 $p_2 \cdots p_r$ 和 $q_2 \cdots q_s$。由于 $\{p_1, \dots, p_r\}$ 和 $\{q_1, \dots, q_s\}$ 不同，去掉相同的 $p_1=q_1$ 后，$\{p_2, \dots, p_r\}$ 和 $\{q_2, \dots, q_s\}$ 也必定不同。
+这表明 $m$ 是一个比 $n$ 更小的、拥有不同素数分解的整数。这与 $n$ 是具有此性质的&lt;em&gt;最小&lt;/em&gt;整数的假设相矛盾！&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;结论:&lt;/strong&gt; 初始假设错误。因此，任何整数 $n &gt; 1$ 的素数分解是唯一的（在不考虑顺序时）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;$Q.E.D.$&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

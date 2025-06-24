@@ -6,8 +6,32 @@
         <description>Recent content in Tags on Anfsity</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
-        <copyright>Anfisty</copyright>
-        <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <copyright>Anfsity</copyright>
+        <lastBuildDate>Tue, 24 Jun 2025 22:42:13 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Summary</title>
+        <link>http://localhost:1313/tags/summary/</link>
+        <pubDate>Tue, 24 Jun 2025 22:42:13 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/summary/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>C&#43;&#43;</title>
+        <link>http://localhost:1313/tags/c&#43;&#43;/</link>
+        <pubDate>Tue, 24 Jun 2025 22:40:03 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/c&#43;&#43;/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Math</title>
+        <link>http://localhost:1313/tags/math/</link>
+        <pubDate>Tue, 24 Jun 2025 22:35:59 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/math/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Css</title>
         <link>http://localhost:1313/tags/css/</link>
         <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>

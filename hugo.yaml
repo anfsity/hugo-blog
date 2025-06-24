@@ -2,7 +2,7 @@ baseurl: https://hugo-blog-h970a9mcn-anfsitys-projects-84410a82.vercel.app/
 languageCode: en-us
 theme: hugo-theme-stack
 title: Anfsity
-copyright: Anfisty
+copyright: Anfsity
 
 # Theme i18n support
 # Available values: ar, bn, ca, de, el, en, es, fr, hu, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw

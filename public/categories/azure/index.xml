@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Azure on Anfsity</title>
+        <link>http://localhost:1313/categories/azure/</link>
+        <description>Recent content in Azure on Anfsity</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en</language>
+        <copyright>Anfsity</copyright>
+        <lastBuildDate>Tue, 24 Jun 2025 22:42:13 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/azure/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>迁移总结</title>
+        <link>http://localhost:1313/p/%E8%BF%81%E7%A7%BB%E6%80%BB%E7%BB%93/</link>
+        <pubDate>Tue, 24 Jun 2025 22:42:13 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/%E8%BF%81%E7%A7%BB%E6%80%BB%E7%BB%93/</guid>
+        <description>&lt;img src="https://i.111666.best/image/bFGnilXaGbPyJep2pc2y4L.png" alt="Featured image of post 迁移总结" /&gt;&lt;p&gt;起因是我重装 win10 的时候把我整块磁盘都清空了，事后才发现我没有给我的博客备份😭。遂想，反正已经要 remake 了，索性换一个框架，于是便从 hexo 换成了 hugo。&lt;/p&gt;
+&lt;p&gt;虽然说所有的数据我在 vercel 上都有，但是都不是 markdown 的储存形式，我也懒得再从网上找工具实现 html 转 markdown 了。就仅仅迁移了几篇还算有意义的文章。&lt;/p&gt;
+&lt;p&gt;其实因为是在 linux 上写的，本地有数据 (。&lt;/p&gt;
+&lt;p&gt;新 hugo 主题对比我原来的 hexo 主题有些部件是不完全的，要自己造轮子。比如回到顶部的小按钮，代码块折叠等等。扯句别的，说实话我想吐槽以下那些 live2d 小人，全屏的动态效果和一些鼠标特效等等，难道看的视觉上不会很难受吗()。&lt;/p&gt;
+&lt;p&gt;其实也没什么好总结的，无非就是看看文档，找些博客做参考，解决一些疑难杂症。现在有 LLM 辅助，应该是比以前要舒服很多的。但是还是不能依赖于 AI, AI 在某些场景太弱智了。&lt;/p&gt;
+&lt;p&gt;不过既然写了一篇博客，就水水字数吧。&lt;/p&gt;
+&lt;p&gt;最近把刚上学的时候感兴趣的一个东西实现了，那个时候是在是不懂这些。唉唉，我已经老了啊。&lt;/p&gt;
+&lt;p&gt;我记得在 csdiy 上看到一个评论说可以借助 Azure 的 vps 自建节点，便想自己动手试一试，就搞出来了一些明堂。&lt;/p&gt;
+&lt;p&gt;首先你要拥有一个 Azure 的学生认证账户，国外学生认证的申请模式都大同小异，也有很多教程，在此就不再赘述。不过如果申请了 github education 的话是会方便很多的，而且 github 的福利也是非常不错的。&lt;/p&gt;
+&lt;p&gt;总的来说，思路就是利用 Azure 的虚拟机，通过 OpenVPN，WireGuard 等虚拟加密网络隧道，绕过 GFW,以实现俗称 “翻墙”，“魔法”的效果。&lt;/p&gt;
+&lt;p&gt;实现过程倒是很简单，按按鼠标就行。假设你已经拥有了 Azure 的一个学生认证账户(学生认证账户每年可以获得 100$ 的免费额度使用，可重复申请)。那么现在你要做的操作就是打开 Azure 的主页，创建一个虚拟机。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.111666.best/image/0EBMvYMM3y3ogghdOhljTp.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Ubunutu 上就没有好用一点的截图工具吗。。。其他的默认就好不需要修改。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.111666.best/image/JykujjkMLdoiwaTPNpPmh0.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.111666.best/image/KsTGMI1hjCvBi07z1LI0bA.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;其他的一路默认就行，注意一下在网络那部分，如果 IP 能该动态就改动态，静态相对而言是很贵的。&lt;/p&gt;
+&lt;p&gt;等待虚拟机创建完毕，使用 ssh 进行连接。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.111666.best/image/2GJHK5dwXYjacaRxr66kD1.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;新装的 Ubuntu，输入命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;爽一爽国外的网速。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt install wireguard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;按照提示即可，然后获得一个 conf&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat *.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;把输出内容往你本地下载 wireguard app上一丢就行，注意不要同时和另一个软件进行代理，可能会出现不知名的错误。尝试访问 google 和 youtube，如果成功就代表一切都 OK 了。好耶。&lt;/p&gt;
+&lt;p&gt;btw,好快的网!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;azureuser@anfsity:~$ ./speedtest 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   Speedtest by Ookla
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;      Server: Misaka Network, Inc. - Seattle, WA (id: 50679)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;         ISP: Microsoft Azure
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Idle Latency:     4.73 ms   (jitter: 0.22ms, low: 4.64ms, high: 5.15ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    Download:  5400.52 Mbps (data used: 6.6 GB)                                                   
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                  7.65 ms   (jitter: 2.84ms, low: 4.57ms, high: 18.57ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;      Upload:   922.00 Mbps (data used: 426.3 MB)                                                   
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                  8.25 ms   (jitter: 1.37ms, low: 4.27ms, high: 12.19ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; Packet Loss:     0.0%
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  Result URL: https://www.speedtest.net/result/c/aae9caa4-acc5-418c-b1b2-419950514d5b
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;羡慕啊。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

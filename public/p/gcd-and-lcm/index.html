@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool. — Joseph Roux 我们要证明的等式是： $$ \\gcd(\\operatorname{lcm}(a,b), \\operatorname{lcm}(a,c)) = \\operatorname{lcm}(a, \\gcd(b,c)) $$ 基础：唯一分解定理（算术基本定理） 证明的关键在于使用">
+<title>GCD and LCM</title>
+
+<link rel='canonical' href='http://localhost:1313/p/gcd-and-lcm/'>
+
+<link rel="stylesheet" href="/scss/style.min.3f5bfcf1493a8d28da9603280e75f4da5fb61ed37696eb5a05a6eef17da4dc2e.css"><meta property='og:title' content="GCD and LCM">
+<meta property='og:description' content="[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool. — Joseph Roux 我们要证明的等式是： $$ \\gcd(\\operatorname{lcm}(a,b), \\operatorname{lcm}(a,c)) = \\operatorname{lcm}(a, \\gcd(b,c)) $$ 基础：唯一分解定理（算术基本定理） 证明的关键在于使用">
+<meta property='og:url' content='http://localhost:1313/p/gcd-and-lcm/'>
+<meta property='og:site_name' content='Anfsity'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Math' /><meta property='article:published_time' content='2025-06-24T22:35:59&#43;08:00'/><meta property='article:modified_time' content='2025-06-24T22:35:59&#43;08:00'/>
+<meta name="twitter:title" content="GCD and LCM">
+<meta name="twitter:description" content="[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool. — Joseph Roux 我们要证明的等式是： $$ \\gcd(\\operatorname{lcm}(a,b), \\operatorname{lcm}(a,c)) = \\operatorname{lcm}(a, \\gcd(b,c)) $$ 基础：唯一分解定理（算术基本定理） 证明的关键在于使用">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">☯️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Anfsity</a></h1>
+            <h2 class="site-description">There is a will, there is a way.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://space.bilibili.com/1325207877?spm_id_from=333.337.0.0'
+                        target="_blank"
+                        title="BiliBili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/anfsity'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="http://localhost:1313/" selected>English</option>
+                                
+                                    <option value="http://localhost:1313/zh-cn/" >中文</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#基础唯一分解定理算术基本定理">基础：唯一分解定理（算术基本定理）</a></li>
+    <li><a href="#使用素数指数表示-gcd-和-lcm">使用素数指数表示 GCD 和 LCM</a></li>
+    <li><a href="#证明过程">证明过程</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#证明">证明</a>
+      <ol>
+        <li><a href="#第一部分存在性证明强归纳法">第一部分：存在性证明（强归纳法）</a></li>
+        <li><a href="#第二部分唯一性证明使用欧几里得引理和反证法">第二部分：唯一性证明（使用欧几里得引理和反证法）</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/algorithm/" >
+                Algorithm
+            </a>
+        
+            <a href="/categories/math/" >
+                Math
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/gcd-and-lcm/">GCD and LCM</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 24, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool.
+— Joseph Roux</p>
+</blockquote>
+<p>我们要证明的等式是：
+</p>
+$$
+\gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c)) = \operatorname{lcm}(a, \gcd(b,c))
+$$
+<hr>
+<h2 id="基础唯一分解定理算术基本定理">基础：唯一分解定理（算术基本定理）
+</h2><p>证明的关键在于使用唯一分解定理。该定理指出，任何大于 1 的整数都可以唯一地分解为素数的乘积（不考虑顺序）。</p>
+<p><strong>形式一：</strong>
+对于 $\forall n \in \mathbb{Z}, n > 1$，存在唯一的不同素数集合 $\{p_1, \dots, p_k\}$ 和唯一的正整数指数集合 $\{\alpha_1, \dots, \alpha_k\}$ 使得：
+</p>
+$$
+n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i}
+$$
+<p><strong>形式二（更适用于证明）：</strong>
+对于 $\forall n \in \mathbb{Z}, n > 1$，其分解可以写成包含所有素数的形式：
+</p>
+$$
+n = \prod_{p \text{ prime}} p^{\nu_p(n)}
+$$
+<p>
+其中 $\nu_p(n)$ 是素数 $p$ 在 $n$ 分解中的（非负）指数。对于给定的 $n$，只有有限个 $\nu_p(n)$ 大于 0。</p>
+<hr>
+<h2 id="使用素数指数表示-gcd-和-lcm">使用素数指数表示 GCD 和 LCM
+</h2><p>根据唯一分解定理，我们可以通过比较整数分解中每个素数 $p$ 的指数来计算最大公约数 (gcd) 和最小公倍数 (lcm)：</p>
+<ul>
+<li>对于任意素数 $p$：
+<ul>
+<li>$p$ 在 $\gcd(x, y)$ 中的指数是 $\nu_p(\gcd(x, y)) = \min(\nu_p(x), \nu_p(y))$</li>
+<li>$p$ 在 $\operatorname{lcm}(x, y)$ 中的指数是 $\nu_p(\operatorname{lcm}(x, y)) = \max(\nu_p(x), \nu_p(y))$</li>
+</ul>
+</li>
+</ul>
+<p><strong>例子：</strong>
+设 $a = 12 = 2^2 \cdot 3^1 \cdot 5^0$
+设 $b = 30 = 2^1 \cdot 3^1 \cdot 5^1$</p>
+<ul>
+<li>
+<p><strong>计算 $\gcd(12, 30)$:</strong></p>
+<ul>
+<li>素数 2: 指数 $\min(2, 1) = 1$</li>
+<li>素数 3: 指数 $\min(1, 1) = 1$</li>
+<li>素数 5: 指数 $\min(0, 1) = 0$</li>
+<li>所以 $\gcd(12, 30) = 2^1 \cdot 3^1 \cdot 5^0 = 6$</li>
+</ul>
+</li>
+<li>
+<p><strong>计算 $\operatorname{lcm}(12, 30)$:</strong></p>
+<ul>
+<li>素数 2: 指数 $\max(2, 1) = 2$</li>
+<li>素数 3: 指数 $\max(1, 1) = 1$</li>
+<li>素数 5: 指数 $\max(0, 1) = 1$</li>
+<li>所以 $\operatorname{lcm}(12, 30) = 2^2 \cdot 3^1 \cdot 5^1 = 60$</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="证明过程">证明过程
+</h2><p>我们的策略是证明对于任意素数 $p$，它在等式左边 (LHS) 和右边 (RHS) 的指数都相等。根据唯一分解定理，如果所有素数的指数都对应相等，则这两个数必然相等。</p>
+<p>设对于任意素数 $p$，其在 $a, b, c$ 中的指数分别为 $\alpha = \nu_p(a)$, $\beta = \nu_p(b)$, $\gamma = \nu_p(c)$。</p>
+<p><strong>1. 计算 LHS 中 $p$ 的指数：</strong>
+LHS = $\gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c))$</p>
+<ul>
+<li>$p$ 在 $\operatorname{lcm}(a,b)$ 中的指数为 $\max(\alpha, \beta)$。</li>
+<li>$p$ 在 $\operatorname{lcm}(a,c)$ 中的指数为 $\max(\alpha, \gamma)$。</li>
+<li>根据 gcd 的指数规则， $p$ 在 LHS 中的指数为：
+$$ \nu_p(\text{LHS}) = \min(\max(\alpha, \beta), \max(\alpha, \gamma)) $$</li>
+</ul>
+<p><strong>2. 计算 RHS 中 $p$ 的指数：</strong>
+RHS = $\operatorname{lcm}(a, \gcd(b,c))$</p>
+<ul>
+<li>$p$ 在 $\gcd(b,c)$ 中的指数为 $\min(\beta, \gamma)$。</li>
+<li>根据 lcm 的指数规则，$p$ 在 RHS 中的指数为：
+$$ \nu_p(\text{RHS}) = \max(\alpha, \min(\beta, \gamma)) $$</li>
+</ul>
+<p><strong>3. 证明指数相等：</strong>
+我们需要证明 $\nu_p(\text{LHS}) = \nu_p(\text{RHS})$，即：
+</p>
+$$ \min(\max(\alpha, \beta), \max(\alpha, \gamma)) = \max(\alpha, \min(\beta, \gamma)) $$
+<p>
+这个等式是 $\min$ 和 $\max$ 运算的一个基本性质，称为分配律。这里用到的是 <strong>max 对 min 的分配律</strong>:
+</p>
+$$ \max(x, \min(y, z)) = \min(\max(x, y), \max(x, z)) $$
+<p>
+令 $x = \alpha$, $y = \beta$, $z = \gamma$，我们直接应用此分配律：
+</p>
+$$ \max(\alpha, \min(\beta, \gamma)) = \min(\max(\alpha, \beta), \max(\alpha, \gamma)) $$
+<p>
+这表明 $\nu_p(\text{RHS}) = \nu_p(\text{LHS})$。</p>
+<p><strong>结论：</strong>
+由于对于任意素数 $p$，它在等式两边的指数都相等，根据唯一分解定理，这两个表达式代表的整数必然相等。</p>
+<p>因此，原等式 $\gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c)) = \operatorname{lcm}(a, \gcd(b,c))$ 成立。</p>
+<p>$Q.E.D.$</p>
+<hr>
+<h1 id="算术基本定理及其证明">算术基本定理及其证明
+</h1><blockquote>
+<p><strong>算术基本定理 (Fundamental Theorem of Arithmetic):</strong>
+任何大于 1 的整数 $n$ 都可以被唯一地分解成有限个素数的乘积（不考虑因子的顺序）。
+即：对于任意整数 $n > 1$，存在唯一的不同素数集合 $\{p_1, \dots, p_k\}$ 和唯一的正整数组 $\{\alpha_1, \dots, \alpha_k\}$ 使得：
+</p>
+$$ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i} $$
+</blockquote>
+<hr>
+<h2 id="证明">证明
+</h2><p>证明分为两部分：存在性和唯一性。</p>
+<h3 id="第一部分存在性证明强归纳法">第一部分：存在性证明（强归纳法）
+</h3><p>我们要证明任何整数 $n > 1$ 都可以写成素数的乘积。</p>
+<ol>
+<li><strong>基础情况:</strong> 当 $n=2$ 时，2 本身是素数，已是素数乘积。成立。</li>
+<li><strong>归纳假设:</strong> 假设对于所有满足 $1 < k < n$ 的整数 $k$，$k$ 都可以表示成素数的乘积。</li>
+<li><strong>归纳步骤:</strong> 考虑整数 $n$：
+<ul>
+<li><strong>情况 A:</strong> 如果 $n$ 是素数，则它已是素数乘积。</li>
+<li><strong>情况 B:</strong> 如果 $n$ 是合数，则 $n = a \cdot b$，其中 $1 < a < n$ 且 $1 < b < n$。根据归纳假设，$a$ 和 $b$ 都可以写成素数乘积：
+$$ a = p_1 p_2 \cdots p_r $$
+$$ b = q_1 q_2 \cdots q_s $$
+其中所有 $p_i, q_j$ 都是素数。那么：
+$$ n = a \cdot b = (p_1 \cdots p_r)(q_1 \cdots q_s) $$
+这表明 $n$ 也可以写成素数的乘积。</li>
+</ul>
+</li>
+</ol>
+<p>根据强归纳法，存在性得证。</p>
+<h3 id="第二部分唯一性证明使用欧几里得引理和反证法">第二部分：唯一性证明（使用欧几里得引理和反证法）
+</h3><p>我们需要用到一个关键引理：</p>
+<blockquote>
+<p><strong>欧几里得引理 (Euclid&rsquo;s Lemma):</strong>
+如果素数 $p$ 整除乘积 $ab$ (记作 $p | ab$)，那么 $p$ 必须整除 $a$ 或 $p$ 必须整除 $b$ (即 $p | a$ 或 $p | b$)。
+<em>推论:</em> 如果素数 $p$ 整除 $a_1 a_2 \cdots a_k$，则 $p$ 至少整除其中一个 $a_i$。</p>
+</blockquote>
+<p><strong>证明唯一性（反证法）：</strong></p>
+<ol>
+<li><strong>假设:</strong> 假设存在大于 1 的整数拥有至少两种不同的素数分解。根据良序原则（最小数原理），必然存在一个<em>最小</em>的这样的整数，记为 $n$。</li>
+<li><strong>分析 $n$:</strong> 设 $n$ 有两种不同的分解：
+$$ n = p_1 p_2 \cdots p_r = q_1 q_2 \cdots q_s $$
+其中 $p_i$ 和 $q_j$ 都是素数，并且作为多重集（考虑重复次数） $\{p_1, \dots, p_r\} \neq \{q_1, \dots, q_s\}$。由于 $n$ 是最小的反例，任何小于 $n$ 的整数 $m > 1$ 的素数分解是唯一的。</li>
+<li><strong>应用引理:</strong> 考虑 $p_1$。显然 $p_1 | n$，所以 $p_1 | (q_1 q_2 \cdots q_s)$。根据欧几里得引理的推论，$p_1$ 必须整除某个 $q_j$。因为 $p_1$ 和 $q_j$ 都是素数，这只可能在 $p_1 = q_j$ 时发生。</li>
+<li><strong>约去公共因子:</strong> 不失一般性，重排 $q$ 使得 $p_1 = q_1$。等式两边同除以 $p_1$：
+$$ \frac{n}{p_1} = p_2 p_3 \cdots p_r = q_2 q_3 \cdots q_s $$</li>
+<li><strong>导出矛盾:</strong> 令 $m = n/p_1$。因为 $n$ 是合数（否则分解唯一），所以 $1 < m < n$。我们得到了整数 $m$ 的两种分解 $p_2 \cdots p_r$ 和 $q_2 \cdots q_s$。由于 $\{p_1, \dots, p_r\}$ 和 $\{q_1, \dots, q_s\}$ 不同，去掉相同的 $p_1=q_1$ 后，$\{p_2, \dots, p_r\}$ 和 $\{q_2, \dots, q_s\}$ 也必定不同。
+这表明 $m$ 是一个比 $n$ 更小的、拥有不同素数分解的整数。这与 $n$ 是具有此性质的<em>最小</em>整数的假设相矛盾！</li>
+<li><strong>结论:</strong> 初始假设错误。因此，任何整数 $n > 1$ 的素数分解是唯一的（在不考虑顺序时）。</li>
+</ol>
+<p>$Q.E.D.$</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/math/">Math</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2024 - 
+        
+        2025 Anfsity
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.9083d5691a8348863fdf7dcf0ad5fa1c8b4087a35409b557eea9ece5fa0a96c0.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+<style>
+    #TableOfContents > ul, ol {
+        ul, ol {
+            display: none;
+        }
+        .open {
+            display: block;
+        }
+    }
+</style>
+
+<script>
+    function initTocHide() {
+        
+        let toc = document.querySelector(".widget--toc");
+        if (!toc) {
+            return;
+        }
+        
+        window.addEventListener('scroll', function() {
+            
+            let openUl = document.querySelectorAll(".open");
+            if (openUl.length > 0) {
+              openUl.forEach((ul) => {
+                ul.classList.remove("open")
+              })
+            }
+            
+            let currentLi = document.querySelector(".active-class");
+            if (!currentLi) {
+                return
+            }
+            
+            if (currentLi.children.length > 1) {
+                currentLi.children[1].classList.add("open")
+            }
+            
+            let ul = currentLi.parentElement;
+            do {
+                ul.classList.add("open");
+                ul = ul.parentElement.parentElement
+            } while (ul !== undefined && (ul.localName === 'ul' || ul.localName === 'ol'))
+        });
+    }
+    initTocHide()
+</script>
+
+
+
+
+
+<style>
+    #backTopBtn {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        z-index: 99;
+        cursor: pointer;
+        width: 26px;
+        height: 26px;
+        background-image: url(http://localhost:1313/icons/arrow-big-up.svg);
+    }
+</style>
+
+<script>
+    
+
+    function initScrollTop() {
+        let rightSideBar = document.querySelector(".right-sidebar");
+        if (!rightSideBar) {
+            return;
+        }
+        
+        let btn = document.createElement("div");
+        btn.id = "backTopBtn";
+        btn.onclick = backToTop
+        rightSideBar.appendChild(btn)
+        
+        window.onscroll = function() {
+            
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                btn.style.display = "block";
+            } else {
+                btn.style.display = "none";
+            }
+        };
+    }
+
+    
+
+    function backToTop(){
+        window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+
+    initScrollTop();
+</script>
+
+
+
+<style>
+    :root {
+         
+        --code-fade-color: white; 
+        --code-btn-bg: #f0f0f5;  
+        --code-btn-icon-color: #333; 
+    }
+
+    html[data-scheme="dark"] {
+        --code-fade-color: #2e2e2e;
+        --code-btn-bg: #424242;
+        --code-btn-icon-color: #c5c5c5;
+    }
+
+
+     
+    .highlight {
+        max-height: 400px;
+        overflow: hidden;
+        position: relative;
+        transition: max-height 0.3s ease-in-out;
+    }
+
+    .highlight.code-show {
+        max-height: none !important;
+    }
+
+    .code-more-box {
+        width: 100%;
+        padding-top: 78px;
+        background-image: linear-gradient(to bottom, transparent, var(--code-fade-color));
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        transition: background-image 0.3s;
+    }
+
+    .highlight.code-show .code-more-box {
+        background-image: none;
+    }
+
+    .code-more-btn {
+        display: block;
+        margin: auto;
+        width: 44px;
+        height: 22px;
+        background: var(--code-btn-bg);
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        padding-top: 6px;
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+        transition: background-color 0.3s;
+    }
+
+    .code-more-img {
+        cursor: pointer !important;
+        display: block;
+        margin: auto;
+        width: 22px;
+        height: 16px;
+        color: var(--code-btn-icon-color);
+        stroke: currentColor;
+    }
+</style>
+
+<script>
+  function initCodeMoreBox() {
+    
+    let codeBlocks = document.querySelectorAll(".highlight");
+    if (!codeBlocks || codeBlocks.length === 0) {
+      return;
+    }
+
+    
+    const moreIconSrc = 'http:\/\/localhost:1313\/icons\/caret-down.svg';
+    const lessIconSrc = 'http:\/\/localhost:1313\/icons\/caret-up.svg';
+
+    codeBlocks.forEach(codeBlock => {
+      if (codeBlock.scrollHeight <= codeBlock.clientHeight) {
+        return;
+      }
+
+      
+      let codeMoreBox = document.createElement('div');
+      codeMoreBox.classList.add('code-more-box');
+      
+      let codeMoreBtn = document.createElement('span');
+      codeMoreBtn.classList.add('code-more-btn');
+      
+      let img = document.createElement('img');
+      img.classList.add('code-more-img');
+      img.src = moreIconSrc; 
+
+      codeMoreBtn.addEventListener('click', () => {
+        codeBlock.classList.toggle('code-show');
+
+        
+        if (codeBlock.classList.contains('code-show')) {
+          img.src = lessIconSrc;
+        } else {
+          img.src = moreIconSrc;
+        }
+
+        window.dispatchEvent(new Event('resize'));
+      });
+
+      codeMoreBtn.appendChild(img);
+      codeMoreBox.appendChild(codeMoreBtn);
+      codeBlock.appendChild(codeMoreBox);
+    });
+  }
+  
+  
+  document.addEventListener('DOMContentLoaded', initCodeMoreBox);
+</script>
+
+    </body>
+</html>
