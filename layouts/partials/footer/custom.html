@@ -167,7 +167,6 @@
             {{ end }}
 
             codeBlocks.forEach(codeBlock => {
-                // 使用 offsetHeight, 它考虑了边框和内边距，更准确
                 if (codeBlock.scrollHeight <= codeBlock.offsetHeight) return;
 
                 const codeMoreBox = document.createElement('div');
@@ -179,7 +178,7 @@
                 const img = document.createElement('img');
                 img.classList.add('code-more-img');
                 img.src = moreIconSrc;
-                img.setAttribute('alt', 'Expand code block'); // 增加可访问性
+                img.setAttribute('alt', 'Expand code block'); 
 
                 codeMoreBtn.addEventListener('click', () => {
                     codeBlock.classList.toggle('code-show');
