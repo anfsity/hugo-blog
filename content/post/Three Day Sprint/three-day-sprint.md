@@ -11,7 +11,7 @@ categories = [
     "Study",
     "Summary"
 ]
-description = ""
+description = "三天冲刺"
 +++
 
  > 以下所有内容引用自 [上海交大生存手册](https://survivesjtu.gitbook.io/survivesjtumanual/sheng-cun-ji-qiao/tu-ji-bei-kao)
