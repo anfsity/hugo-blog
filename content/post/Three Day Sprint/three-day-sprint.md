@@ -3,8 +3,14 @@ title = "Three Day Sprint"
 date = 2025-06-25T00:29:21+08:00
 draft = false
 author = "Anfsity"
-tags = ["Study"]
-categories = ["Study"]
+tags = [
+    "Study",
+    "Summary"
+]
+categories = [
+    "Study",
+    "Summary"
+]
 description = ""
 +++
 

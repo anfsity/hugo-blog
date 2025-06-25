@@ -7,10 +7,26 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
         <copyright>Anfsity</copyright>
-        <lastBuildDate>Tue, 24 Jun 2025 22:42:13 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 25 Jun 2025 13:59:19 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Algorithm</title>
+        <link>http://localhost:1313/tags/algorithm/</link>
+        <pubDate>Wed, 25 Jun 2025 13:59:19 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/algorithm/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Study</title>
+        <link>http://localhost:1313/tags/study/</link>
+        <pubDate>Wed, 25 Jun 2025 00:29:21 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/study/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Summary</title>
         <link>http://localhost:1313/tags/summary/</link>
-        <pubDate>Tue, 24 Jun 2025 22:42:13 +0800</pubDate>
+        <pubDate>Wed, 25 Jun 2025 00:29:21 +0800</pubDate>
         
         <guid>http://localhost:1313/tags/summary/</guid>
         <description></description>

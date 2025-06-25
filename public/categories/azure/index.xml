@@ -129,6 +129,22 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;羡慕啊。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;$upd:$&lt;/p&gt;
+&lt;p&gt;当初写这个的时候并没有部署到 vercel 上，推上去才发现本地能加载的 svg 图片在上面不行。。。然后我开了一个 fixbug 分支尝试去修复他(我不懂前端哇),进行了一些列改动后，愉悦的出现了神秘 bug ：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Text&#34; data-lang=&#34;Text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;500: INTERNAL_SERVER_ERROR 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Code: MIDDLEWARE_INVOCATION_FAILED 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ID: hkg1::5qkdl-1750825759600-8b738d10c1a2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;最神秘的是，我在 fixbug 行不通的改动，同步到 main 反而行了，很神秘啊。既然能跑，我就不做改动了。&lt;/p&gt;
 </description>
         </item>
         
