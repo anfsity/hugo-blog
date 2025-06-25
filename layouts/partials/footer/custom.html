@@ -1,56 +1,22 @@
-<!-- 折叠大标题内部的小标题 -->
+<!-- ================================================================ -->
+<!-- 自定义样式 -->
+<!-- ================================================================ -->
 <style>
-    #TableOfContents > ul, ol {
-        ul, ol {
+    /* 1. 动态目录样式 */
+    #TableOfContents > ul,
+    #TableOfContents > ol {
+        ul,
+        ol {
             display: none;
         }
         .open {
             display: block;
         }
     }
-</style>
 
-<script>
-    function initTocHide() {
-        // 判断是否存在文章目录
-        let toc = document.querySelector(".widget--toc");
-        if (!toc) {
-            return;
-        }
-        // 监听滚动
-        window.addEventListener('scroll', function() {
-            //清除class值
-            let openUl = document.querySelectorAll(".open");
-            if (openUl.length > 0) {
-              openUl.forEach((ul) => {
-                ul.classList.remove("open")
-              })
-            }
-            // 获取active-class
-            let currentLi = document.querySelector(".active-class");
-            if (!currentLi) {
-                return
-            }
-            // 展示子ul
-            if (currentLi.children.length > 1) {
-                currentLi.children[1].classList.add("open")
-            }
-            // 展示父ul
-            let ul = currentLi.parentElement;
-            do {
-                ul.classList.add("open");
-                ul = ul.parentElement.parentElement
-            } while (ul !== undefined && (ul.localName === 'ul' || ul.localName === 'ol'))
-        });
-    }
-    initTocHide()
-</script>
-
-<!----------------->
-
-<!-- 添加一键返回顶部功能 -->
-
-<style>
+    /* 2. 返回顶部按钮样式 */
+    {{ with resources.Get "icons/arrow-big-up.svg" }}
+    {{ $icon := .Content | base64Encode | safeURL }}
     #backTopBtn {
         display: none;
         position: fixed;
@@ -59,74 +25,32 @@
         cursor: pointer;
         width: 26px;
         height: 26px;
-        background-image: url({{ (resources.Get "icons/arrow-big-up.svg").Permalink }});
+        background-image: url('{{ .Permalink }}');
     }
-</style>
+    {{ end }}
 
-<script>
-    /**
-     * 滚动回顶部初始化
-     */
-    function initScrollTop() {
-        let rightSideBar = document.querySelector(".right-sidebar");
-        if (!rightSideBar) {
-            return;
-        }
-        // 添加返回顶部按钮到右侧边栏
-        let btn = document.createElement("div");
-        btn.id = "backTopBtn";
-        btn.onclick = backToTop
-        rightSideBar.appendChild(btn)
-        // 滚动监听
-        window.onscroll = function() {
-            // 当网页向下滑动 20px 出现"返回顶部" 按钮
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                btn.style.display = "block";
-            } else {
-                btn.style.display = "none";
-            }
-        };
-    }
-
-    /**
-     * 返回顶部
-     */
-    function backToTop(){
-        window.scrollTo({ top: 0, behavior: "smooth" })
-    }
-
-    initScrollTop();
-</script>
-
-<!-- 添加展开代码块和折叠代码块功能 -->
-
-<style>
+    /* 3. 代码块折叠样式 */
     :root {
         /* 亮色模式下的默认颜色 */
         --code-fade-color: white; 
         --code-btn-bg: #f0f0f5;  
         --code-btn-icon-color: #333; 
     }
-
     html[data-scheme="dark"] {
+        /* 适配 Stack 主题的暗黑模式颜色 */
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
-
-
-    /* 默认的代码块高度限制 */
     .highlight {
         max-height: 400px;
         overflow: hidden;
         position: relative;
         transition: max-height 0.3s ease-in-out;
     }
-
     .highlight.code-show {
         max-height: none !important;
     }
-
     .code-more-box {
         width: 100%;
         padding-top: 78px;
@@ -137,12 +61,11 @@
         bottom: 0;
         z-index: 1;
         transition: background-image 0.3s;
+        pointer-events: none; /* 让遮罩本身不响应点击 */
     }
-
     .highlight.code-show .code-more-box {
         background-image: none;
     }
-
     .code-more-btn {
         display: block;
         margin: auto;
@@ -156,10 +79,9 @@
         position: relative;
         z-index: 2;
         transition: background-color 0.3s;
+        pointer-events: auto; /* 确保按钮可以被点击 */
     }
-
     .code-more-img {
-        cursor: pointer !important;
         display: block;
         margin: auto;
         width: 22px;
@@ -169,53 +91,119 @@
     }
 </style>
 
+<!-- ================================================================ -->
+<!-- 自定义脚本 -->
+<!-- ================================================================ -->
 <script>
-  function initCodeMoreBox() {
-    // 查找所有代码块
-    let codeBlocks = document.querySelectorAll(".highlight");
-    if (!codeBlocks || codeBlocks.length === 0) {
-      return;
-    }
+    // 确保在整个文档加载完毕后再执行所有脚本
+    document.addEventListener("DOMContentLoaded", function() {
 
-    // 预先获取图标的链接，避免在循环中重复调用
-    const moreIconSrc = '{{ (resources.Get "icons/caret-down.svg").Permalink }}';
-    const lessIconSrc = '{{ (resources.Get "icons/caret-up.svg").Permalink }}';
+        // --- 功能一：动态目录 ---
+        function initTocHide() {
+            const toc = document.querySelector(".widget--toc");
+            if (!toc) return;
 
-    codeBlocks.forEach(codeBlock => {
-      if (codeBlock.scrollHeight <= codeBlock.clientHeight) {
-        return;
-      }
+            window.addEventListener('scroll', function() {
+                const openUls = document.querySelectorAll("#TableOfContents .open");
+                openUls.forEach(ul => ul.classList.remove("open"));
 
-      // --- 原有的元素创建逻辑保持不变 ---
-      let codeMoreBox = document.createElement('div');
-      codeMoreBox.classList.add('code-more-box');
-      
-      let codeMoreBtn = document.createElement('span');
-      codeMoreBtn.classList.add('code-more-btn');
-      
-      let img = document.createElement('img');
-      img.classList.add('code-more-img');
-      img.src = moreIconSrc; // 初始状态为“展开”图标
+                const currentLi = document.querySelector("#TableOfContents .active-class");
+                if (!currentLi) return;
 
-      codeMoreBtn.addEventListener('click', () => {
-        codeBlock.classList.toggle('code-show');
+                if (currentLi.children.length > 1 && currentLi.children[1].matches('ul, ol')) {
+                    currentLi.children[1].classList.add("open");
+                }
 
-        // 根据是否存在 'code-show' 类来判断当前状态，并切换图标
-        if (codeBlock.classList.contains('code-show')) {
-          img.src = lessIconSrc;
-        } else {
-          img.src = moreIconSrc;
+                let parentUl = currentLi.parentElement;
+                while (parentUl && parentUl.closest('#TableOfContents')) {
+                    if (parentUl.matches('ul, ol')) {
+                        parentUl.classList.add("open");
+                    }
+                    if (parentUl.parentElement && parentUl.parentElement.tagName === 'LI') {
+                        parentUl = parentUl.parentElement.parentElement;
+                    } else {
+                        break;
+                    }
+                }
+            }, { passive: true }); // 使用 passive listener 提升滚动性能
         }
 
-        window.dispatchEvent(new Event('resize'));
-      });
+        // --- 功能二：返回顶部 ---
+        function initScrollTop() {
+            const rightSideBar = document.querySelector(".right-sidebar");
+            if (!rightSideBar) return;
 
-      codeMoreBtn.appendChild(img);
-      codeMoreBox.appendChild(codeMoreBtn);
-      codeBlock.appendChild(codeMoreBox);
+            const btn = document.createElement("div");
+            btn.id = "backTopBtn";
+            btn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+            rightSideBar.appendChild(btn);
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 20) {
+                    btn.style.display = "block";
+                } else {
+                    btn.style.display = "none";
+                }
+            }, { passive: true });
+        }
+
+        // --- 功能三：代码块折叠 ---
+        function initCodeMoreBox() {
+            const codeBlocks = document.querySelectorAll(".highlight");
+            if (!codeBlocks.length) return;
+
+            // 使用 Base64 内联 SVG，避免资源加载问题
+            let moreIconSrc = '';
+            let lessIconSrc = '';
+
+            {{ with resources.Get "icons/caret-down.svg" }}
+                {{ $iconContent := .Content | base64Encode }}
+                moreIconSrc = 'data:image/svg+xml;base64,{{ $iconContent }}';
+            {{ end }}
+
+            {{ with resources.Get "icons/caret-up.svg" }}
+                {{ $iconContent := .Content | base64Encode }}
+                lessIconSrc = 'data:image/svg+xml;base64,{{ $iconContent }}';
+            {{ end }}
+
+            codeBlocks.forEach(codeBlock => {
+                // 使用 offsetHeight, 它考虑了边框和内边距，更准确
+                if (codeBlock.scrollHeight <= codeBlock.offsetHeight) return;
+
+                const codeMoreBox = document.createElement('div');
+                codeMoreBox.classList.add('code-more-box');
+                
+                const codeMoreBtn = document.createElement('span');
+                codeMoreBtn.classList.add('code-more-btn');
+                
+                const img = document.createElement('img');
+                img.classList.add('code-more-img');
+                img.src = moreIconSrc;
+                img.setAttribute('alt', 'Expand code block'); // 增加可访问性
+
+                codeMoreBtn.addEventListener('click', () => {
+                    codeBlock.classList.toggle('code-show');
+                    const isShown = codeBlock.classList.contains('code-show');
+                    img.src = isShown ? lessIconSrc : moreIconSrc;
+                    img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
+                    
+                    // 触发 resize 事件，帮助其他组件（如目录）重新计算位置
+                    window.dispatchEvent(new Event('resize'));
+                });
+
+                codeMoreBtn.appendChild(img);
+                codeMoreBox.appendChild(codeMoreBtn);
+                codeBlock.appendChild(codeMoreBox);
+            });
+        }
+
+        // --- 统一调用所有初始化函数 ---
+        try {
+            initTocHide();
+            initScrollTop();
+            initCodeMoreBox();
+        } catch (e) {
+            console.error("Error initializing custom scripts:", e);
+        }
     });
-  }
-  
-  // 使用 DOMContentLoaded 确保所有元素都已加载
-  document.addEventListener('DOMContentLoaded', initCodeMoreBox);
 </script>
