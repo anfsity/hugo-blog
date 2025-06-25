@@ -1,6 +1,6 @@
 ---
 title: "GCD and LCM"
-date: 2025-06-24T22:35:59+08:00
+date: 2025-04-21T22:35:59+08:00
 draft: false
 author: "Anfsity"
 tags: [Math]

@@ -1,6 +1,6 @@
 ---
 title: "Linear Algebra"
-date: 2025-06-24T22:12:58+08:00
+date: 2024-10-17T22:12:58+08:00
 draft: false
 author: "Anfsity"
 tags: []

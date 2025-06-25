@@ -1,6 +1,6 @@
 +++
 title = "Multiplicative Inverse"
-date = 2025-06-25T13:59:19+08:00
+date = 2025-05-25T13:59:19+08:00
 draft = false
 author = "Anfsity"
 tags = ["Algorithm"]

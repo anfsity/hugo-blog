@@ -1,6 +1,6 @@
 ---
 title: "C++ 杂项"
-date: 2025-06-24T22:40:03+08:00
+date: 2025-05-24T22:40:03+08:00
 draft: false
 author: "Anfsity"
 tags: [c++]
