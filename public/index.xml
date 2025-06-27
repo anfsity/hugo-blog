@@ -7,7 +7,49 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
         <copyright>Anfsity</copyright>
-        <lastBuildDate>Wed, 25 Jun 2025 00:29:21 +0800</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 27 Jun 2025 19:29:03 +0800</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CS:APP</title>
+        <link>http://localhost:1313/p/csapp/</link>
+        <pubDate>Fri, 27 Jun 2025 19:29:03 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/csapp/</guid>
+        <description>&lt;img src="https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg" alt="Featured image of post CS:APP" /&gt;&lt;p&gt;目前施工正在进行中，目前仅做完 DataLab&lt;/p&gt;
+&lt;h2 id=&#34;目录&#34;&gt;目录
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;http://localhost:1313/p/datalab/&#34; &gt;Data Lab&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Bomb Lab&lt;/p&gt;
+&lt;p&gt;Attack Lab&lt;/p&gt;
+&lt;p&gt;Architechture Lab&lt;/p&gt;
+&lt;p&gt;Cache Lab&lt;/p&gt;
+&lt;p&gt;Performance Lab&lt;/p&gt;
+&lt;p&gt;Shell Lab&lt;/p&gt;
+&lt;p&gt;Malloc Lab&lt;/p&gt;
+&lt;p&gt;Proxy Lab&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;实用链接&#34;&gt;实用链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/XieGuochao/csapp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CSAPP Lab 备份&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://hansimov.gitbook.io/csapp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CSAPP 电子汉化版&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://wdxtub.com/work/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;不周山的博客&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://fengmuzi2003.gitbook.io/csapp3e/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CSAPP 重点解读&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;感想&#34;&gt;感想
+&lt;/h2&gt;&lt;!-- 暂未实现 hhh --&gt;
+</description>
+        </item>
+        <item>
         <title>Three Day Sprint</title>
         <link>http://localhost:1313/p/three-day-sprint/</link>
         <pubDate>Wed, 25 Jun 2025 00:29:21 +0800</pubDate>

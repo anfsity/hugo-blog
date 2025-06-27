@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Computer Science on Anfsity</title>
+        <link>http://localhost:1313/categories/computer-science/</link>
+        <description>Recent content in Computer Science on Anfsity</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en</language>
+        <copyright>Anfsity</copyright>
+        <lastBuildDate>Fri, 27 Jun 2025 19:29:03 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/computer-science/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CS:APP</title>
+        <link>http://localhost:1313/p/csapp/</link>
+        <pubDate>Fri, 27 Jun 2025 19:29:03 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/csapp/</guid>
+        <description>&lt;img src="https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg" alt="Featured image of post CS:APP" /&gt;&lt;p&gt;目前施工正在进行中，目前仅作完 DataLab&lt;/p&gt;
+&lt;h2 id=&#34;实验目录&#34;&gt;实验目录
+&lt;/h2&gt;&lt;p&gt;
+&lt;div class=&#34;lab-list&#34;&gt;
+    &lt;ul&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/datalab/&#34;&gt;DataLab&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Jun 27, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/three-day-sprint/&#34;&gt;Three Day Sprint&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Jun 25, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/%E8%BF%81%E7%A7%BB%E6%80%BB%E7%BB%93/&#34;&gt;迁移总结&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Jun 24, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/%E6%B5%85%E8%B0%88%E7%AD%9B%E6%B3%95/&#34;&gt;浅谈筛法&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - May 25, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/multiplicative-inverse/&#34;&gt;Multiplicative Inverse&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - May 25, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/c-%E6%9D%82%E9%A1%B9/&#34;&gt;C&amp;#43;&amp;#43; 杂项&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - May 24, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/no-title/&#34;&gt;No Title&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - May 24, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/gcd-and-lcm/&#34;&gt;GCD and LCM&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Apr 21, 2025&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/linear-algebra/&#34;&gt;Linear Algebra&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Oct 17, 2024&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/markdown-syntax-guide/&#34;&gt;Markdown Syntax Guide&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Mar 11, 2019&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/rich-content/&#34;&gt;Rich Content&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Mar 10, 2019&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/placeholder-text/&#34;&gt;Placeholder Text&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Mar 9, 2019&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/math-typesetting/&#34;&gt;Math Typesetting&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Mar 8, 2019&lt;/span&gt;
+                &lt;/li&gt;&lt;li&gt;
+                    &lt;a href=&#34;http://localhost:1313/p/emoji-support/&#34;&gt;Emoji Support&lt;/a&gt;
+                    &lt;span class=&#34;date&#34;&gt; - Mar 5, 2019&lt;/span&gt;
+                &lt;/li&gt;&lt;/ul&gt;
+&lt;/div&gt;
+
+
+&lt;style&gt;
+.lab-list ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.lab-list li {
+    padding: 5px 0;
+    font-size: 1.1em;
+}
+.lab-list .date {
+    color: var(--card-text-color-secondary);
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+&lt;/style&gt;
+  &lt;!-- 只需这一行，目录自动生成！ --&gt;&lt;/p&gt;
+&lt;h2 id=&#34;实用链接&#34;&gt;实用链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/XieGuochao/csapp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CSAPP Lab 备份&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hansimov.gitbook.io/csapp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CSAPP 电子汉化版&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://wdxtub.com/work/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;不周山的博客&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://fengmuzi2003.gitbook.io/csapp3e/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CSAPP 重点解读&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;感想&#34;&gt;感想
+&lt;/h2&gt;&lt;!-- 暂未实现 hhh --&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

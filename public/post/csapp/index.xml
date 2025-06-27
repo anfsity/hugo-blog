@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>csapp on Anfsity</title>
+        <link>http://localhost:1313/post/csapp/</link>
+        <description>Recent content in csapp on Anfsity</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en</language>
+        <copyright>Anfsity</copyright>
+        <lastBuildDate>Fri, 27 Jun 2025 19:29:03 +0800</lastBuildDate><atom:link href="http://localhost:1313/post/csapp/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CS:APP</title>
+        <link>http://localhost:1313/p/csapp/</link>
+        <pubDate>Fri, 27 Jun 2025 19:29:03 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/csapp/</guid>
+        <description>&lt;img src="https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg" alt="Featured image of post CS:APP" /&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;http://localhost:1313/p/datalab/&#34; &gt;DataLab&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
