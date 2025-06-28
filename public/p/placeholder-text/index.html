@@ -404,7 +404,16 @@
 <h1 id="vagus-elidunt">Vagus elidunt
 </h1><p><svg class="canon" xmlns="http://www.w3.org/2000/svg" overflow="visible" viewBox="0 0 496 373" height="373" width="496"><g fill="none"><path stroke="#000" stroke-width=".75" d="M.599 372.348L495.263 1.206M.312.633l494.95 370.853M.312 372.633L247.643.92M248.502.92l246.76 370.566M330.828 123.869V1.134M330.396 1.134L165.104 124.515"></path><path stroke="#ED1C24" stroke-width=".75" d="M275.73 41.616h166.224v249.05H275.73zM54.478 41.616h166.225v249.052H54.478z"></path><path stroke="#000" stroke-width=".75" d="M.479.375h495v372h-495zM247.979.875v372"></path><ellipse cx="498.729" cy="177.625" rx=".75" ry="1.25"></ellipse><ellipse cx="247.229" cy="377.375" rx=".75" ry="1.25"></ellipse></g></svg></p>
 <p><a class="link" href="https://en.wikipedia.org/wiki/Canons_of_page_construction#Van_de_Graaf_canon"  target="_blank" rel="noopener"
-    >The Van de Graaf Canon</a></p>
+    >The Van de Graaf Canon</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+</p>
 <h2 id="mane-refeci-capiebant-unda-mulcebat">Mane refeci capiebant unda mulcebat
 </h2><p>Victa caducifer, malo vulnere contra dicere aurato, ludit regale, voca! Retorsit colit est profanae esse virescere furit nec; iaculi matertera et visa est, viribus. Divesque creatis, tecta novat collumque vulnus est, parvas. <strong>Faces illo pepulere</strong> tempus adest. Tendit flamma, ab opes virum sustinet, sidus sequendo urbis.</p>
 <p>Iubar proles corpore raptos vero auctor imperium; sed et huic: manus caeli Lelegas tu lux. Verbis obstitit intus oblectamina fixis linguisque ausus sperare Echionides cornuaque tenent clausit possit. Omnia putatur. Praeteritae refert ausus; ferebant e primus lora nutat, vici quae mea ipse. Et iter nil spectatae vulnus haerentia iuste et exercebat, sui et.</p>
@@ -568,7 +577,7 @@
         
         
         Published 15 aritcles · 
-        Total 16.49k words
+        Total 19.36k words
     </section>
 </footer>
 
@@ -707,12 +716,14 @@
         --code-btn-bg: #f0f0f5;  
         --code-btn-icon-color: #333; 
     }
+
     html[data-scheme="dark"] {
          
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
+
     .highlight {
         max-height: 400px;
         overflow: hidden;
@@ -770,6 +781,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         
+
         function initTocHide() {
             const toc = document.querySelector(".widget--toc");
             if (!toc) return;
@@ -800,6 +812,7 @@
         }
 
         
+
         function initScrollTop() {
             const rightSideBar = document.querySelector(".right-sidebar");
             if (!rightSideBar) return;
@@ -810,28 +823,22 @@
             rightSideBar.appendChild(btn);
 
             window.addEventListener('scroll', function() {
-                if (window.scrollY > 20) {
-                    btn.style.display = "block";
-                } else {
-                    btn.style.display = "none";
-                }
+                btn.style.display = (window.scrollY > 20) ? "block" : "none";
             }, { passive: true });
         }
 
         
+
         function initCodeMoreBox() {
             const codeBlocks = document.querySelectorAll(".highlight");
             if (!codeBlocks.length) return;
 
             
-            let moreIconSrc = '';
-            let lessIconSrc = '';
-
+            let moreIconSrc = '', lessIconSrc = '';
             
                 
                 moreIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtZG93biI\u002bPHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8\u002bPHBhdGggZD0iTTE4IDljLjg1MiAwIDEuMjk3IC45ODYgLjc4MyAxLjYyM2wtLjA3NiAuMDg0bC02IDZhMSAxIDAgMCAxIC0xLjMyIC4wODNsLS4wOTQgLS4wODNsLTYgLTZsLS4wODMgLS4wOTRsLS4wNTQgLS4wNzdsLS4wNTQgLS4wOTZsLS4wMTcgLS4wMzZsLS4wMjcgLS4wNjdsLS4wMzIgLS4xMDhsLS4wMSAtLjA1M2wtLjAxIC0uMDZsLS4wMDQgLS4wNTd2LS4xMThsLjAwNSAtLjA1OGwuMDA5IC0uMDZsLjAxIC0uMDUybC4wMzIgLS4xMDhsLjAyNyAtLjA2N2wuMDcgLS4xMzJsLjA2NSAtLjA5bC4wNzMgLS4wODFsLjA5NCAtLjA4M2wuMDc3IC0uMDU0bC4wOTYgLS4wNTRsLjAzNiAtLjAxN2wuMDY3IC0uMDI3bC4xMDggLS4wMzJsLjA1MyAtLjAxbC4wNiAtLjAxbC4wNTcgLS4wMDRsMTIuMDU5IC0uMDAyeiIgLz48L3N2Zz4=';
             
-
             
                 
                 lessIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtdXAiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMS4yOTMgNy4yOTNhMSAxIDAgMCAxIDEuMzIgLS4wODNsLjA5NCAuMDgzbDYgNmwuMDgzIC4wOTRsLjA1NCAuMDc3bC4wNTQgLjA5NmwuMDE3IC4wMzZsLjAyNyAuMDY3bC4wMzIgLjEwOGwuMDEgLjA1M2wuMDEgLjA2bC4wMDQgLjA1N2wuMDAyIC4wNTlsLS4wMDIgLjA1OWwtLjAwNSAuMDU4bC0uMDA5IC4wNmwtLjAxIC4wNTJsLS4wMzIgLjEwOGwtLjAyNyAuMDY3bC0uMDcgLjEzMmwtLjA2NSAuMDlsLS4wNzMgLjA4MWwtLjA5NCAuMDgzbC0uMDc3IC4wNTRsLS4wOTYgLjA1NGwtLjAzNiAuMDE3bC0uMDY3IC4wMjdsLS4xMDggLjAzMmwtLjA1MyAuMDFsLS4wNiAuMDFsLS4wNTcgLjAwNGwtLjA1OSAuMDAyaC0xMmMtLjg1MiAwIC0xLjI5NyAtLjk4NiAtLjc4MyAtMS42MjNsLjA3NiAtLjA4NGw2IC02eiIgLz48L3N2Zz4=';
@@ -857,7 +864,6 @@
                     img.src = isShown ? lessIconSrc : moreIconSrc;
                     img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
                     
-                    
                     window.dispatchEvent(new Event('resize'));
                 });
 
@@ -868,10 +874,28 @@
         }
 
         
+
+        function initHorizontalScroll() {
+            const scrollArea = document.querySelector('.subsection-list');
+            if (!scrollArea) return;
+
+            scrollArea.addEventListener('wheel', function(event) {
+                if (event.deltaY !== 0) {
+                    
+                    event.preventDefault();
+                    
+                    scrollArea.scrollLeft += event.deltaY;
+                }
+            }, { passive: false }); 
+        }
+
+        
+        
         try {
             initTocHide();
             initScrollTop();
             initCodeMoreBox();
+            initHorizontalScroll();
         } catch (e) {
             console.error("Error initializing custom scripts:", e);
         }

@@ -95,7 +95,16 @@
 &lt;p&gt;全局静态变量具有内部链接，也就是对于链接器来说，全局静态变量是看不见的，他只能被当前的翻译单元所访问，可以用来防止其他相同名字的其他文件变量冲突。注意定义在头文件中的静态变量作用域也被限制在当前的翻译单元，也就是对所有引用头文件的翻译单元来说，每个翻译单元都有一个静态变量的副本&lt;/p&gt;
 &lt;p&gt;Static 修饰的变量或者函数，导致的性质就是他的作用域会被改变，要想理解 static 关键词，应该先对程序的编译过程有一定的认识。&lt;/p&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.geeksforgeeks.org/static-keyword-cpp/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;参考链接&lt;/a&gt;&lt;/p&gt;
+    &gt;参考链接&lt;/a&gt;
+
+&lt;span style=&#34;white-space: nowrap;&#34;&gt;&lt;svg width=&#34;.7em&#34;
+    height=&#34;.7em&#34; viewBox=&#34;0 0 21 21&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+    &lt;path d=&#34;m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z&#34; fill=&#34;currentColor&#34; /&gt;
+    &lt;path d=&#34;M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z&#34;
+        fill=&#34;currentColor&#34;&gt;
+&lt;/svg&gt;&lt;/span&gt;
+
+&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;part-ii&#34;&gt;$Part\ II.$
 &lt;/h2&gt;&lt;p&gt;&lt;em&gt;$Tag\ Dispatch$&lt;/em&gt;&lt;/p&gt;
@@ -168,7 +177,16 @@
 &lt;/div&gt;&lt;p&gt;标签调度，其实是利用函数重载的一种 c++ 技巧，可以用来处理这样一种情况：你要做出不同的操作对具有相似参数和返回值的同名函数。&lt;/p&gt;
 &lt;p&gt;这是一种静态多态($static\ polymorphism$)&lt;/p&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://iamsorush.com/posts/cpp-tag-dispatch/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;参考博客&lt;/a&gt;&lt;/p&gt;
+    &gt;参考博客&lt;/a&gt;
+
+&lt;span style=&#34;white-space: nowrap;&#34;&gt;&lt;svg width=&#34;.7em&#34;
+    height=&#34;.7em&#34; viewBox=&#34;0 0 21 21&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+    &lt;path d=&#34;m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z&#34; fill=&#34;currentColor&#34; /&gt;
+    &lt;path d=&#34;M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z&#34;
+        fill=&#34;currentColor&#34;&gt;
+&lt;/svg&gt;&lt;/span&gt;
+
+&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;part-iii&#34;&gt;$Part\ III.$
 &lt;/h2&gt;&lt;p&gt;&lt;em&gt;$Duff&#39;s\ Device$&lt;/em&gt;&lt;/p&gt;
@@ -258,7 +276,16 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;利用 switch 语句的特性进行非常奇怪的操作，这被叫做 $Duff&#39;s\ device$， 可以用来模拟 C++ 的协程，但是在 C++20 版本已经提供了官方封装的协程。&lt;/p&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.geeksforgeeks.org/duffs-device-work/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;How does Duff&amp;rsquo;s Device work?&lt;/a&gt;&lt;/p&gt;
+    &gt;How does Duff&amp;rsquo;s Device work?&lt;/a&gt;
+
+&lt;span style=&#34;white-space: nowrap;&#34;&gt;&lt;svg width=&#34;.7em&#34;
+    height=&#34;.7em&#34; viewBox=&#34;0 0 21 21&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+    &lt;path d=&#34;m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z&#34; fill=&#34;currentColor&#34; /&gt;
+    &lt;path d=&#34;M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z&#34;
+        fill=&#34;currentColor&#34;&gt;
+&lt;/svg&gt;&lt;/span&gt;
+
+&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;part-iv&#34;&gt;$Part\ IV.$
 &lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;

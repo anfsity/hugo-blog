@@ -1,8 +1,8 @@
 <!-- ================================================================ -->
-<!-- 自定义样式 -->
+<!-- 自定义全局样式 -->
 <!-- ================================================================ -->
 <style>
-    /* 1. 动态目录样式 */
+    /* 1. 动态目录样式：仅展开当前章节的子目录 */
     #TableOfContents > ul,
     #TableOfContents > ol {
         ul,
@@ -36,12 +36,14 @@
         --code-btn-bg: #f0f0f5;  
         --code-btn-icon-color: #333; 
     }
+
     html[data-scheme="dark"] {
         /* 适配 Stack 主题的暗黑模式颜色 */
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
+
     .highlight {
         max-height: 400px;
         overflow: hidden;
@@ -92,13 +94,16 @@
 </style>
 
 <!-- ================================================================ -->
-<!-- 自定义脚本 -->
+<!-- 自定义全局脚本 -->
 <!-- ================================================================ -->
 <script>
     // 确保在整个文档加载完毕后再执行所有脚本
     document.addEventListener("DOMContentLoaded", function() {
 
-        // --- 功能一：动态目录 ---
+        /**
+         * 功能一：动态目录
+         * 根据页面滚动位置，自动展开和折叠当前章节的目录
+         */
         function initTocHide() {
             const toc = document.querySelector(".widget--toc");
             if (!toc) return;
@@ -128,7 +133,10 @@
             }, { passive: true }); // 使用 passive listener 提升滚动性能
         }
 
-        // --- 功能二：返回顶部 ---
+        /**
+         * 功能二：返回顶部按钮
+         * 在右侧边栏动态创建并显示/隐藏返回顶部的按钮
+         */
         function initScrollTop() {
             const rightSideBar = document.querySelector(".right-sidebar");
             if (!rightSideBar) return;
@@ -139,28 +147,24 @@
             rightSideBar.appendChild(btn);
 
             window.addEventListener('scroll', function() {
-                if (window.scrollY > 20) {
-                    btn.style.display = "block";
-                } else {
-                    btn.style.display = "none";
-                }
+                btn.style.display = (window.scrollY > 20) ? "block" : "none";
             }, { passive: true });
         }
 
-        // --- 功能三：代码块折叠 ---
+        /**
+         * 功能三：代码块折叠/展开
+         * 为高度超过预设值的代码块添加“展开”按钮
+         */
         function initCodeMoreBox() {
             const codeBlocks = document.querySelectorAll(".highlight");
             if (!codeBlocks.length) return;
 
-            // 使用 Base64 内联 SVG，避免资源加载问题
-            let moreIconSrc = '';
-            let lessIconSrc = '';
-
+            // 使用 Base64 内联 SVG，避免额外网络请求
+            let moreIconSrc = '', lessIconSrc = '';
             {{ with resources.Get "icons/caret-down.svg" }}
                 {{ $iconContent := .Content | base64Encode }}
                 moreIconSrc = 'data:image/svg+xml;base64,{{ $iconContent }}';
             {{ end }}
-
             {{ with resources.Get "icons/caret-up.svg" }}
                 {{ $iconContent := .Content | base64Encode }}
                 lessIconSrc = 'data:image/svg+xml;base64,{{ $iconContent }}';
@@ -186,7 +190,6 @@
                     img.src = isShown ? lessIconSrc : moreIconSrc;
                     img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
                     
-                    // 触发 resize 事件，帮助其他组件（如目录）重新计算位置
                     window.dispatchEvent(new Event('resize'));
                 });
 
@@ -196,11 +199,31 @@
             });
         }
 
+        /**
+         * 功能四：鼠标滚轮控制横向滚动
+         * 监听特定区域，将垂直滚轮事件转换为水平滚动
+         */
+        function initHorizontalScroll() {
+            const scrollArea = document.querySelector('.subsection-list');
+            if (!scrollArea) return;
+
+            scrollArea.addEventListener('wheel', function(event) {
+                if (event.deltaY !== 0) {
+                    // 阻止默认的垂直滚动行为，这是实现横向滚动的关键
+                    event.preventDefault();
+                    // 将垂直滚动量应用到水平滚动上
+                    scrollArea.scrollLeft += event.deltaY;
+                }
+            }, { passive: false }); // 此处必须为 passive: false 才能调用 preventDefault()
+        }
+
         // --- 统一调用所有初始化函数 ---
+        // 使用 try...catch 块包裹，防止一个功能的错误影响其他功能
         try {
             initTocHide();
             initScrollTop();
             initCodeMoreBox();
+            initHorizontalScroll();
         } catch (e) {
             console.error("Error initializing custom scripts:", e);
         }

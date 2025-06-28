@@ -339,8 +339,26 @@
 <p>各位同学们，在本书的开始，我不得不遗憾地告诉大家一个消息。国内绝大部分大学的本科教学，不是濒临崩溃，而是早已崩溃。在此，我无意争论是否复旦、中科大、或者清华、北大是否比我们崩溃的更少一些——这种争论是没有意义的。我只是看到了无数充满求知欲、激情、与年轻梦想的同学们，将要把自己的四年青春，充满希望与信任地交给大学来塑造。这使我心中非常不安。</p>
 </blockquote>
 <p>其实我很庆幸，我的运气还算可以，我的信息检索能力也还说的过去。在高考刚刚结束，我就看到了<a class="link" href="https://survivesjtu.gitbook.io/survivesjtumanual"  target="_blank" rel="noopener"
-    >《上海交通大学生存手册》</a>，在学习 CS 不久，就了解到了 <a class="link" href="https://csdiy.wiki/"  target="_blank" rel="noopener"
-    >csdiy</a>，虽然不是心仪的大学(高考发挥失常)，但起码是我自己选择的专业，是我有足够的热情，足够的兴趣去投入的专业。</p>
+    >《上海交通大学生存手册》</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+，在学习 CS 不久，就了解到了 <a class="link" href="https://csdiy.wiki/"  target="_blank" rel="noopener"
+    >csdiy</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+，虽然不是心仪的大学(高考发挥失常)，但起码是我自己选择的专业，是我有足够的热情，足够的兴趣去投入的专业。</p>
 <p>初入大学，我曾向一些优秀的学长请教选择 CS 专业的缘由，得到的答案却往往是“这个专业有潜力，能赚钱”这类现实考量。我不禁好奇，在这宝贵的四年里，究竟有多少人真正怀揣着明确的目标与梦想，他们热切追求着什么，渴望达成何种成就，又将塑造怎样的未来？而此刻，当我敲下这些文字，耳边传来的却仍旧是室友沉浸于游戏的喧嚣。我并非自诩清醒或优越，只是深感如此挥霍青春，实在可惜，也着实令人惋叹。</p>
 <p>从小就喜欢折腾的我，对 CS 感兴趣也许并不是一件值得惊讶的事，然而由于设备限制，我对于 CS 的了解，其实非常非常的肤浅。我不懂命令行，不懂编程语言，不懂网络。基本上，我是一个什么都不会的小白。也许，会用几个插件，知道几个软件，折腾过 windows 系统，这些简单的事情，甚至足以让我以为我对电脑非常的了解。放在现在来看，简直是羞愧难当。但不管怎么说，为了搞懂这些，我学会了搜索，习惯了查看文档，这总归算是个不错的开端。</p>
 <blockquote>
@@ -486,7 +504,7 @@
         
         
         Published 15 aritcles · 
-        Total 16.49k words
+        Total 19.36k words
     </section>
 </footer>
 
@@ -625,12 +643,14 @@
         --code-btn-bg: #f0f0f5;  
         --code-btn-icon-color: #333; 
     }
+
     html[data-scheme="dark"] {
          
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
+
     .highlight {
         max-height: 400px;
         overflow: hidden;
@@ -688,6 +708,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         
+
         function initTocHide() {
             const toc = document.querySelector(".widget--toc");
             if (!toc) return;
@@ -718,6 +739,7 @@
         }
 
         
+
         function initScrollTop() {
             const rightSideBar = document.querySelector(".right-sidebar");
             if (!rightSideBar) return;
@@ -728,28 +750,22 @@
             rightSideBar.appendChild(btn);
 
             window.addEventListener('scroll', function() {
-                if (window.scrollY > 20) {
-                    btn.style.display = "block";
-                } else {
-                    btn.style.display = "none";
-                }
+                btn.style.display = (window.scrollY > 20) ? "block" : "none";
             }, { passive: true });
         }
 
         
+
         function initCodeMoreBox() {
             const codeBlocks = document.querySelectorAll(".highlight");
             if (!codeBlocks.length) return;
 
             
-            let moreIconSrc = '';
-            let lessIconSrc = '';
-
+            let moreIconSrc = '', lessIconSrc = '';
             
                 
                 moreIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtZG93biI\u002bPHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8\u002bPHBhdGggZD0iTTE4IDljLjg1MiAwIDEuMjk3IC45ODYgLjc4MyAxLjYyM2wtLjA3NiAuMDg0bC02IDZhMSAxIDAgMCAxIC0xLjMyIC4wODNsLS4wOTQgLS4wODNsLTYgLTZsLS4wODMgLS4wOTRsLS4wNTQgLS4wNzdsLS4wNTQgLS4wOTZsLS4wMTcgLS4wMzZsLS4wMjcgLS4wNjdsLS4wMzIgLS4xMDhsLS4wMSAtLjA1M2wtLjAxIC0uMDZsLS4wMDQgLS4wNTd2LS4xMThsLjAwNSAtLjA1OGwuMDA5IC0uMDZsLjAxIC0uMDUybC4wMzIgLS4xMDhsLjAyNyAtLjA2N2wuMDcgLS4xMzJsLjA2NSAtLjA5bC4wNzMgLS4wODFsLjA5NCAtLjA4M2wuMDc3IC0uMDU0bC4wOTYgLS4wNTRsLjAzNiAtLjAxN2wuMDY3IC0uMDI3bC4xMDggLS4wMzJsLjA1MyAtLjAxbC4wNiAtLjAxbC4wNTcgLS4wMDRsMTIuMDU5IC0uMDAyeiIgLz48L3N2Zz4=';
             
-
             
                 
                 lessIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtdXAiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMS4yOTMgNy4yOTNhMSAxIDAgMCAxIDEuMzIgLS4wODNsLjA5NCAuMDgzbDYgNmwuMDgzIC4wOTRsLjA1NCAuMDc3bC4wNTQgLjA5NmwuMDE3IC4wMzZsLjAyNyAuMDY3bC4wMzIgLjEwOGwuMDEgLjA1M2wuMDEgLjA2bC4wMDQgLjA1N2wuMDAyIC4wNTlsLS4wMDIgLjA1OWwtLjAwNSAuMDU4bC0uMDA5IC4wNmwtLjAxIC4wNTJsLS4wMzIgLjEwOGwtLjAyNyAuMDY3bC0uMDcgLjEzMmwtLjA2NSAuMDlsLS4wNzMgLjA4MWwtLjA5NCAuMDgzbC0uMDc3IC4wNTRsLS4wOTYgLjA1NGwtLjAzNiAuMDE3bC0uMDY3IC4wMjdsLS4xMDggLjAzMmwtLjA1MyAuMDFsLS4wNiAuMDFsLS4wNTcgLjAwNGwtLjA1OSAuMDAyaC0xMmMtLjg1MiAwIC0xLjI5NyAtLjk4NiAtLjc4MyAtMS42MjNsLjA3NiAtLjA4NGw2IC02eiIgLz48L3N2Zz4=';
@@ -775,7 +791,6 @@
                     img.src = isShown ? lessIconSrc : moreIconSrc;
                     img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
                     
-                    
                     window.dispatchEvent(new Event('resize'));
                 });
 
@@ -786,10 +801,28 @@
         }
 
         
+
+        function initHorizontalScroll() {
+            const scrollArea = document.querySelector('.subsection-list');
+            if (!scrollArea) return;
+
+            scrollArea.addEventListener('wheel', function(event) {
+                if (event.deltaY !== 0) {
+                    
+                    event.preventDefault();
+                    
+                    scrollArea.scrollLeft += event.deltaY;
+                }
+            }, { passive: false }); 
+        }
+
+        
+        
         try {
             initTocHide();
             initScrollTop();
             initCodeMoreBox();
+            initHorizontalScroll();
         } catch (e) {
             console.error("Error initializing custom scripts:", e);
         }

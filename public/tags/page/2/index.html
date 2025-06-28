@@ -603,7 +603,7 @@
         
         
         Published 15 aritcles · 
-        Total 16.49k words
+        Total 19.36k words
     </section>
 </footer>
 
@@ -664,12 +664,14 @@
         --code-btn-bg: #f0f0f5;  
         --code-btn-icon-color: #333; 
     }
+
     html[data-scheme="dark"] {
          
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
+
     .highlight {
         max-height: 400px;
         overflow: hidden;
@@ -727,6 +729,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         
+
         function initTocHide() {
             const toc = document.querySelector(".widget--toc");
             if (!toc) return;
@@ -757,6 +760,7 @@
         }
 
         
+
         function initScrollTop() {
             const rightSideBar = document.querySelector(".right-sidebar");
             if (!rightSideBar) return;
@@ -767,28 +771,22 @@
             rightSideBar.appendChild(btn);
 
             window.addEventListener('scroll', function() {
-                if (window.scrollY > 20) {
-                    btn.style.display = "block";
-                } else {
-                    btn.style.display = "none";
-                }
+                btn.style.display = (window.scrollY > 20) ? "block" : "none";
             }, { passive: true });
         }
 
         
+
         function initCodeMoreBox() {
             const codeBlocks = document.querySelectorAll(".highlight");
             if (!codeBlocks.length) return;
 
             
-            let moreIconSrc = '';
-            let lessIconSrc = '';
-
+            let moreIconSrc = '', lessIconSrc = '';
             
                 
                 moreIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtZG93biI\u002bPHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8\u002bPHBhdGggZD0iTTE4IDljLjg1MiAwIDEuMjk3IC45ODYgLjc4MyAxLjYyM2wtLjA3NiAuMDg0bC02IDZhMSAxIDAgMCAxIC0xLjMyIC4wODNsLS4wOTQgLS4wODNsLTYgLTZsLS4wODMgLS4wOTRsLS4wNTQgLS4wNzdsLS4wNTQgLS4wOTZsLS4wMTcgLS4wMzZsLS4wMjcgLS4wNjdsLS4wMzIgLS4xMDhsLS4wMSAtLjA1M2wtLjAxIC0uMDZsLS4wMDQgLS4wNTd2LS4xMThsLjAwNSAtLjA1OGwuMDA5IC0uMDZsLjAxIC0uMDUybC4wMzIgLS4xMDhsLjAyNyAtLjA2N2wuMDcgLS4xMzJsLjA2NSAtLjA5bC4wNzMgLS4wODFsLjA5NCAtLjA4M2wuMDc3IC0uMDU0bC4wOTYgLS4wNTRsLjAzNiAtLjAxN2wuMDY3IC0uMDI3bC4xMDggLS4wMzJsLjA1MyAtLjAxbC4wNiAtLjAxbC4wNTcgLS4wMDRsMTIuMDU5IC0uMDAyeiIgLz48L3N2Zz4=';
             
-
             
                 
                 lessIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtdXAiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMS4yOTMgNy4yOTNhMSAxIDAgMCAxIDEuMzIgLS4wODNsLjA5NCAuMDgzbDYgNmwuMDgzIC4wOTRsLjA1NCAuMDc3bC4wNTQgLjA5NmwuMDE3IC4wMzZsLjAyNyAuMDY3bC4wMzIgLjEwOGwuMDEgLjA1M2wuMDEgLjA2bC4wMDQgLjA1N2wuMDAyIC4wNTlsLS4wMDIgLjA1OWwtLjAwNSAuMDU4bC0uMDA5IC4wNmwtLjAxIC4wNTJsLS4wMzIgLjEwOGwtLjAyNyAuMDY3bC0uMDcgLjEzMmwtLjA2NSAuMDlsLS4wNzMgLjA4MWwtLjA5NCAuMDgzbC0uMDc3IC4wNTRsLS4wOTYgLjA1NGwtLjAzNiAuMDE3bC0uMDY3IC4wMjdsLS4xMDggLjAzMmwtLjA1MyAuMDFsLS4wNiAuMDFsLS4wNTcgLjAwNGwtLjA1OSAuMDAyaC0xMmMtLjg1MiAwIC0xLjI5NyAtLjk4NiAtLjc4MyAtMS42MjNsLjA3NiAtLjA4NGw2IC02eiIgLz48L3N2Zz4=';
@@ -814,7 +812,6 @@
                     img.src = isShown ? lessIconSrc : moreIconSrc;
                     img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
                     
-                    
                     window.dispatchEvent(new Event('resize'));
                 });
 
@@ -825,10 +822,28 @@
         }
 
         
+
+        function initHorizontalScroll() {
+            const scrollArea = document.querySelector('.subsection-list');
+            if (!scrollArea) return;
+
+            scrollArea.addEventListener('wheel', function(event) {
+                if (event.deltaY !== 0) {
+                    
+                    event.preventDefault();
+                    
+                    scrollArea.scrollLeft += event.deltaY;
+                }
+            }, { passive: false }); 
+        }
+
+        
+        
         try {
             initTocHide();
             initScrollTop();
             initCodeMoreBox();
+            initHorizontalScroll();
         } catch (e) {
             console.error("Error initializing custom scripts:", e);
         }

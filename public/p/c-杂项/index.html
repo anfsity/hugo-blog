@@ -449,7 +449,16 @@
 <p>全局静态变量具有内部链接，也就是对于链接器来说，全局静态变量是看不见的，他只能被当前的翻译单元所访问，可以用来防止其他相同名字的其他文件变量冲突。注意定义在头文件中的静态变量作用域也被限制在当前的翻译单元，也就是对所有引用头文件的翻译单元来说，每个翻译单元都有一个静态变量的副本</p>
 <p>Static 修饰的变量或者函数，导致的性质就是他的作用域会被改变，要想理解 static 关键词，应该先对程序的编译过程有一定的认识。</p>
 <p><a class="link" href="https://www.geeksforgeeks.org/static-keyword-cpp/"  target="_blank" rel="noopener"
-    >参考链接</a></p>
+    >参考链接</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+</p>
 <hr>
 <h2 id="part-ii">$Part\ II.$
 </h2><p><em>$Tag\ Dispatch$</em></p>
@@ -522,7 +531,16 @@
 </div><p>标签调度，其实是利用函数重载的一种 c++ 技巧，可以用来处理这样一种情况：你要做出不同的操作对具有相似参数和返回值的同名函数。</p>
 <p>这是一种静态多态($static\ polymorphism$)</p>
 <p><a class="link" href="https://iamsorush.com/posts/cpp-tag-dispatch/"  target="_blank" rel="noopener"
-    >参考博客</a></p>
+    >参考博客</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+</p>
 <hr>
 <h2 id="part-iii">$Part\ III.$
 </h2><p><em>$Duff's\ Device$</em></p>
@@ -612,7 +630,16 @@
 </div>
 </div><p>利用 switch 语句的特性进行非常奇怪的操作，这被叫做 $Duff's\ device$， 可以用来模拟 C++ 的协程，但是在 C++20 版本已经提供了官方封装的协程。</p>
 <p><a class="link" href="https://www.geeksforgeeks.org/duffs-device-work/"  target="_blank" rel="noopener"
-    >How does Duff&rsquo;s Device work?</a></p>
+    >How does Duff&rsquo;s Device work?</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+</p>
 <hr>
 <h2 id="part-iv">$Part\ IV.$
 </h2><div class="highlight"><div class="chroma">
@@ -1033,7 +1060,7 @@
         
         
         Published 15 aritcles · 
-        Total 16.49k words
+        Total 19.36k words
     </section>
 </footer>
 
@@ -1172,12 +1199,14 @@
         --code-btn-bg: #f0f0f5;  
         --code-btn-icon-color: #333; 
     }
+
     html[data-scheme="dark"] {
          
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
+
     .highlight {
         max-height: 400px;
         overflow: hidden;
@@ -1235,6 +1264,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         
+
         function initTocHide() {
             const toc = document.querySelector(".widget--toc");
             if (!toc) return;
@@ -1265,6 +1295,7 @@
         }
 
         
+
         function initScrollTop() {
             const rightSideBar = document.querySelector(".right-sidebar");
             if (!rightSideBar) return;
@@ -1275,28 +1306,22 @@
             rightSideBar.appendChild(btn);
 
             window.addEventListener('scroll', function() {
-                if (window.scrollY > 20) {
-                    btn.style.display = "block";
-                } else {
-                    btn.style.display = "none";
-                }
+                btn.style.display = (window.scrollY > 20) ? "block" : "none";
             }, { passive: true });
         }
 
         
+
         function initCodeMoreBox() {
             const codeBlocks = document.querySelectorAll(".highlight");
             if (!codeBlocks.length) return;
 
             
-            let moreIconSrc = '';
-            let lessIconSrc = '';
-
+            let moreIconSrc = '', lessIconSrc = '';
             
                 
                 moreIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtZG93biI\u002bPHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8\u002bPHBhdGggZD0iTTE4IDljLjg1MiAwIDEuMjk3IC45ODYgLjc4MyAxLjYyM2wtLjA3NiAuMDg0bC02IDZhMSAxIDAgMCAxIC0xLjMyIC4wODNsLS4wOTQgLS4wODNsLTYgLTZsLS4wODMgLS4wOTRsLS4wNTQgLS4wNzdsLS4wNTQgLS4wOTZsLS4wMTcgLS4wMzZsLS4wMjcgLS4wNjdsLS4wMzIgLS4xMDhsLS4wMSAtLjA1M2wtLjAxIC0uMDZsLS4wMDQgLS4wNTd2LS4xMThsLjAwNSAtLjA1OGwuMDA5IC0uMDZsLjAxIC0uMDUybC4wMzIgLS4xMDhsLjAyNyAtLjA2N2wuMDcgLS4xMzJsLjA2NSAtLjA5bC4wNzMgLS4wODFsLjA5NCAtLjA4M2wuMDc3IC0uMDU0bC4wOTYgLS4wNTRsLjAzNiAtLjAxN2wuMDY3IC0uMDI3bC4xMDggLS4wMzJsLjA1MyAtLjAxbC4wNiAtLjAxbC4wNTcgLS4wMDRsMTIuMDU5IC0uMDAyeiIgLz48L3N2Zz4=';
             
-
             
                 
                 lessIconSrc = 'data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItY2FyZXQtdXAiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMS4yOTMgNy4yOTNhMSAxIDAgMCAxIDEuMzIgLS4wODNsLjA5NCAuMDgzbDYgNmwuMDgzIC4wOTRsLjA1NCAuMDc3bC4wNTQgLjA5NmwuMDE3IC4wMzZsLjAyNyAuMDY3bC4wMzIgLjEwOGwuMDEgLjA1M2wuMDEgLjA2bC4wMDQgLjA1N2wuMDAyIC4wNTlsLS4wMDIgLjA1OWwtLjAwNSAuMDU4bC0uMDA5IC4wNmwtLjAxIC4wNTJsLS4wMzIgLjEwOGwtLjAyNyAuMDY3bC0uMDcgLjEzMmwtLjA2NSAuMDlsLS4wNzMgLjA4MWwtLjA5NCAuMDgzbC0uMDc3IC4wNTRsLS4wOTYgLjA1NGwtLjAzNiAuMDE3bC0uMDY3IC4wMjdsLS4xMDggLjAzMmwtLjA1MyAuMDFsLS4wNiAuMDFsLS4wNTcgLjAwNGwtLjA1OSAuMDAyaC0xMmMtLjg1MiAwIC0xLjI5NyAtLjk4NiAtLjc4MyAtMS42MjNsLjA3NiAtLjA4NGw2IC02eiIgLz48L3N2Zz4=';
@@ -1322,7 +1347,6 @@
                     img.src = isShown ? lessIconSrc : moreIconSrc;
                     img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
                     
-                    
                     window.dispatchEvent(new Event('resize'));
                 });
 
@@ -1333,10 +1357,28 @@
         }
 
         
+
+        function initHorizontalScroll() {
+            const scrollArea = document.querySelector('.subsection-list');
+            if (!scrollArea) return;
+
+            scrollArea.addEventListener('wheel', function(event) {
+                if (event.deltaY !== 0) {
+                    
+                    event.preventDefault();
+                    
+                    scrollArea.scrollLeft += event.deltaY;
+                }
+            }, { passive: false }); 
+        }
+
+        
+        
         try {
             initTocHide();
             initScrollTop();
             initCodeMoreBox();
+            initHorizontalScroll();
         } catch (e) {
             console.error("Error initializing custom scripts:", e);
         }
