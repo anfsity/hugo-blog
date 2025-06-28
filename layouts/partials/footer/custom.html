@@ -91,6 +91,75 @@
         color: var(--code-btn-icon-color);
         stroke: currentColor;
     }
+    /* 动态名言容器样式 */
+    .dynamic-quote-container {
+        width: 100%;
+        margin: 40px auto;
+        padding: 32px 30px;
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l2);
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* 2. 引用块：实现左右分离的核心 (Flexbox) */
+    .dynamic-quote-container blockquote {
+        width: 100%;
+        margin: 0;
+        display: flex; /* 启用 Flexbox 布局 */
+        justify-content: space-between; /* 关键：让子元素两端对齐 */
+        align-items: flex-end; /* 让作者和引言底部对齐，效果更好 */
+        gap: 25px; /* 在引言和作者之间保留一些间距 */
+        transition: opacity 0.5s;
+    }
+
+    /* 3. 引言正文样式 (左侧部分) */
+    .dynamic-quote-container blockquote p {
+        margin: 0;
+        flex-grow: 1; /* 占据所有剩余空间 */
+        font-size: 1.6rem; /* 清晰、适中的字体大小 */
+        line-height: 1.8;
+        color: var(--card-text-color-main);
+    }
+
+    /* 4. 来源/作者样式 (右侧部分) */
+    .dynamic-quote-container blockquote cite {
+        flex-shrink: 0; /* 防止作者信息被压缩 */
+        font-size: 1.3rem;
+        font-style: normal;
+        color: var(--card-text-color-secondary);
+        white-space: nowrap; /* 防止作者和书名换行 */
+        text-align: right;
+    }
+    /* 用伪元素添加破折号，更符合排版规范 */
+    .dynamic-quote-container blockquote cite::before {
+        content: "— ";
+        margin-right: 2px;
+    }
+
+    /* 5. 加载时的提示信息样式 */
+    .dynamic-quote-container blockquote i {
+        font-style: italic;
+        color: var(--card-text-color-tertiary);
+        text-align: center;
+        width: 100%;
+    }
+
+    /* 6. 移动端响应式处理：当屏幕变窄时，自动切换为上下布局 */
+    @media (max-width: 680px) {
+        .dynamic-quote-container blockquote {
+            flex-direction: column; /* 垂直排列 */
+            align-items: flex-end;  /* 整体靠右对齐 */
+            gap: 12px; /* 减小垂直间距 */
+        }
+
+        .dynamic-quote-container blockquote p {
+            width: 100%;
+            text-align: left; /* 在垂直布局时，正文保持左对齐 */
+        }
+    }
 </style>
 
 <!-- ================================================================ -->

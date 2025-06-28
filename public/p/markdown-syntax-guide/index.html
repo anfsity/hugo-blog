@@ -263,7 +263,8 @@
     </ol>
 </aside>
 
-    <aside class="sidebar right-sidebar sticky">
+    
+        <aside class="sidebar right-sidebar sticky">
         
             
                 
@@ -352,6 +353,7 @@
         
     </aside>
 
+    
 
             <main class="main full-width">
     <article class="has-image main-article">
@@ -746,10 +748,74 @@
 </article>
 
     
+<div class="dynamic-quote-container">
+    <blockquote id="dynamic-quote">
+        <i>正在加载一句名言...</i>
+    </blockquote>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const quoteElement = document.getElementById("dynamic-quote");
+
+    
+    const quoteFetchers = [
+        
+
+        function fetchHitokoto() {
+            fetch('https://v1.hitokoto.cn/?c=a&c=b&c=c&c=d&c=e&c=f&c=g')
+                .then(response => response.json())
+                .then(data => {
+                    const from = data.from_who || data.from;
+                    quoteElement.innerHTML = `<p>${data.hitokoto}</p><cite>${from}</cite>`;
+                })
+                .catch(error => {
+                    console.error('Hitokoto API failed, falling back to Shanbay...', error);
+                    
+                    fetchShanbay();
+                });
+        },
+
+        
+
+        function fetchShanbay() {
+            fetch('https://apiv3.shanbay.com/weapps/dailyquote/quote')
+                .then(response => response.json())
+                .then(data => {
+                    
+                    const content = `
+                        <p>${data.content}</p>
+                        <p style="opacity: 0.75; font-size: 0.9em; margin-top: 8px;">${data.translation}</p>
+                    `;
+                    quoteElement.innerHTML = `${content}<cite>${data.author}</cite>`;
+                })
+                .catch(error => {
+                    console.error('Shanbay API also failed:', error);
+                    quoteElement.innerText = '名言服务暂时不可用 T_T';
+                });
+        }
+    ];
+
+    
+    try {
+        
+        const randomIndex = Math.floor(Math.random() * 2); 
+        
+        quoteFetchers[randomIndex]();
+    } catch (e) {
+        console.error("Error executing random quote fetcher:", e);
+        quoteElement.innerText = '加载脚本时出现意外错误。';
+    }
+});
+</script>
+
 
     
 
-     
+    
+
+
     
         
     
@@ -1004,6 +1070,75 @@
         height: 16px;
         color: var(--code-btn-icon-color);
         stroke: currentColor;
+    }
+     
+    .dynamic-quote-container {
+        width: 100%;
+        margin: 40px auto;
+        padding: 32px 30px;
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l2);
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+    }
+
+     
+    .dynamic-quote-container blockquote {
+        width: 100%;
+        margin: 0;
+        display: flex;  
+        justify-content: space-between;  
+        align-items: flex-end;  
+        gap: 25px;  
+        transition: opacity 0.5s;
+    }
+
+     
+    .dynamic-quote-container blockquote p {
+        margin: 0;
+        flex-grow: 1;  
+        font-size: 1.6rem;  
+        line-height: 1.8;
+        color: var(--card-text-color-main);
+    }
+
+     
+    .dynamic-quote-container blockquote cite {
+        flex-shrink: 0;  
+        font-size: 1.3rem;
+        font-style: normal;
+        color: var(--card-text-color-secondary);
+        white-space: nowrap;  
+        text-align: right;
+    }
+     
+    .dynamic-quote-container blockquote cite::before {
+        content: "— ";
+        margin-right: 2px;
+    }
+
+     
+    .dynamic-quote-container blockquote i {
+        font-style: italic;
+        color: var(--card-text-color-tertiary);
+        text-align: center;
+        width: 100%;
+    }
+
+     
+    @media (max-width: 680px) {
+        .dynamic-quote-container blockquote {
+            flex-direction: column;  
+            align-items: flex-end;   
+            gap: 12px;  
+        }
+
+        .dynamic-quote-container blockquote p {
+            width: 100%;
+            text-align: left;  
+        }
     }
 </style>
 

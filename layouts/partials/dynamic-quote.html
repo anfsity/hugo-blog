@@ -1,0 +1,66 @@
+<!-- 1. 用于显示名言的占位符容器 -->
+<div class="dynamic-quote-container">
+    <blockquote id="dynamic-quote">
+        <i>正在加载一句名言...</i>
+    </blockquote>
+</div>
+
+<!-- 2. 执行 API 请求的脚本 -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const quoteElement = document.getElementById("dynamic-quote");
+
+    // 将我们选定的两个可靠 API 放入一个数组中
+    const quoteFetchers = [
+        /**
+         * API 1: 一言 (Hitokoto) - 稳定可靠
+         * 调性：二次元，网络，中二
+         */
+        function fetchHitokoto() {
+            fetch('https://v1.hitokoto.cn/?c=a&c=b&c=c&c=d&c=e&c=f&c=g')
+                .then(response => response.json())
+                .then(data => {
+                    const from = data.from_who || data.from;
+                    quoteElement.innerHTML = `<p>${data.hitokoto}</p><cite>${from}</cite>`;
+                })
+                .catch(error => {
+                    console.error('Hitokoto API failed, falling back to Shanbay...', error);
+                    // 如果“一言”失败，自动降级到“扇贝”
+                    fetchShanbay();
+                });
+        },
+
+        /**
+         * API 2: 扇贝单词 (Shanbay) - 稳定可靠
+         * 调性：励志，中英双语
+         */
+        function fetchShanbay() {
+            fetch('https://apiv3.shanbay.com/weapps/dailyquote/quote')
+                .then(response => response.json())
+                .then(data => {
+                    // 创建一个段落来展示中英文
+                    const content = `
+                        <p>${data.content}</p>
+                        <p style="opacity: 0.75; font-size: 0.9em; margin-top: 8px;">${data.translation}</p>
+                    `;
+                    quoteElement.innerHTML = `${content}<cite>${data.author}</cite>`;
+                })
+                .catch(error => {
+                    console.error('Shanbay API also failed:', error);
+                    quoteElement.innerText = '名言服务暂时不可用 T_T';
+                });
+        }
+    ];
+
+    // --- 随机选择一个函数并执行 ---
+    try {
+        // 在 0 和 1 之间随机选择一个索引 (0.5 的概率)
+        const randomIndex = Math.floor(Math.random() * 2); 
+        // 调用随机选中的函数
+        quoteFetchers[randomIndex]();
+    } catch (e) {
+        console.error("Error executing random quote fetcher:", e);
+        quoteElement.innerText = '加载脚本时出现意外错误。';
+    }
+});
+</script>

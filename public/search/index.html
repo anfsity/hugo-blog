@@ -461,6 +461,75 @@
         color: var(--code-btn-icon-color);
         stroke: currentColor;
     }
+     
+    .dynamic-quote-container {
+        width: 100%;
+        margin: 40px auto;
+        padding: 32px 30px;
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l2);
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+    }
+
+     
+    .dynamic-quote-container blockquote {
+        width: 100%;
+        margin: 0;
+        display: flex;  
+        justify-content: space-between;  
+        align-items: flex-end;  
+        gap: 25px;  
+        transition: opacity 0.5s;
+    }
+
+     
+    .dynamic-quote-container blockquote p {
+        margin: 0;
+        flex-grow: 1;  
+        font-size: 1.6rem;  
+        line-height: 1.8;
+        color: var(--card-text-color-main);
+    }
+
+     
+    .dynamic-quote-container blockquote cite {
+        flex-shrink: 0;  
+        font-size: 1.3rem;
+        font-style: normal;
+        color: var(--card-text-color-secondary);
+        white-space: nowrap;  
+        text-align: right;
+    }
+     
+    .dynamic-quote-container blockquote cite::before {
+        content: "— ";
+        margin-right: 2px;
+    }
+
+     
+    .dynamic-quote-container blockquote i {
+        font-style: italic;
+        color: var(--card-text-color-tertiary);
+        text-align: center;
+        width: 100%;
+    }
+
+     
+    @media (max-width: 680px) {
+        .dynamic-quote-container blockquote {
+            flex-direction: column;  
+            align-items: flex-end;   
+            gap: 12px;  
+        }
+
+        .dynamic-quote-container blockquote p {
+            width: 100%;
+            text-align: left;  
+        }
+    }
 </style>
 
 
