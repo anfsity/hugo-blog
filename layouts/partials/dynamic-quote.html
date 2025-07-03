@@ -1,7 +1,7 @@
 <!-- 1. 用于显示名言的占位符容器 -->
 <div class="dynamic-quote-container">
     <blockquote id="dynamic-quote">
-        <i>正在加载一句名言...</i>
+        <i>正在加载一句随机句子...</i>
     </blockquote>
 </div>
 
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(error => {
                     console.error('Shanbay API also failed:', error);
-                    quoteElement.innerText = '名言服务暂时不可用 T_T';
+                    quoteElement.innerText = '不知道为什么，我爆炸了喵(๑⃙⃘°̧̧̧ㅿ°̧̧̧๑⃙⃘)';
                 });
         }
     ];

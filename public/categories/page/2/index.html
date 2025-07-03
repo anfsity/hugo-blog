@@ -10,7 +10,7 @@
 <meta property='og:description' content="There is a will, there is a way.">
 <meta property='og:url' content='http://localhost:1313/categories/'>
 <meta property='og:site_name' content='Anfsity'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2025-06-27T21:24:03&#43;08:00 '/>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2025-07-03T22:01:28&#43;08:00 '/>
 <meta name="twitter:title" content="Categories">
 <meta name="twitter:description" content="There is a will, there is a way."><link rel="alternate" type="application/rss&#43;xml" href="http://localhost:1313/categories/index.xml">
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -305,7 +305,7 @@
                     <a href="/archives/#2025">
                         
                             <span class="year">2025</span>
-                            <span class="count">8</span>
+                            <span class="count">10</span>
                         
                     </a> 
                 </div>
@@ -348,7 +348,7 @@
 
     <div class="tagCloud-tags">
         
-            <a href="/categories/algorithm/" class="font_size_3">
+            <a href="/categories/algorithm/" class="font_size_4">
                 Algorithm
             </a>
         
@@ -409,12 +409,12 @@
 
     <div class="tagCloud-tags">
         
-            <a href="/tags/summary/" class="font_size_3">
-                Summary
+            <a href="/tags/algorithm/" class="font_size_3">
+                Algorithm
             </a>
         
-            <a href="/tags/algorithm/" class="font_size_2">
-                Algorithm
+            <a href="/tags/summary/" class="font_size_3">
+                Summary
             </a>
         
             <a href="/tags/markdown/" class="font_size_2">
@@ -558,8 +558,12 @@
         
         
         
-        Published 15 aritcles · 
-        Total 19.36k words
+        
+        
+        
+        
+        Published 17 aritcles · 
+        Total 20.87k words
     </section>
 </footer>
 
@@ -674,6 +678,75 @@
         height: 16px;
         color: var(--code-btn-icon-color);
         stroke: currentColor;
+    }
+     
+    .dynamic-quote-container {
+        width: 100%;
+        margin: 40px auto;
+        padding: 32px 30px;
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l2);
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+    }
+
+     
+    .dynamic-quote-container blockquote {
+        width: 100%;
+        margin: 0;
+        display: flex;  
+        justify-content: space-between;  
+        align-items: flex-end;  
+        gap: 25px;  
+        transition: opacity 0.5s;
+    }
+
+     
+    .dynamic-quote-container blockquote p {
+        margin: 0;
+        flex-grow: 1;  
+        font-size: 1.6rem;  
+        line-height: 1.8;
+        color: var(--card-text-color-main);
+    }
+
+     
+    .dynamic-quote-container blockquote cite {
+        flex-shrink: 0;  
+        font-size: 1.3rem;
+        font-style: normal;
+        color: var(--card-text-color-secondary);
+        white-space: nowrap;  
+        text-align: right;
+    }
+     
+    .dynamic-quote-container blockquote cite::before {
+        content: "— ";
+        margin-right: 2px;
+    }
+
+     
+    .dynamic-quote-container blockquote i {
+        font-style: italic;
+        color: var(--card-text-color-tertiary);
+        text-align: center;
+        width: 100%;
+    }
+
+     
+    @media (max-width: 680px) {
+        .dynamic-quote-container blockquote {
+            flex-direction: column;  
+            align-items: flex-end;   
+            gap: 12px;  
+        }
+
+        .dynamic-quote-container blockquote p {
+            width: 100%;
+            text-align: left;  
+        }
     }
 </style>
 
