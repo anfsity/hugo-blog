@@ -9,7 +9,7 @@ tags = [
 categories = [
     "Algorithm",
 ]
-description = "板刷cf"
+description = "板切cf"
 image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
 +++
 
@@ -17,3 +17,5 @@ image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
 ## Index
 
  - [1400]({{< relref "1400.md" >}})
+
+ - [Summary 1300-1400]({{< relref "Summer-1300A.md" >}})
