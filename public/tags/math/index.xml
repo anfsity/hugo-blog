@@ -15,14 +15,12 @@
         <guid>http://localhost:1313/p/gcd-and-lcm/</guid>
         <description>&lt;blockquote&gt;
 &lt;p&gt;[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool.
-— Joseph Roux&lt;/p&gt;
-&lt;/blockquote&gt;
+— Joseph Roux&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;我们要证明的等式是：
 &lt;/p&gt;
 $$
 \gcd(\operatorname{lcm}(a,b), \operatorname{lcm}(a,c)) = \operatorname{lcm}(a, \gcd(b,c))
-$$
-&lt;hr&gt;
+$$&lt;hr&gt;
 &lt;h2 id=&#34;基础唯一分解定理算术基本定理&#34;&gt;基础：唯一分解定理（算术基本定理）
 &lt;/h2&gt;&lt;p&gt;证明的关键在于使用唯一分解定理。该定理指出，任何大于 1 的整数都可以唯一地分解为素数的乘积（不考虑顺序）。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;形式一：&lt;/strong&gt;
@@ -30,14 +28,12 @@ $$
 &lt;/p&gt;
 $$
 n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i}
-$$
-&lt;p&gt;&lt;strong&gt;形式二（更适用于证明）：&lt;/strong&gt;
+$$&lt;p&gt;&lt;strong&gt;形式二（更适用于证明）：&lt;/strong&gt;
 对于 $\forall n \in \mathbb{Z}, n &gt; 1$，其分解可以写成包含所有素数的形式：
 &lt;/p&gt;
 $$
 n = \prod_{p \text{ prime}} p^{\nu_p(n)}
-$$
-&lt;p&gt;
+$$&lt;p&gt;
 其中 $\nu_p(n)$ 是素数 $p$ 在 $n$ 分解中的（非负）指数。对于给定的 $n$，只有有限个 $\nu_p(n)$ 大于 0。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;使用素数指数表示-gcd-和-lcm&#34;&gt;使用素数指数表示 GCD 和 LCM
@@ -95,16 +91,13 @@ $$ \nu_p(\text{RHS}) = \max(\alpha, \min(\beta, \gamma)) $$&lt;/li&gt;
 &lt;p&gt;&lt;strong&gt;3. 证明指数相等：&lt;/strong&gt;
 我们需要证明 $\nu_p(\text{LHS}) = \nu_p(\text{RHS})$，即：
 &lt;/p&gt;
-$$ \min(\max(\alpha, \beta), \max(\alpha, \gamma)) = \max(\alpha, \min(\beta, \gamma)) $$
-&lt;p&gt;
+$$ \min(\max(\alpha, \beta), \max(\alpha, \gamma)) = \max(\alpha, \min(\beta, \gamma)) $$&lt;p&gt;
 这个等式是 $\min$ 和 $\max$ 运算的一个基本性质，称为分配律。这里用到的是 &lt;strong&gt;max 对 min 的分配律&lt;/strong&gt;:
 &lt;/p&gt;
-$$ \max(x, \min(y, z)) = \min(\max(x, y), \max(x, z)) $$
-&lt;p&gt;
+$$ \max(x, \min(y, z)) = \min(\max(x, y), \max(x, z)) $$&lt;p&gt;
 令 $x = \alpha$, $y = \beta$, $z = \gamma$，我们直接应用此分配律：
 &lt;/p&gt;
-$$ \max(\alpha, \min(\beta, \gamma)) = \min(\max(\alpha, \beta), \max(\alpha, \gamma)) $$
-&lt;p&gt;
+$$ \max(\alpha, \min(\beta, \gamma)) = \min(\max(\alpha, \beta), \max(\alpha, \gamma)) $$&lt;p&gt;
 这表明 $\nu_p(\text{RHS}) = \nu_p(\text{LHS})$。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt;
 由于对于任意素数 $p$，它在等式两边的指数都相等，根据唯一分解定理，这两个表达式代表的整数必然相等。&lt;/p&gt;
@@ -117,8 +110,7 @@ $$ \max(\alpha, \min(\beta, \gamma)) = \min(\max(\alpha, \beta), \max(\alpha, \g
 任何大于 1 的整数 $n$ 都可以被唯一地分解成有限个素数的乘积（不考虑因子的顺序）。
 即：对于任意整数 $n &gt; 1$，存在唯一的不同素数集合 $\{p_1, \dots, p_k\}$ 和唯一的正整数组 $\{\alpha_1, \dots, \alpha_k\}$ 使得：
 &lt;/p&gt;
-$$ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i} $$
-&lt;/blockquote&gt;
+$$ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k} = \prod_{i=1}^{k} p_i^{\alpha_i} $$&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;证明&#34;&gt;证明
 &lt;/h2&gt;&lt;p&gt;证明分为两部分：存在性和唯一性。&lt;/p&gt;
@@ -145,8 +137,7 @@ $$ n = a \cdot b = (p_1 \cdots p_r)(q_1 \cdots q_s) $$
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;欧几里得引理 (Euclid&amp;rsquo;s Lemma):&lt;/strong&gt;
 如果素数 $p$ 整除乘积 $ab$ (记作 $p | ab$)，那么 $p$ 必须整除 $a$ 或 $p$ 必须整除 $b$ (即 $p | a$ 或 $p | b$)。
-&lt;em&gt;推论:&lt;/em&gt; 如果素数 $p$ 整除 $a_1 a_2 \cdots a_k$，则 $p$ 至少整除其中一个 $a_i$。&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;em&gt;推论:&lt;/em&gt; 如果素数 $p$ 整除 $a_1 a_2 \cdots a_k$，则 $p$ 至少整除其中一个 $a_i$。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;证明唯一性（反证法）：&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;假设:&lt;/strong&gt; 假设存在大于 1 的整数拥有至少两种不同的素数分解。根据良序原则（最小数原理），必然存在一个&lt;em&gt;最小&lt;/em&gt;的这样的整数，记为 $n$。&lt;/li&gt;

@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='http://localhost:1313/p/multiplicative-inverse/'>
 
-<link rel="stylesheet" href="/scss/style.min.cfd93c6fd15e6a1e0b4912161f673e500ccc6cf8593d2bec24e6df1938f66273.css"><meta property='og:title' content="Multiplicative Inverse">
+<link rel="stylesheet" href="/scss/style.min.53129b6a70c0c5893bdf0a69e9b6ed645939db166bb00bdf57fe9fd00394e4c9.css"><meta property='og:title' content="Multiplicative Inverse">
 <meta property='og:description' content="乘法逆元">
 <meta property='og:url' content='http://localhost:1313/p/multiplicative-inverse/'>
 <meta property='og:site_name' content='Anfsity'>
@@ -58,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu_360325857fd925ef.png" width="300"
                             height="300" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -377,13 +377,11 @@
 </h1><p>在算法竞赛中， 常常出现让答案对一个大质数进行取模的运算。由于模运算的性质，可以很容易的计算加法和减法。但是对于乘法，需要一些特殊的处理，这就是乘法逆元。</p>
 <h1 id="定义">定义
 </h1><blockquote>
-<p>我们把 $a^{-1}$ 叫作 $a \bmod p$ 的乘法逆元， 如果满足 $a\cdot a^{-1} \equiv 1 \pmod p$。</p>
-</blockquote>
+<p>我们把 $a^{-1}$ 叫作 $a \bmod p$ 的乘法逆元， 如果满足 $a\cdot a^{-1} \equiv 1 \pmod p$。</p></blockquote>
  <!-- > [!note]- 扯淡 -->
 <blockquote>
 <p>在高中数学中， 如果 $b\cdot b^{-1}=1$， 就把 $b^{-1}$ 叫作 $b$ 的倒数， 即 $a / b = a\cdot b^{-1}$。</p>
-<p>乘法逆元与之类似， 起到相似的作用。只不过作用域在 $\bmod p$ 下。</p>
-</blockquote>
+<p>乘法逆元与之类似， 起到相似的作用。只不过作用域在 $\bmod p$ 下。</p></blockquote>
 <h1 id="求解逆元">求解逆元
 </h1><hr>
 <h2 id="朴素枚举">朴素枚举
@@ -397,8 +395,7 @@
 <li>表述</li>
 </ul>
 <blockquote>
-<p>如果 $gcd(a,p)=1$ 则  $a^{p-1}\equiv 1 \pmod p$。</p>
-</blockquote>
+<p>如果 $gcd(a,p)=1$ 则  $a^{p-1}\equiv 1 \pmod p$。</p></blockquote>
  <!-- > [!hint]- 证明 -->
 <blockquote>
 <p>关于费马小定理的证明有很多种，这里给出一种我认为最优雅的一种证明。</p>
@@ -408,8 +405,7 @@
 <p>现在证明 $i,j$ 在 $\bmod p$ 意义下同构。</p>
 <p>也就是证明 $j$ 序列中两两不同在 $\bmod p$ 意义下。</p>
 <p>假设 $j$ 序列中满足 $xa \equiv ya \pmod p \ (1\leq x,y\leq p-1，x，y不同)$， 由模运算的性质得 $x \equiv y \pmod p$， 由于 $1\leq x,y\leq p-1$ ， $x \text{只能等于} y$ ， 假设不成立，原命题得证。</p>
-<p>然后，我们把 $i，j$ 序列乘起来得到 $(p-1)!\cdot a^{p-1} \equiv (p-1)! \pmod p$ ，$gcd((p-1)!,p)=1$，那么也就是 $a^{p-1}\equiv 1 \pmod p$。</p>
-</blockquote>
+<p>然后，我们把 $i，j$ 序列乘起来得到 $(p-1)!\cdot a^{p-1} \equiv (p-1)! \pmod p$ ，$gcd((p-1)!,p)=1$，那么也就是 $a^{p-1}\equiv 1 \pmod p$。</p></blockquote>
 <p>看向乘法逆元的定义 $：a\cdot a^{-1} \equiv 1 \pmod p$， 对费马小定理进行变形得到 $a\cdot a^{p-2} \equiv 1 \pmod p$，这就说明 $a^{p-2}$ 是 $a$ 的乘法逆元。注意者只有在 $p$ 是质数的时候成立。</p>
 <p>对于计算 $a^{p-2}$ ，可以用快速幂做到在 $O(log(p-2))$ 计算。</p>
 <ul>
@@ -479,8 +475,7 @@ i^{-1} \equiv \begin{cases}
     1,                                           & \text{if } i = 1, \\
     某种已知 情况, & \text{otherwise}.
 \end{cases} \pmod p
-$$
-<p>我们大胆猜测这个已知情况和一个小于 $i$ 的数有关，让我们想一想，哪里可以弄到小于 $i$ 的数又和 $i$ 有关呢？</p>
+$$<p>我们大胆猜测这个已知情况和一个小于 $i$ 的数有关，让我们想一想，哪里可以弄到小于 $i$ 的数又和 $i$ 有关呢？</p>
 <p>正巧，注意到 $p = k\cdot i + r$， 这个 $r$ 不就小于 $i$ 吗？ (注意到这个不是没有理由的， 我们已知的信息就只有 $p,i$ ， 而把一个数写成 $ki+x$ 的形式在 $\bmod$ 里是非常常见的，因为模运算就是这么定义的。)</p>
 <p>让我们来好好把玩把玩她 $: p=k\cdot i+r$ ，$r=p\%i$。</p>
 <p>先对等式两边取模得到
@@ -488,52 +483,44 @@ $$
 $$\begin{gathered}
 0 \equiv k\cdot i+r\ (\bmod p)  \\
 \end{gathered}
-$$
-<p>
+$$<p>
 移项
 </p>
 $$\begin{gather}
 -k\cdot i \equiv r \ (\bmod p)
 \end{gather}
-$$
-<p>
+$$<p>
 乘 $i^{-1}$
 </p>
 $$
 -k \equiv r \cdot i^{-1} \pmod p
-$$
-<p>
+$$<p>
 把 $i^{-1}$ 拆出来
 </p>
 $$
 i^{-1} \equiv -k\cdot r^{-1} \pmod p
-$$
-<p>
+$$<p>
 代换 $r$
 </p>
 $$
 i^{-1} \equiv -k\cdot (p\%i)^{-1} \pmod p
-$$
-<p>
+$$<p>
 重写 $k$
 </p>
 $$
 i^{-1} \equiv -\left\lfloor  \frac{p}{i}  \right\rfloor\cdot (p\%i)^{-1} \pmod p
-$$
-<p>
+$$<p>
 改成正数
 </p>
 $$
 i^{-1} \equiv (p-\left\lfloor  \frac{p}{i}  \right\rfloor)\cdot (p\%i)^{-1} \pmod p
-$$
-<p>哈哈，这是什么，我们得到了一个式子，她完美的符合我们的猜想。</p>
+$$<p>哈哈，这是什么，我们得到了一个式子，她完美的符合我们的猜想。</p>
 $$
 i^{-1} \equiv \begin{cases}
     1,                                           & \text{if } i = 1, \\
     i^{-1} \equiv (p-\left\lfloor  \frac{p}{i}  \right\rfloor)\cdot (p\%i)^{-1}, & \text{otherwise}.
 \end{cases} \pmod p
-$$
-<div class="highlight"><div class="chroma">
+$$<div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -617,8 +604,7 @@ $$
         fill="currentColor">
 </svg></span>
 
-</p>
-</blockquote>
+</p></blockquote>
 <blockquote>
 <p>本文采用 <a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh"  target="_blank" rel="noopener"
     >CC BY-SA 4.0</a>
@@ -630,8 +616,7 @@ $$
         fill="currentColor">
 </svg></span>
 
- 国际许可协议进行许可。</p>
-</blockquote>
+ 国际许可协议进行许可。</p></blockquote>
 
 </section>
 
@@ -878,8 +863,10 @@ document.addEventListener("DOMContentLoaded", function() {
         
         
         
-        Published 18 aritcles · 
-        Total 22.86k words
+        
+        
+        Published 19 aritcles · 
+        Total 24.55k words
     </section>
 </footer>
 
@@ -968,7 +955,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.9083d5691a8348863fdf7dcf0ad5fa1c8b4087a35409b557eea9ece5fa0a96c0.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.b7bce75f860fbc5d2c8d4b7cf1767970ec639cb7573426b866a3a26b429c1a75.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

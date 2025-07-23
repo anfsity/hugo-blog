@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。 $Prove$ 对于所有正整数，都可以表示为 $6k + i$。 由于以下情况 : $6k \\equiv 0 \\pmod{2}$ $6k+2 \\equiv 0 \\pmod{2}$">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。\n$Prove$\n对于所有正整数，都可以表示为 $6k + i$。\n由于以下情况 :\n$6k \\equiv 0 \\pmod{2}$\n$6k+2 \\equiv 0 \\pmod{2}$\n$6k+3\\equiv 0 \\pmod{3}$\n$6k+4\\equiv 0 \\pmod{2}$\n也就是说， 只有 $6k \\pm 1$ 存在可能为质数的可能， 所以我们只要检查 $6k \\pm 1$ 有没有可能是质数就行了， 这种方法也可以进行推广，但是要筛的数的范围也会随之变大， 不过时间复杂度也会变得更加优秀。\n">
 <title>浅谈筛法</title>
 
 <link rel='canonical' href='http://localhost:1313/p/%E6%B5%85%E8%B0%88%E7%AD%9B%E6%B3%95/'>
 
-<link rel="stylesheet" href="/scss/style.min.cfd93c6fd15e6a1e0b4912161f673e500ccc6cf8593d2bec24e6df1938f66273.css"><meta property='og:title' content="浅谈筛法">
-<meta property='og:description' content="素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。 $Prove$ 对于所有正整数，都可以表示为 $6k + i$。 由于以下情况 : $6k \\equiv 0 \\pmod{2}$ $6k+2 \\equiv 0 \\pmod{2}$">
+<link rel="stylesheet" href="/scss/style.min.53129b6a70c0c5893bdf0a69e9b6ed645939db166bb00bdf57fe9fd00394e4c9.css"><meta property='og:title' content="浅谈筛法">
+<meta property='og:description' content="素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。\n$Prove$\n对于所有正整数，都可以表示为 $6k + i$。\n由于以下情况 :\n$6k \\equiv 0 \\pmod{2}$\n$6k+2 \\equiv 0 \\pmod{2}$\n$6k+3\\equiv 0 \\pmod{3}$\n$6k+4\\equiv 0 \\pmod{2}$\n也就是说， 只有 $6k \\pm 1$ 存在可能为质数的可能， 所以我们只要检查 $6k \\pm 1$ 有没有可能是质数就行了， 这种方法也可以进行推广，但是要筛的数的范围也会随之变大， 不过时间复杂度也会变得更加优秀。\n">
 <meta property='og:url' content='http://localhost:1313/p/%E6%B5%85%E8%B0%88%E7%AD%9B%E6%B3%95/'>
 <meta property='og:site_name' content='Anfsity'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Algorithm' /><meta property='article:published_time' content='2025-05-25T14:07:56&#43;08:00'/><meta property='article:modified_time' content='2025-05-25T14:07:56&#43;08:00'/>
 <meta name="twitter:title" content="浅谈筛法">
-<meta name="twitter:description" content="素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。 $Prove$ 对于所有正整数，都可以表示为 $6k + i$。 由于以下情况 : $6k \\equiv 0 \\pmod{2}$ $6k+2 \\equiv 0 \\pmod{2}$">
+<meta name="twitter:description" content="素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。\n$Prove$\n对于所有正整数，都可以表示为 $6k + i$。\n由于以下情况 :\n$6k \\equiv 0 \\pmod{2}$\n$6k+2 \\equiv 0 \\pmod{2}$\n$6k+3\\equiv 0 \\pmod{3}$\n$6k+4\\equiv 0 \\pmod{2}$\n也就是说， 只有 $6k \\pm 1$ 存在可能为质数的可能， 所以我们只要检查 $6k \\pm 1$ 有没有可能是质数就行了， 这种方法也可以进行推广，但是要筛的数的范围也会随之变大， 不过时间复杂度也会变得更加优秀。\n">
     <link rel="shortcut icon" href="/favicon.ico" />
 
     </head>
@@ -58,7 +58,7 @@
                     
                     
                         
-                        <img src="/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png" width="300"
+                        <img src="/img/avatar_hu_360325857fd925ef.png" width="300"
                             height="300" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -386,8 +386,7 @@
 <p>$6k+2 \equiv 0 \pmod{2}$</p>
 <p>$6k+3\equiv 0 \pmod{3}$</p>
 <p>$6k+4\equiv 0 \pmod{2}$</p>
-<p>也就是说， 只有 $6k \pm 1$ 存在可能为质数的可能， 所以我们只要检查 $6k \pm 1$ 有没有可能是质数就行了， 这种方法也可以进行推广，但是要筛的数的范围也会随之变大， 不过时间复杂度也会变得更加优秀。</p>
-</blockquote>
+<p>也就是说， 只有 $6k \pm 1$ 存在可能为质数的可能， 所以我们只要检查 $6k \pm 1$ 有没有可能是质数就行了， 这种方法也可以进行推广，但是要筛的数的范围也会随之变大， 不过时间复杂度也会变得更加优秀。</p></blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -609,19 +608,16 @@ prime:  $[\underbrace{\dots\dots}_{\text{p}_{j}}\ , \quad \underset{\substack{\u
 设这两个操作为 $(i_{1},p_{1}),\ (i_{2},p_{2})$。
 由于我们证明了合数必然是被自己的最小质因数筛除，则 $p_{1}=lpf(N)=p_{2}$，那么也就有 $i_{1}=i_{2}$ ，也就是说， 这两个操作是等价的。</p>
 <p>假设不成立，唯一性得证。</p>
-<p>这里的 $lpf(N)$ 是 $Least\ Prime\ Factor\ of\ N$。</p>
-</blockquote>
+<p>这里的 $lpf(N)$ 是 $Least\ Prime\ Factor\ of\ N$。</p></blockquote>
 <ul>
 <li>筛法求约数个数</li>
 </ul>
 <p>用 $d_i$ 表示 $i$ 的约数个数，$num_i$ 表示 $i$ 的最小质因子出现次数。</p>
 <h3 id="约数个数定理">约数个数定理
 </h3><blockquote>
-<p>定理：若 $n=\prod_{i=1}^m p_i^{c_i}$ 则 $d_i=\prod_{i=1}^m (c_i+1)$。</p>
-</blockquote>
+<p>定理：若 $n=\prod_{i=1}^m p_i^{c_i}$ 则 $d_i=\prod_{i=1}^m (c_i+1)$。</p></blockquote>
 <blockquote>
-<p>证明：我们知道 $p_i^{c_i}$ 的约数有 $p_i^0,p_i^1,\dots ,p_i^{c_i}$ 共 $c_i+1$ 个，根据乘法原理，$n$ 的约数个数就是 $\prod_{i=1}^m (c_i+1)$。</p>
-</blockquote>
+<p>证明：我们知道 $p_i^{c_i}$ 的约数有 $p_i^0,p_i^1,\dots ,p_i^{c_i}$ 共 $c_i+1$ 个，根据乘法原理，$n$ 的约数个数就是 $\prod_{i=1}^m (c_i+1)$。</p></blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -708,8 +704,7 @@ prime:  $[\underbrace{\dots\dots}_{\text{p}_{j}}\ , \quad \underset{\substack{\u
 <p>那么有 $d[N]=(q+2)\cdot \frac{d[i]}{q+1}$， 也就是 $d[N]=(\text{num[i]+2})\cdot \frac{d[i]}{\text{num}[i]+1}$。代换 $\text{num}[i]$ 得到 $d[N]=(\text{num}[N]+1)\cdot \frac{d[i]}{\text{num}[N]}$。</p>
 <div align="right">
 <p><em>$Q.E.D.$</em></p>
-</div>
-</blockquote>
+</div></blockquote>
 
 </section>
 
@@ -956,8 +951,10 @@ document.addEventListener("DOMContentLoaded", function() {
         
         
         
-        Published 18 aritcles · 
-        Total 22.86k words
+        
+        
+        Published 19 aritcles · 
+        Total 24.55k words
     </section>
 </footer>
 
@@ -1046,7 +1043,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.9083d5691a8348863fdf7dcf0ad5fa1c8b4087a35409b557eea9ece5fa0a96c0.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.b7bce75f860fbc5d2c8d4b7cf1767970ec639cb7573426b866a3a26b429c1a75.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

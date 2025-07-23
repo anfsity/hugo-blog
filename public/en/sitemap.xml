@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-07-09T21:20:52+08:00</lastmod>
+    <lastmod>2025-07-24T01:19:29+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
@@ -16,7 +16,7 @@
                 />
   </url><url>
     <loc>http://localhost:1313/post/</loc>
-    <lastmod>2025-07-09T21:20:52+08:00</lastmod>
+    <lastmod>2025-07-24T01:19:29+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
@@ -28,16 +28,19 @@
                 href="http://localhost:1313/post/"
                 />
   </url><url>
+    <loc>http://localhost:1313/p/summer-1400a/</loc>
+    <lastmod>2025-07-24T01:19:29+08:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/p/summer-1300a/</loc>
     <lastmod>2025-07-09T21:20:52+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/p/1400/</loc>
     <lastmod>2025-07-03T22:01:28+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/algorithm/</loc>
+    <loc>http://localhost:1313/categories/algorithm/</loc>
     <lastmod>2025-07-03T21:43:26+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/algorithm/</loc>
+    <loc>http://localhost:1313/tags/algorithm/</loc>
     <lastmod>2025-07-03T21:43:26+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
@@ -72,25 +75,25 @@
     <loc>http://localhost:1313/p/datalab/</loc>
     <lastmod>2025-06-27T21:24:03+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/computer-science/</loc>
+    <loc>http://localhost:1313/categories/computer-science/</loc>
     <lastmod>2025-06-27T19:29:03+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/computer-science/</loc>
+    <loc>http://localhost:1313/tags/computer-science/</loc>
     <lastmod>2025-06-27T19:29:03+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/p/csapp/</loc>
     <lastmod>2025-06-27T19:29:03+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/study/</loc>
-    <lastmod>2025-06-25T00:29:21+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/categories/study/</loc>
     <lastmod>2025-06-25T00:29:21+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/summary/</loc>
+    <loc>http://localhost:1313/tags/study/</loc>
     <lastmod>2025-06-25T00:29:21+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/summary/</loc>
+    <lastmod>2025-06-25T00:29:21+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/summary/</loc>
     <lastmod>2025-06-25T00:29:21+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/p/three-day-sprint/</loc>
@@ -123,10 +126,10 @@
     <loc>http://localhost:1313/p/gcd-and-lcm/</loc>
     <lastmod>2025-04-21T22:35:59+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/math/</loc>
+    <loc>http://localhost:1313/categories/math/</loc>
     <lastmod>2025-04-21T22:35:59+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/math/</loc>
+    <loc>http://localhost:1313/tags/math/</loc>
     <lastmod>2025-04-21T22:35:59+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/p/linear-algebra/</loc>
@@ -150,10 +153,10 @@
     <loc>http://localhost:1313/categories/syntax/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/themes/</loc>
+    <loc>http://localhost:1313/categories/themes/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/themes/</loc>
+    <loc>http://localhost:1313/tags/themes/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/privacy/</loc>
