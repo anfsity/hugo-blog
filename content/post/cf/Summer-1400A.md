@@ -51,7 +51,7 @@ hidden = true
 思路很直接，很明显是滑动窗口。但是代码有可取之处，为了下一次加速思考，记录如下。
 
 ```cpp
-	int tmp = 0;
+    int tmp = 0;
     for(int i = 0; i < m; ++i) {
         if(cnt[a[i]] > 0) {
             tmp ++;

@@ -13,6 +13,7 @@ description = "板切cf"
 image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
 +++
 
+![ycy](https://t.alcy.cc/ycy)
 
 ## Index
 
@@ -21,3 +22,5 @@ image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
  - [Summary 1300-1400]({{< relref "Summer-1300A.md" >}})
 
  - [Summary 1400A]({{< relref "Summer-1400A.md" >}})
+
+ - [Summary 1400B]({{< relref "Summer-1400B.md" >}})
