@@ -4,7 +4,7 @@ date: 2025-05-24T22:40:03+08:00
 draft: false
 author: "Anfsity"
 tags: [c++]
-categories: [Other]
+categories: [C++]
 description: ""
 ---
 ## $Part\ I.$
