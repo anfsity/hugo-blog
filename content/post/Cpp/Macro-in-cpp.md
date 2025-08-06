@@ -1,7 +1,7 @@
 +++
 title = "Macro in C/CPP"
 date = 2025-08-06T12:36:02+08:00
-draft = true
+draft = false
 author = "Anfsity"
 tags = [
     "C++",
