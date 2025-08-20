@@ -15,7 +15,26 @@
                 href="http://localhost:1313/"
                 />
   </url><url>
-    <loc>http://localhost:1313/p/macro-in-cpp/</loc>
+    <loc>http://localhost:1313/categories/c&#43;&#43;/</loc>
+    <lastmod>2025-08-06T12:36:02+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/c&#43;&#43;/</loc>
+    <lastmod>2025-08-06T12:36:02+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2025-08-06T12:36:02+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="http://localhost:1313/zh-cn/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/categories/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/p/macro-in-c/cpp/</loc>
     <lastmod>2025-08-06T12:36:02+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/post/</loc>
@@ -29,6 +48,19 @@
                 rel="alternate"
                 hreflang="en"
                 href="http://localhost:1313/post/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-08-06T12:36:02+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="http://localhost:1313/zh-cn/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/"
                 />
   </url><url>
     <loc>http://localhost:1313/p/summer-1400b/</loc>
@@ -49,34 +81,8 @@
     <loc>http://localhost:1313/tags/algorithm/</loc>
     <lastmod>2025-07-03T21:43:26+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-07-03T21:43:26+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/zh-cn/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/categories/"
-                />
-  </url><url>
     <loc>http://localhost:1313/p/grinding-codeforces/</loc>
     <lastmod>2025-07-03T21:43:26+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-07-03T21:43:26+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/zh-cn/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/"
-                />
   </url><url>
     <loc>http://localhost:1313/p/datalab/</loc>
     <lastmod>2025-06-27T21:24:03+08:00</lastmod>
@@ -116,12 +122,6 @@
   </url><url>
     <loc>http://localhost:1313/p/multiplicative-inverse/</loc>
     <lastmod>2025-05-25T13:59:19+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/c&#43;&#43;/</loc>
-    <lastmod>2025-05-24T22:40:03+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/c&#43;&#43;/</loc>
-    <lastmod>2025-05-24T22:40:03+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/p/c-%E6%9D%82%E9%A1%B9/</loc>
     <lastmod>2025-05-24T22:40:03+08:00</lastmod>

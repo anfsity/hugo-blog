@@ -10,7 +10,7 @@
 <meta property='og:description' content="乘法逆元">
 <meta property='og:url' content='http://localhost:1313/p/multiplicative-inverse/'>
 <meta property='og:site_name' content='Anfsity'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Algorithm' /><meta property='article:published_time' content='2025-05-25T13:59:19&#43;08:00'/><meta property='article:modified_time' content='2025-05-25T13:59:19&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Algorithm' /><meta property='article:published_time' content='2025-05-25T13:59:19&#43;08:00'/><meta property='article:modified_time' content='2025-08-20T13:35:19&#43;08:00'/>
 <meta name="twitter:title" content="Multiplicative Inverse">
 <meta name="twitter:description" content="乘法逆元">
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -285,10 +285,20 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#朴素枚举">朴素枚举</a></li>
-    <li><a href="#费马小定理">费马小定理</a></li>
-    <li><a href="#拓展欧几里得算法">拓展欧几里得算法</a></li>
-    <li><a href="#线性递推">线性递推</a></li>
+    <li><a href="#简介">简介</a>
+      <ol>
+        <li><a href="#定义">定义</a></li>
+      </ol>
+    </li>
+    <li><a href="#求解逆元">求解逆元</a>
+      <ol>
+        <li><a href="#朴素枚举">朴素枚举</a></li>
+        <li><a href="#费马小定理">费马小定理</a></li>
+        <li><a href="#拓展欧几里得算法">拓展欧几里得算法</a></li>
+        <li><a href="#线性递推">线性递推</a></li>
+      </ol>
+    </li>
+    <li><a href="#模板化">模板化</a></li>
   </ol>
 </nav>
         </div>
@@ -358,7 +368,7 @@
 
 
                 <time class="article-time--reading">
-                    4 minute read
+                    6 minute read
                 </time>
             </div>
         
@@ -373,39 +383,33 @@
     <section class="article-content">
     
     
-    <h1 id="简介">简介
-</h1><p>在算法竞赛中， 常常出现让答案对一个大质数进行取模的运算。由于模运算的性质，可以很容易的计算加法和减法。但是对于乘法，需要一些特殊的处理，这就是乘法逆元。</p>
-<h1 id="定义">定义
-</h1><blockquote>
-<p>我们把 $a^{-1}$ 叫作 $a \bmod p$ 的乘法逆元， 如果满足 $a\cdot a^{-1} \equiv 1 \pmod p$。</p></blockquote>
- <!-- > [!note]- 扯淡 -->
+    <h2 id="简介">简介
+</h2><p>在算法计算中, 常常由于数据原因对答案进行大数取模. 对于加法和减法, 处理起来相对容易, 但是对于除法来说, 就较为复杂. 为了解决这个问题, 我们来探讨一下乘法逆元.</p>
+<h3 id="定义">定义
+</h3><blockquote>
+<p>我们把 $a^{-1}$ 叫作 $a \bmod p$ 的乘法逆元, 如果满足 $a\cdot a^{-1} \equiv 1 \pmod p$.</p></blockquote>
 <blockquote>
-<p>在高中数学中， 如果 $b\cdot b^{-1}=1$， 就把 $b^{-1}$ 叫作 $b$ 的倒数， 即 $a / b = a\cdot b^{-1}$。</p>
-<p>乘法逆元与之类似， 起到相似的作用。只不过作用域在 $\bmod p$ 下。</p></blockquote>
-<h1 id="求解逆元">求解逆元
-</h1><hr>
-<h2 id="朴素枚举">朴素枚举
-</h2><p>由模运算的性质知道 $x \equiv y \pmod p\ 肯定有\ 0\leq y\leq p-1$ 。</p>
-<p>从 $1$ 到 $p-1$ 枚举判断是否有 $i$ 满足 $a\cdot i \equiv 1 \pmod p$。</p>
-<p>时间复杂度为 $O(P)$ 。</p>
-<p>这个方法的唯一优点就是简单易想。</p>
+<p>在高中数学中, 如果 $b\cdot b^{-1}=1$, 就把 $b^{-1}$ 叫作 $b$ 的倒数,  即 $\frac{a}{b} = a\cdot b^{-1}$.</p>
+<p>乘法逆元的定义与之类似. 只不过作用域在 $\bmod p$ 下.</p></blockquote>
+<h2 id="求解逆元">求解逆元
+</h2><hr>
+<h3 id="朴素枚举">朴素枚举
+</h3><p>由模运算的性质知道 $x \equiv y \pmod p$ 必有 $\ 0\leq y\leq p-1$ 。</p>
+<p>我们可以从 $1$ 到 $p-1$ 枚举判断是否有 $i$ 满足 $a\cdot i \equiv 1 \pmod p$。</p>
+<p>线性时间复杂度, 方法的优点是简单易想, 缺点嘛, 显而易见.</p>
 <hr>
-<h2 id="费马小定理">费马小定理
-</h2><ul>
-<li>表述</li>
-</ul>
-<blockquote>
+<h3 id="费马小定理">费马小定理
+</h3><blockquote>
 <p>如果 $gcd(a,p)=1$ 则  $a^{p-1}\equiv 1 \pmod p$。</p></blockquote>
- <!-- > [!hint]- 证明 -->
 <blockquote>
 <p>关于费马小定理的证明有很多种，这里给出一种我认为最优雅的一种证明。</p>
 <p>考虑两个序列 :</p>
 <p>$i:[1,2,3,\dots,p-1]$</p>
 <p>$j:[a,2a,3a, \dots,(p-1)a]$</p>
 <p>现在证明 $i,j$ 在 $\bmod p$ 意义下同构。</p>
-<p>也就是证明 $j$ 序列中两两不同在 $\bmod p$ 意义下。</p>
-<p>假设 $j$ 序列中满足 $xa \equiv ya \pmod p \ (1\leq x,y\leq p-1，x，y不同)$， 由模运算的性质得 $x \equiv y \pmod p$， 由于 $1\leq x,y\leq p-1$ ， $x \text{只能等于} y$ ， 假设不成立，原命题得证。</p>
-<p>然后，我们把 $i，j$ 序列乘起来得到 $(p-1)!\cdot a^{p-1} \equiv (p-1)! \pmod p$ ，$gcd((p-1)!,p)=1$，那么也就是 $a^{p-1}\equiv 1 \pmod p$。</p></blockquote>
+<p>也就是说,  如果二者都有序, 序列 $i$ 和 序列 $j$ 在 $\bmod p$ 意义下是完全相同的.</p>
+<p>假设 $j$ 序列中存在 $xa \equiv ya \pmod p \ (1\leq x,y\leq p-1，x \neq y)$， 由模运算的性质得 $x \equiv y \pmod p$， 由于 $1\leq x,y\leq p-1$ $x$ 一定等于 $y$. 假设不成立，原命题得证。</p>
+<p>然后，我们把 $i，j$ 序列乘起来得到 $(p-1)!\cdot a^{p-1} \equiv (p-1)! \pmod p$ ，由于$gcd((p-1)!,p)=1$，化简为 $a^{p-1}\equiv 1 \pmod p$。</p></blockquote>
 <p>看向乘法逆元的定义 $：a\cdot a^{-1} \equiv 1 \pmod p$， 对费马小定理进行变形得到 $a\cdot a^{p-2} \equiv 1 \pmod p$，这就说明 $a^{p-2}$ 是 $a$ 的乘法逆元。注意者只有在 $p$ 是质数的时候成立。</p>
 <p>对于计算 $a^{p-2}$ ，可以用快速幂做到在 $O(log(p-2))$ 计算。</p>
 <ul>
@@ -424,15 +428,17 @@
 </span><span class="lnt"> 9
 </span><span class="lnt">10
 </span><span class="lnt">11
+</span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="n">i64</span> <span class="nf">binpow</span><span class="p">(</span><span class="n">i64</span> <span class="n">base</span><span class="p">,</span> <span class="kt">int</span> <span class="n">exp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="n">i64</span> <span class="nf">qpow</span><span class="p">(</span><span class="n">i64</span> <span class="n">base</span><span class="p">,</span> <span class="n">i64</span> <span class="n">exp</span><span class="p">,</span> <span class="n">i64</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">exp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">0LL</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">i64</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">base</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">while</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">exp</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> 
-</span></span><span class="line"><span class="cl">            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="o">*</span> <span class="n">base</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="o">*</span> <span class="n">base</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	        <span class="n">res</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">i128</span><span class="o">&gt;</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">*</span> <span class="n">base</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">base</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">i128</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="o">*</span> <span class="n">base</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">exp</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
@@ -440,55 +446,116 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><hr>
-<h2 id="拓展欧几里得算法">拓展欧几里得算法
-</h2><div class="highlight"><div class="chroma">
+<h3 id="拓展欧几里得算法">拓展欧几里得算法
+</h3><p>拓展欧几里得算法是对欧几里得算法的拓展.  用来求解满足<a class="link" href="https://en.wikipedia.org/wiki/B%C3%A9zout%27s_identity"  target="_blank" rel="noopener"
+    >Bézout&rsquo;s identity</a>
+
+<span style="white-space: nowrap;"><svg width=".7em"
+    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
+    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
+        fill="currentColor">
+</svg></span>
+
+的不定方程$a\cdot x + b \cdot y=gcd(a, b)$ 的解.</p>
+<p>对于这个方程 </p>
+$$a\cdot x + b \cdot y=gcd(a, b)$$<p>
+稍做变形, 有 </p>
+$$a\cdot x \equiv gcd(a, b) \pmod b$$<p>在 $b$ 为质数的情况下,  $x$ 为 $a$ 的逆元.</p>
+<p>显然, $x=1,\ y=114514$ 是在 $b=0$ 时满足情况的一组解().</p>
+<p>现在假设我们已知 $x_{0},y_{0}$ 是当前状态的一组解, 令当前计算的 $gcd$ 为 $gcd(a', b')$ , 上一个方程为 $gcd(a, b)$ . 有 $b'=a\ \bmod \ b,\ a'=b$ .</p>
+<p>也就是 </p>
+$$\begin{aligned}
+& x \cdot a + y \cdot b = gcd(a,b) \\
+& x_{0} \cdot a' + y_{0} \cdot b' = gcd(a', b')
+\end{aligned}$$<p>
+那么 </p>
+$$x_{0} \cdot b + y_{0} \cdot(a\ \bmod \ b) = gcd(a', b') = gcd(a, b)$$<p>
+化简 </p>
+$$x_{0} \cdot b + y_{0} \cdot\left( a - \left\lfloor  \frac{a}{b}  \right\rfloor \cdot b  \right) =gcd(a, b)$$<p>
+移项 </p>
+$$y_{0} \cdot a + \left( x_{0} - \left\lfloor  \frac{a}{b}  \right\rfloor \cdot y_{0} \right) \cdot b = gcd(a, b)$$<p>
+新的解 $x,y$ 为 $x = y_{0}, \ y = x_{0} - \left\lfloor  \frac{a}{b}  \right\rfloor \cdot y_{0}$.</p>
+<div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Exgcd</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">Exgcd</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">T</span><span class="p">{})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">T</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">T</span><span class="p">{}};</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Exgcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">-=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="p">[</span><span class="n">gcd</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Exgcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span> <span class="o">*</span> <span class="n">y0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span><span class="n">gcd</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">T</span> <span class="n">normalize</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">x</span> <span class="o">+=</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">T</span> <span class="n">Inv</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="n">T</span> <span class="n">mod</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="p">[</span><span class="n">gcd</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">Exgcd</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">mod</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">assert</span><span class="p">(</span><span class="n">gcd</span> <span class="o">==</span> <span class="n">T</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;The modular inverse does not exist.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><hr>
-<h2 id="线性递推">线性递推
-</h2><p>想象一下，如果你仅仅知道拓欧和费马小定理，你能不能想到可能存在一种 $O(N)$ 的方法求出逆元，我想不出。</p>
-<p>不过如果有人告诉你，存在一种方法，可以在线性时间内求出 $N$ 范围内的逆元，你会怎么去思考？</p>
-<p>如果是线性时间的话，那么我就要在 $O(1)$ 内求出一个数的逆元，要么我知道一个公式可以直接计算出逆元，要么我可以通过递推方程来得出，要么我可以通过某种方式均摊到 $O(1)$。</p>
-<p>很明显，直接套公式有点不太现实，费马没想到，欧拉没想到，他们都没想到，我不太认为我自己可能会想到。而且完全没有思路，不是吗？直觉告诉我，递推是最有可能的方案。</p>
+<h3 id="线性递推">线性递推
+</h3><p>想象一下, 如果你的知识储备不够充裕, 你能否凭空想出一种 $O(1)$ 的算法来求解逆元. 这恐怕十分困难.</p>
+<p>不过如果有人告诉你，存在一种方法，可以在线性时间内求出连续 $N$ 范围内的逆元，你会怎么去思考？</p>
+<p>如果是线性时间的话，那要么我在 $O(1)$ 内求出一个数的逆元，要么我知道一个公式可以直接计算出逆元，要么我可以通过递推方程来得出，要么我可以通过某种方式均摊到 $O(1)$。</p>
+<p>明显，直接套公式有点不太现实，费马没想到，欧拉没想到，他们都没想到，我不太认为我自己可能会想到。直觉告诉我，递推是最有可能的方案。</p>
 <p>不妨试一试，令 $i\ 是\ 1\dots n$ 里面的任意一个数， $base$ 情况是 $1^{-1} \equiv 1 \pmod p$ 。</p>
 $$
 i^{-1} \equiv \begin{cases}
     1,                                           & \text{if } i = 1, \\
-    某种已知 情况, & \text{otherwise}.
+    \text{a previous situation}, & \text{otherwise}.
 \end{cases} \pmod p
-$$<p>我们大胆猜测这个已知情况和一个小于 $i$ 的数有关，让我们想一想，哪里可以弄到小于 $i$ 的数又和 $i$ 有关呢？</p>
-<p>正巧，注意到 $p = k\cdot i + r$， 这个 $r$ 不就小于 $i$ 吗？ (注意到这个不是没有理由的， 我们已知的信息就只有 $p,i$ ， 而把一个数写成 $ki+x$ 的形式在 $\bmod$ 里是非常常见的，因为模运算就是这么定义的。)</p>
-<p>让我们来好好把玩把玩她 $: p=k\cdot i+r$ ，$r=p\%i$。</p>
+$$<p>我们大胆猜测这个已知情况和一个小于 $i$ 的数有关，让我们想一想，哪里可以存在小于 $i$ 的数又和 $i$ 有关呢？</p>
+<p>不妨注意到 $p = k\cdot i + r$， 这个 $r$ 不就小于 $i$ 吗？ (注意到这个不是没有理由的， 我们已知的信息就只有 $p,i$ ， 而把一个数写成 $ki+x$ 的形式是一个非常常见的技巧. )</p>
+<p>让我们来好好把玩把玩这个等式 $: p=k\cdot i+r$ ，$r=p \bmod i$。</p>
 <p>先对等式两边取模得到
 </p>
-$$\begin{gathered}
-0 \equiv k\cdot i+r\ (\bmod p)  \\
-\end{gathered}
+$$
+0 \equiv k\cdot i+r \pmod p
 $$<p>
 移项
 </p>
-$$\begin{gather}
--k\cdot i \equiv r \ (\bmod p)
-\end{gather}
+$$
+-k\cdot i \equiv r \pmod p
 $$<p>
 乘 $i^{-1}$
 </p>
@@ -503,22 +570,22 @@ $$<p>
 代换 $r$
 </p>
 $$
-i^{-1} \equiv -k\cdot (p\%i)^{-1} \pmod p
+i^{-1} \equiv -k\cdot (p \bmod i)^{-1} \pmod p
 $$<p>
 重写 $k$
 </p>
 $$
-i^{-1} \equiv -\left\lfloor  \frac{p}{i}  \right\rfloor\cdot (p\%i)^{-1} \pmod p
+i^{-1} \equiv -\left\lfloor  \frac{p}{i}  \right\rfloor\cdot (p \bmod i)^{-1} \pmod p
 $$<p>
 改成正数
 </p>
 $$
-i^{-1} \equiv (p-\left\lfloor  \frac{p}{i}  \right\rfloor)\cdot (p\%i)^{-1} \pmod p
-$$<p>哈哈，这是什么，我们得到了一个式子，她完美的符合我们的猜想。</p>
+i^{-1} \equiv (p-\left\lfloor  \frac{p}{i}  \right\rfloor)\cdot (p \bmod i)^{-1} \pmod p
+$$<p>哈哈，这是什么，我们得到了一个式子，它完美的符合我们的猜想。</p>
 $$
 i^{-1} \equiv \begin{cases}
     1,                                           & \text{if } i = 1, \\
-    i^{-1} \equiv (p-\left\lfloor  \frac{p}{i}  \right\rfloor)\cdot (p\%i)^{-1}, & \text{otherwise}.
+    (p-\left\lfloor  \frac{p}{i}  \right\rfloor)\cdot (p \bmod i)^{-1}, & \text{otherwise}.
 \end{cases} \pmod p
 $$<div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -532,8 +599,8 @@ $$<div class="highlight"><div class="chroma">
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">i64</span><span class="o">&gt;</span> <span class="n">Inv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">int</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">998244353</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">i64</span><span class="o">&gt;</span> <span class="n">Inv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="kt">int</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">998244353</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Inverse</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Inv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
@@ -543,9 +610,9 @@ $$<div class="highlight"><div class="chroma">
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>写出这个 $code$ ，易如反掌。</p>
-<p>不过这么写只能求出 $1\dots n$ 的逆元，如果求给定任意 $a_{i}\dots a_{i+n}$ 这 $n$ 个数的逆元，就要换种方法。</p>
+<p>不过这么写只能求出 $1\dots n$ 的逆元，如果求给定任意 $a_{i}\dots a_{i+n}$ 这 $n$ 个数的逆元，就要稍稍变通一下.</p>
 <p>利用类似前缀和的思想，首先计算 $n$ 个数的前缀积，记为 $s_i$，然后使用快速幂或扩展欧几里得法计算 $s_n$ 的逆元，记为 $sv_n$。</p>
-<p>因为 $sv_n$ 是 $n$ 个数的积的逆元，所以当我们把它乘上 $a_{i+n}$ 时，就会和 $a_{i+n}$ 的逆元抵消，于是就得到了 $a_i$ 到 $a_{i+n}$ 的积逆元，记为 $sv_{n-1}$。</p>
+<p>因为 $sv_n$ 是 $n$ 个数的积的逆元，所以当我们把它乘上 $a_{i+n}$ 时，就会和 $a_{i+n}$ 的逆元抵消，于是就得到了 $a_i$ 到 $a_{i+n-1}$ 的积逆元，记为 $sv_{n-1}$。</p>
 <p>同理我们可以依次计算出所有的 $sv_i$，于是 $a_i^{-1}$ 就可以用 $s_{i-1} \times sv_i$ 求得。</p>
 <p>所以我们就在 $O(n + \log p)$ 的时间内计算出了 $n$ 个数的逆元。</p>
 <div class="highlight"><div class="chroma">
@@ -568,7 +635,6 @@ $$<div class="highlight"><div class="chroma">
 </span><span class="lnt">16
 </span><span class="lnt">17
 </span><span class="lnt">18
-</span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="n">i64</span> <span class="nf">modInv</span><span class="p">(</span><span class="n">i64</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
@@ -576,8 +642,7 @@ $$<div class="highlight"><div class="chroma">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Inverse</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">i64</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">sInv</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">i64</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">sInv</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
@@ -592,7 +657,287 @@ $$<div class="highlight"><div class="chroma">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
+</div><h2 id="模板化">模板化
+</h2><p>显然每次都重新编写这些是没有必要的, 而且这些内容十分适合模板化.</p>
+<p>编写成静态类 $ModInt$.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">auto</span> <span class="n">mod</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ModInt</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static_assert</span><span class="p">(</span><span class="n">mod</span> <span class="o">&gt;=</span> <span class="mi">1LL</span><span class="p">,</span> <span class="s">&#34;The modulus must be a positive integer.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="n">T</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span><span class="n">mod</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">Exgcd</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">T</span><span class="p">{})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">,</span> <span class="n">T</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">T</span><span class="p">{}};</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">auto</span> <span class="p">[</span><span class="n">gcd</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Exgcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">T</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span> <span class="o">*</span> <span class="n">y0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span><span class="n">gcd</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span><span class="p">()</span> <span class="o">:</span> <span class="n">value</span><span class="p">(</span><span class="n">T</span><span class="p">{})</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span><span class="p">(</span><span class="k">const</span> <span class="n">V</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span> <span class="o">%</span> <span class="n">mod</span><span class="p">)</span> <span class="o">+</span> <span class="n">mod</span><span class="p">)</span> <span class="o">%</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span> <span class="nf">inv</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">auto</span> <span class="p">[</span><span class="n">gcd</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">Exgcd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mod</span><span class="p">);</span> <span class="c1">// It could be hold that -mod &lt; x &lt; mod.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">assert</span><span class="p">(</span><span class="n">gcd</span> <span class="o">==</span> <span class="n">T</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;The modular inverse does not exist.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ModInt</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// calculation operator overloading
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">constexpr</span> <span class="n">ModInt</span> <span class="k">operator</span><span class="o">-</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nf">ModInt</span><span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">mod</span> <span class="o">-</span> <span class="n">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">+=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">-=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">+=</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">-=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">%=</span> <span class="n">mod</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">value</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">((</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">i128</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">value</span><span class="p">)</span> <span class="o">%</span> <span class="n">mod</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">constexpr</span> <span class="n">ModInt</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">/=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="o">*</span><span class="k">this</span> <span class="o">*=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">inv</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="n">ModInt</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ModInt</span> <span class="n">res</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">res</span> <span class="o">+=</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="n">ModInt</span> <span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ModInt</span> <span class="n">res</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">res</span> <span class="o">-=</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="n">ModInt</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ModInt</span> <span class="n">res</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">res</span> <span class="o">*=</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="n">ModInt</span> <span class="k">operator</span><span class="o">/</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ModInt</span> <span class="n">res</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">res</span> <span class="o">/=</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// bool operator overloading 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">friend</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&gt;=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// stream operator overloading
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">friend</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">ModInt</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">T</span> <span class="n">v</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">is</span> <span class="o">&gt;&gt;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">x</span> <span class="o">=</span> <span class="n">ModInt</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">is</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">i64</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">1&#39;000&#39;000&#39;007LL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">ModInt</span><span class="o">&lt;</span><span class="n">mod</span><span class="o">&gt;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Z</span> <span class="n">mpow</span><span class="p">(</span><span class="n">Z</span> <span class="n">base</span><span class="p">,</span> <span class="n">T</span> <span class="n">exp</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">assert</span><span class="p">(</span><span class="n">exp</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Z</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span><span class="p">(</span><span class="n">exp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">exp</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">            <span class="n">res</span> <span class="o">*=</span> <span class="n">base</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">base</span> <span class="o">*=</span> <span class="n">base</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exp</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>动态模数还没写 &hellip;</p>
+<hr>
 <blockquote>
 <p>本文部分内容参考自 <a class="link" href="https://oiwiki.org/math/number-theory/inverse/#%E7%BA%BF%E6%80%A7%E6%B1%82%E9%80%86%E5%85%83"  target="_blank" rel="noopener"
     >OIwiki</a>
@@ -605,18 +950,6 @@ $$<div class="highlight"><div class="chroma">
 </svg></span>
 
 </p></blockquote>
-<blockquote>
-<p>本文采用 <a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh"  target="_blank" rel="noopener"
-    >CC BY-SA 4.0</a>
-
-<span style="white-space: nowrap;"><svg width=".7em"
-    height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-    <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />
-    <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z"
-        fill="currentColor">
-</svg></span>
-
- 国际许可协议进行许可。</p></blockquote>
 
 </section>
 
@@ -650,7 +983,19 @@ $$<div class="highlight"><div class="chroma">
         fill="currentColor">
 </svg></span></span>
     </section>
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            Last updated on Aug 20, 2025 13:35 CST
+        </span>
+    </section></footer>
 
 
     
@@ -878,7 +1223,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         
         Published 21 aritcles · 
-        Total 28.31k words
+        Total 29.25k words
     </section>
 </footer>
 
