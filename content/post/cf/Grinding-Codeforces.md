@@ -24,3 +24,5 @@ image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
  - [Summary 1400A]({{< relref "Summer-1400A.md" >}})
 
  - [Summary 1400B]({{< relref "Summer-1400B.md" >}})
+
+ - [Summary 1400C-D]({{< relref "Summer-1400C-D.md" >}})
