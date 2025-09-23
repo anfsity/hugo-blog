@@ -42,3 +42,11 @@
   margin-bottom: 10px;
 }
 
+/* Make the SVG inside responsive and interactive */
+.mermaid-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 500px;
+  cursor: grab; /* A nice visual cue that it's interactive */
+}

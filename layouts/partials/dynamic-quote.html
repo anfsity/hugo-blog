@@ -54,9 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // --- 随机选择一个函数并执行 ---
     try {
-        // 在 0 和 1 之间随机选择一个索引 (0.5 的概率)
         const randomIndex = Math.floor(Math.random() * 2); 
-        // 调用随机选中的函数
         quoteFetchers[randomIndex]();
     } catch (e) {
         console.error("Error executing random quote fetcher:", e);

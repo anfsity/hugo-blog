@@ -1,0 +1,6 @@
+<div id="mermaid-{{ .Ordinal }}" class="mermaid-container">
+  <div class="mermaid">
+    {{- .Inner | htmlEscape | safeHTML -}}
+  </div>
+</div>
+{{- .Page.Store.Set "hasMermaid" true -}}
