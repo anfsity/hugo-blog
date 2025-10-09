@@ -1,4 +1,4 @@
-baseurl: https://anfsity.top/
+baseurl: https://anfsity.me/
 languageCode: en-us
 theme: hugo-theme-stack
 title: Anfsity
@@ -9,7 +9,7 @@ copyright: Anfsity
 DefaultContentLanguage: en
 
 # Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
-# This will make .Summary and WordCount behave correctly for CJK languages.
+# This will make .Summary and .WordCount behave correctly for CJK languages.
 hasCJKLanguage: true
 
 languages:
