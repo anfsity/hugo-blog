@@ -1,0 +1,142 @@
+{{- define "main" -}}
+
+    <article class="main-article">
+        <header class="main-article-header">
+            {{ partial "article/components/header" . }}
+        </header>
+
+        <section class="main-article-content">
+            {{ .Content }}
+
+            {{/* --- Carousel HTML Structure --- */}}
+            <div class="carousel-container" id="neko-carousel">
+                <div class="loading-indicator">Loading images... 🐾</div>
+                <button class="carousel-btn prev-btn" title="Previous">‹</button>
+                <button class="carousel-btn next-btn" title="Next">›</button>
+            </div>
+            
+        </section>
+
+        <footer class="main-article-footer">
+            {{ partial "footer/footer" . }}
+        </footer>
+    </article>
+
+    {{/* --- CSS Styles for the Carousel --- */}}
+    <style>
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 850px;
+            aspect-ratio: 3 / 4;
+            margin: 2rem auto;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-image { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.5s ease-in-out; visibility: hidden; }
+        .carousel-image.active { opacity: 1; visibility: visible; }
+        .loading-indicator { font-size: 1.2rem; color: #555; }
+        .carousel-btn { z-index: 10; position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; font-size: 24px; cursor: pointer; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; user-select: none; transition: background-color 0.3s; }
+        .carousel-btn:hover { background-color: rgba(0,0,0,0.8); }
+        .prev-btn { left: 15px; }
+        .next-btn { right: 15px; }
+    </style>
+
+    {{/* --- JavaScript Logic for the Carousel (Updated) --- */}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const carousel = document.getElementById('neko-carousel');
+            if (!carousel) return;
+
+            const loader = carousel.querySelector('.loading-indicator');
+            const prevBtn = carousel.querySelector('.prev-btn');
+            const nextBtn = carousel.querySelector('.next-btn');
+
+            // --- Define the allowed categories ---
+            const allowedCategories = ['neko', 'waifu', 'kitsune'];
+            const PRELOAD_AHEAD = 3;
+
+            const imageUrls = [];
+            let currentIndex = 0;
+            let isFetching = false;
+
+            async function fetchNekoUrls(count) {
+                if (isFetching) return;
+                isFetching = true;
+
+                const promises = Array(count).fill().map(async () => {
+                    try {
+                        // --- Randomly pick a category for each request ---
+                        const randomCategory = allowedCategories[Math.floor(Math.random() * allowedCategories.length)];
+                        const apiUrl = `https://nekos.best/api/v2/${randomCategory}`;
+                        
+                        const response = await fetch(apiUrl);
+                        if (!response.ok) return null;
+                        const data = await response.json();
+                        return data.results[0].url;
+                    } catch (error) {
+                        console.error("API fetch error:", error);
+                        return null;
+                    }
+                });
+
+                const newUrls = (await Promise.all(promises)).filter(url => url && !imageUrls.includes(url));
+                
+                newUrls.forEach(url => {
+                    imageUrls.push(url);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.classList.add('carousel-image');
+                    img.alt = 'Image from API';
+                    carousel.insertBefore(img, loader);
+                });
+
+                isFetching = false;
+            }
+
+            function showImage(index) {
+                const images = carousel.querySelectorAll('.carousel-image');
+                if (images.length === 0) return;
+                currentIndex = index;
+                images.forEach((img, i) => {
+                    img.classList.toggle('active', i === index);
+                });
+                const shouldFetchMore = imageUrls.length - currentIndex < PRELOAD_AHEAD;
+                if (shouldFetchMore && !isFetching) {
+                    fetchNekoUrls(5);
+                }
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (imageUrls.length > 0) {
+                    const nextIndex = (currentIndex + 1) % imageUrls.length;
+                    showImage(nextIndex);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (imageUrls.length > 0) {
+                    const prevIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
+                    showImage(prevIndex);
+                }
+            });
+
+            async function init() {
+                await fetchNekoUrls(5);
+                if (imageUrls.length > 0) {
+                    loader.style.display = 'none';
+                    showImage(0);
+                } else {
+                    loader.innerText = 'Failed to load images.';
+                }
+            }
+
+            init();
+        });
+    </script>
+{{- end -}}
