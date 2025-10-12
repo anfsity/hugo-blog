@@ -1,152 +1,198 @@
 {{- define "main" -}}
+<article class="main-article">
+    <header class="main-article-header">
+        {{ partial "article/components/header" . }}
+    </header>
 
-    <article class="main-article">
-        <header class="main-article-header">
-            {{ partial "article/components/header" . }}
-        </header>
+    <section class="main-article-content">
+        {{ .Content }}
 
-        <section class="main-article-content">
-            {{ .Content }}
+        <div class="carousel-container" id="multi-api-carousel">
+            <div class="loading-indicator">Loading images from multiple APIs... 🐾</div>
+            <button class="carousel-btn prev-btn" title="Previous"></button>
+            <button class="carousel-btn next-btn" title="Next"></button>
+        </div>
 
-            {{/* --- Carousel HTML Structure (Updated with SVG icons) --- */}}
-            <div class="carousel-container" id="neko-carousel">
-                <div class="loading-indicator">Loading images... 🐾</div>
-                
-                {{/* --- Changed: Removed text, icons will be backgrounds --- */}}
-                <button class="carousel-btn prev-btn" title="Previous"></button>
-                <button class="carousel-btn next-btn" title="Next"></button>
-            </div>
-            
-        </section>
+    </section>
 
-        <footer class="main-article-footer">
-            {{ partial "footer/footer" . }}
-        </footer>
-    </article>
+    <footer class="main-article-footer">
+        {{ partial "footer/footer" . }}
+    </footer>
+</article>
 
-    {{/* --- CSS Styles for the Carousel (Updated) --- */}}
-    <style>
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            max-width: 850px;
-            aspect-ratio: 3 / 4;
-            margin: 2rem auto;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            background-color: #eee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+<style>
+    .carousel-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        aspect-ratio: 3 / 4;
+        margin: 2rem auto;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        background-color: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: aspect-ratio 0.4s ease-in-out, max-width 0.4s ease-in-out;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        visibility: hidden;
+    }
+
+    .carousel-image.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .loading-indicator {
+        font-size: 1.2rem;
+        color: #555;
+    }
+
+    .carousel-btn {
+        z-index: 10;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        transition: background-color 0.3s;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 40%;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .prev-btn {
+        left: 15px;
+        background-image: url("{{ (resources.Get `icons/left.svg`).RelPermalink }}");
+    }
+
+    .next-btn {
+        right: 15px;
+        background-image: url("{{ (resources.Get `icons/right.svg`).RelPermalink }}");
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const carousel = document.getElementById('multi-api-carousel');
+        if (!carousel) return;
+
+        const loader = carousel.querySelector('.loading-indicator');
+        const prevBtn = carousel.querySelector('.prev-btn');
+        const nextBtn = carousel.querySelector('.next-btn');
+
+        const apiConfigs = [
+            { name: "nekos.best", getUrl: () => { const c = ['neko', 'waifu', 'kitsune']; return `https://nekos.best/api/v2/${c[Math.floor(Math.random() * c.length)]}`; }, parse: (d) => d.results[0].url },
+            { name: "pic.re", getUrl: () => 'https://pic.re/image.json', parse: (d) => `https://${d.file_url}` },
+            { name: "nekosia", getUrl: () => 'https://api.nekosia.cat/api/v1/images/random', parse: (d) => d.image.original.url },
+            // { name: "nekosapi", getUrl: () => 'https://api.nekosapi.com/v4/images/random?rating=safe&limit=1', parse: (d) => d[0].url },
+            { name: "waifu.im", getUrl: () => 'https://api.waifu.im/search?is_nsfw=false', parse: (d) => d.images[0].url },
+        ];
+
+        const PRELOAD_AHEAD = 3;
+        const imageData = [];
+        let currentIndex = 0;
+        let isFetching = false;
+
+        function getImageDimensions(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+                img.onerror = reject;
+                img.src = url;
+            });
         }
-        .carousel-image { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.5s ease-in-out; visibility: hidden; }
-        .carousel-image.active { opacity: 1; visibility: visible; }
-        .loading-indicator { font-size: 1.2rem; color: #555; }
-        
-        .carousel-btn {
-            z-index: 10;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0,0,0,0.5);
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            transition: background-color 0.3s;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 40%;
-        }
-        .carousel-btn:hover { background-color: rgba(0,0,0,0.8); }
 
-        .prev-btn {
-            left: 15px;
-            background-image: url("{{ (resources.Get `icons/left.svg`).RelPermalink }}");
-        }
-
-        .next-btn {
-            right: 15px;
-            background-image: url("{{ (resources.Get `icons/right.svg`).RelPermalink }}");
-        }
-    </style>
-
-    {{/* --- JavaScript Logic for the Carousel (No changes needed here) --- */}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const carousel = document.getElementById('neko-carousel');
-            if (!carousel) return;
-            const loader = carousel.querySelector('.loading-indicator');
-            const prevBtn = carousel.querySelector('.prev-btn');
-            const nextBtn = carousel.querySelector('.next-btn');
-            const allowedCategories = ['neko', 'waifu', 'kitsune'];
-            const PRELOAD_AHEAD = 3;
-            const imageUrls = [];
-            let currentIndex = 0;
-            let isFetching = false;
-            async function fetchNekoUrls(count) {
-                if (isFetching) return;
-                isFetching = true;
-                const promises = Array(count).fill().map(async () => {
-                    try {
-                        const randomCategory = allowedCategories[Math.floor(Math.random() * allowedCategories.length)];
-                        const apiUrl = `https://nekos.best/api/v2/${randomCategory}`;
-                        const response = await fetch(apiUrl);
-                        if (!response.ok) return null;
-                        const data = await response.json();
-                        return data.results[0].url;
-                    } catch (error) {
-                        console.error("API fetch error:", error);
-                        return null;
-                    }
-                });
-                const newUrls = (await Promise.all(promises)).filter(url => url && !imageUrls.includes(url));
-                newUrls.forEach(url => {
-                    imageUrls.push(url);
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.classList.add('carousel-image');
-                    img.alt = 'Image from API';
-                    carousel.insertBefore(img, loader);
-                });
-                isFetching = false;
-            }
-            function showImage(index) {
-                const images = carousel.querySelectorAll('.carousel-image');
-                if (images.length === 0) return;
-                currentIndex = index;
-                images.forEach((img, i) => {
-                    img.classList.toggle('active', i === index);
-                });
-                const shouldFetchMore = imageUrls.length - currentIndex < PRELOAD_AHEAD;
-                if (shouldFetchMore && !isFetching) {
-                    fetchNekoUrls(5);
-                }
-            }
-            nextBtn.addEventListener('click', () => {
-                if (imageUrls.length > 0) {
-                    const nextIndex = (currentIndex + 1) % imageUrls.length;
-                    showImage(nextIndex);
+        async function fetchImageUrls(count) {
+            if (isFetching) return;
+            isFetching = true;
+            const promises = Array(count).fill().map(async () => {
+                try {
+                    // const api = apiConfigs[3];
+                    const api = apiConfigs[Math.floor(Math.random() * apiConfigs.length)];
+                    const response = await fetch(api.getUrl());
+                    if (!response.ok) return null;
+                    const data = await response.json();
+                    const url = api.parse(data);
+                    const dimensions = await getImageDimensions(url);
+                    return { url, ...dimensions };
+                } catch (error) {
+                    console.error("API fetch/parse error:", error);
+                    return null;
                 }
             });
-            prevBtn.addEventListener('click', () => {
-                if (imageUrls.length > 0) {
-                    const prevIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
-                    showImage(prevIndex);
-                }
+            const newImageData = (await Promise.all(promises)).filter(d => d && !imageData.some(existing => existing.url === d.url));
+            newImageData.forEach(data => {
+                imageData.push(data);
+                const img = document.createElement('img');
+                img.src = data.url;
+                img.classList.add('carousel-image');
+                img.alt = 'Image from API';
+                carousel.insertBefore(img, loader);
             });
-            async function init() {
-                await fetchNekoUrls(5);
-                if (imageUrls.length > 0) {
-                    loader.style.display = 'none';
-                    showImage(0);
-                } else {
-                    loader.innerText = 'Failed to load images.';
-                }
+            isFetching = false;
+        }
+
+        function showImage(index) {
+            const images = carousel.querySelectorAll('.carousel-image');
+            if (images.length === 0 || !imageData[index]) return;
+
+            currentIndex = index;
+            const currentImage = imageData[index];
+            const newAspectRatio = currentImage.width / currentImage.height;
+
+            if (newAspectRatio < 1) { // Portrait or square-ish portrait
+                carousel.style.maxWidth = '900px';
+            } else { // Landscape or square
+                carousel.style.maxWidth = '1150px';
             }
-            init();
-        });
-    </script>
+
+            // Set the aspect ratio dynamically
+            carousel.style.aspectRatio = newAspectRatio;
+
+            images.forEach((img, i) => {
+                img.classList.toggle('active', i === index);
+            });
+
+            const shouldFetchMore = imageData.length - currentIndex < PRELOAD_AHEAD;
+            if (shouldFetchMore && !isFetching) {
+                fetchImageUrls(5);
+            }
+        }
+
+        nextBtn.addEventListener('click', () => { if (imageData.length > 0) showImage((currentIndex + 1) % imageData.length); });
+        prevBtn.addEventListener('click', () => { if (imageData.length > 0) showImage((currentIndex - 1 + imageData.length) % imageData.length); });
+
+        async function init() {
+            await fetchImageUrls(5);
+            if (imageData.length > 0) {
+                loader.style.display = 'none';
+                showImage(0);
+            } else {
+                loader.innerText = 'Failed to load images.';
+            }
+        }
+
+        init();
+    });
+</script>
 {{- end -}}
