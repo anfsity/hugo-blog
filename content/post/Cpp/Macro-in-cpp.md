@@ -11,7 +11,7 @@ categories = [
 ]
 description = ""
 image = ""
-lastmod = 2025-10-15T00:52:02+08:00 
+lastmod = 2025-10-15T00:52:02
 +++
 
 {{< quote source="Fly To Meteor (Milthm Edit)" url="https://www.youtube.com/watch?v=n5lNIpzoizI">}}
