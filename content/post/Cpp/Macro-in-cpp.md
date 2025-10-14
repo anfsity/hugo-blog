@@ -11,9 +11,12 @@ categories = [
 ]
 description = ""
 image = ""
+lastmod = 2025-10-15T00:52:02+08:00 
 +++
 
- > [Around the right track baby we ain't going back](https://www.youtube.com/watch?v=n6lNIpzoizI)
+{{< quote source="Fly To Meteor (Milthm Edit)" url="https://www.youtube.com/watch?v=n5lNIpzoizI">}}
+Around the right track baby we ain't going back
+{{< /quote >}}
 
 ## Encounter
 ---
