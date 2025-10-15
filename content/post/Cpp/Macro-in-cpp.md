@@ -11,16 +11,16 @@ categories = [
 ]
 description = ""
 image = ""
-lastmod = 2025-10-15T00:52:02
+lastmod = 2025-10-15T07:52:02
 +++
 
 {{< quote source="Fly To Meteor (Milthm Edit)" url="https://www.youtube.com/watch?v=n5lNIpzoizI">}}
 Around the right track baby we ain't going back
 {{< /quote >}}
 
-## Encounter
 ---
 
+## Encounter
 起因是因为这么一段代码
 
 ```C
@@ -68,8 +68,9 @@ make: *** [Makefile:10: new] Error 1
 
 这个时候我对宏还几近一无所知, 对于这样违背常识的报错感到很困惑. 查阅资料解决问题后便决定写一篇总结。
 
-## C preprocessor
 ---
+
+## C Preprocessor
 
 我们知道, 你写下的 C/C++ Code 从源代码到可执行文件一般会经历四个步骤 :
 
@@ -86,15 +87,16 @@ C preprocessor 是一个 text file processor ( 文本文件处理器 ), 它主�
 
 不过要注意的是, C preprocessor 仅仅是一个文本处理器, 它并不明白 C/C++ 的语法, 这在很多时候, 会导致一些危险的行为。
 
-## Features
 ---
+
+## Features
 
 ### File inclusion
 
 C 预处理器中有两个用于包含文件内容的指令 :
 
-- `#include`, [source file inclusion](https://en.cppreference.com/w/cpp/preprocessor/include.html).
-- `#embed`, [resource inclusion](https://en.cppreference.com/w/cpp/preprocessor/embed.html).
+- `#include` ([source file inclusion](https://en.cppreference.com/w/cpp/preprocessor/include.html)) 。
+- `#embed` ([resource inclusion](https://en.cppreference.com/w/cpp/preprocessor/embed.html))。
 
 #### Source file inclusion
 
@@ -187,8 +189,9 @@ void foo() {
  
  > `DECLARE_STRUCT_TYPE(g_object)` expands to `typedef struct g_object_s g_object_t`.
 
-## The order of expansion
----
+ ---
+
+## The Order Of Expansion
 
 除了上面提到过的那些, 还有一些常见的 features, 比如 预定义宏, `#warning` , *Line control* 之类的。
 
@@ -224,13 +227,15 @@ arg1
 
 ![image](https://i.111666.best/image/utSQCn0nuItiL3SK7qjfKa.png)
 
-递归定义 `U` 表示 ：「从递归的上一层的 U 与上一个宏的并集」, 最开始 `U` 被定义为 $∅$ ，表示当前宏不是被任何其他宏展开得来的。
+递归定义禁用集 `U` 表示 ：「从递归的上一层的 U 与上一个宏的并集」, 最开始 `U` 被定义为 $∅$ ，表示当前宏不是被任何其他宏展开得来的。
 
 - 第一步，`arg1` 维护的 `U` 是空集，将 `arg1 (1)` 展开为 `arg1 | arg2 | arg3 (2)`， 这里对应图里的第一个 `expand` 。
 - 第二步，我们从左向右扫描，首先遇到 `arg1 (2)` ，他的维护的集合已经包含了 `{arg1}` ，那么 `arg1 (2)` 就不应该被展开，它保持原样。接着遇到 `|` ，`|` 不是宏，跳过。然后我们遇到第二个宏 `arg2 (2)` , 他维护的集合 `{arg1}` 不包括 `arg2` ，`arg2 (2)` 被展开为 `arg1 2` 。跳过 `|` ，展开 `arg3 (2)` 为 `arg2 3` ，此时 `arg3` 维护的集合变成 `{arg1, arg3}` 。
 - 第三步，展开从上一个 `arg3` 继承来的 `arg2 (3)` ，它维护的集合是 `{arg1, arg3}` ，将其展开为 `arg1 1` 。
 
 展开过程结束，最终结果为 `arg1 | arg1 2 | arg1 2 3` 。
+
+我这图写的稍微有些误导性，需要指出的是，这个 expand 不是像 bfs 那样逐层展开的，而是像 dfs 那样遇到就展开到底部再返回。
 
 可以发现，整个递归过程构成一颗先序遍历的递归树。我们可以用这种方式很好的理解整个 *object-like* 宏的展开规则。
 
@@ -283,7 +288,7 @@ BAR((1, 2))
 
 每次展开结束后，identifier 会向后看一个 token 判断是否构成一个新的 *function-like*  宏。
 
-然后重新扫描，发现 `FUNC(1, 2)` 可以被宏匹配，展开为 `1 - 2`。
+预处理器向后看，发现 `FUNC(1, 2)` 可以被匹配函数式宏，展开为 `1 - 2`。
 
 2. 
 
@@ -348,9 +353,11 @@ FOO(BAR())
     RecursionTracer TRACE_HELPER(__COUNTER__)(__func__, #__VA_ARGS__, ##__VA_ARGS__)
 ```
 
-### 可变参数宏
+### variadic macro
 
 `__VA_ARGS__` 比较简单，需要需要注意的是使用的时候应该加上 `##` :
+
+这是为了防止传入参数个数为 0 的时候，`,` 剩余。使用 `##` 可以把这个 `,` 吞掉。
 
 ```cpp
 #define LOG(fmt, ...) printf(fmt, ##__VA_ARGS__)
@@ -358,9 +365,7 @@ LOG("User %s", "Alex") // -> printf("User %s", "Alex");
 LOG("System started."); // -> printf("System started.");
 ```
 
-这是为了防止传入参数个数为 0 的时候，`,` 剩余。使用 `##` 可以把这个 `,` 吞掉。
-
-在 [gcc 拓展](https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html#Variadic-Macros-1)中，实现了一个宏 `__VA_OPT__` 表示一个参数是 optional 的，于是上面的代码可以改成 ：
+在[ gcc 拓展](https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html#Variadic-Macros-1)中，实现了一个宏 `__VA_OPT__` 表示一个参数是 optional 的，于是上面的代码可以改成 ：
 
 ```cpp
 #define LOG(fmt, ...) printf(fmt __VA_OPT__(,) __VA_ARGS__)
@@ -368,9 +373,204 @@ LOG("System started."); // -> printf("System started.");
 
 表示如果 `...` 不为空，就在这里插入一个 `,` 。
 
-## References
+### Delayed expansion
+
+```cpp
+#define A() 123
+
+#define EMPTY()
+#define DEFER(id) id EMPTY()
+#define EXPAND(...) __VA_ARGS__
+
+DEFER(A)()
+EXPAND(DEFER(A)())
+```
+
+考虑 `DEFER(A)()` 宏，当他展开到 `A EMPTY()()` 的时候，`EMPTY()` 被展开，此时结果为 `A ()` ，注意这一轮扫描已经结束了。在 `DEFER(A)()` 这一次宏展开的重新扫描过程中，A 和 () 无法构成一次函数式宏调用，因此展开被延迟了。注意在此时 `A ()` 被展开成 `A ()` 的前一时刻的 `U` 是 `{DEFFER, EMPTY}` ，但是当生成 `A ()` 后，`U` 被销毁，重新变成空集。
+
+当我们给这个宏的外面再套一层壳的时候，`EXPAND()` 宏使得预处理器重新扫描 `A ()` ，它被识别为一个函数式宏，展开成 `123` 。注意这个时候 `A ()` 的 `U` 被消除了，展开完后的 `U` 是 `{A}` 而不是 `{DEFFER, EMPTY, A}` 。
+
+我们在这里重新提到了禁用集 `U` ，是因为它在接下来这个魔法中发挥了至关重要的作用。
+### A Little Magic
+
+```cpp
+#define BAR_I() BAR
+#define BAR() 1 BAR_I
+
+BAR () () () // U {}
+-> BAR_I () () // U {BAR}
+-> BAR () // U {BAR_I} 注意！在执行上一步的展开时，U 被消除了
+-> BAR_I // U {BAR} 此处也消除了上一轮的 U
+```
+
+也就是说，每当我展开过程中出现一个新的 *function-like* 宏时，这个新的 *function-like* 宏不会继承它源头的 U 。
+
+我们利用刚才的延迟展开，可以实现以下代码 ：
+
+```cpp
+#define BAR_I() BAR
+#define BAR()  DEFER(BAR_I)()() 1
+
+BAR()                 -> BAR_I()() 1
+EXPAND(BAR())         -> BAR_I()() 1 1
+EXPAND(EXPAND(BAR())) -> BAR_I()() 1 1 1
+```
+
+这说明宏可以构成一个有限的递归栈，进而说明了宏是图灵完备的。
+
+ > 以上代码来自于[宏定义黑魔法-从入门到奇技淫巧 (5) - 实现图灵完备的宏](https://zhuanlan.zhihu.com/p/27146532)。
+
+### X-Macros
+
+假设我们有一个结构体 `User` ，我们需要将它序列化为 JSON 字符串，也要能够从 JSON 字符串中解析出来。
+
+```cpp
+struct User {
+    std::string name;
+    int         id;
+};
+```
+
+我们的目的是自动生成下面功能的函数
+
+- void toJSON (const User &user, std::ostream &os);
+- void fromJSON (User &user, const JsonObj &json);
+
+我们创建一个 `userMembers.def` 文件，列出 `User` 结构体的所有成员。
+
+```cpp
+// userMembers.def
+// X(type, name)
+X(std::string, name)
+X(int,           id)
+```
+
+在我们的主代码中 ：
+
+```cpp
+#include ...
+// 各种头文件包含
+
+struct User {
+#define X(type, name) type name;
+#include "userMembers.def"
+#undef X
+// serMembers.def 的内容被展开后，立马 undef X，自动生成了结构体 User 。
+};
+
+void toJSON (const User &user, std::ostream &os) {
+	os << "{";
+	bool first = true;
+#define X(type, name) \
+	if (!first)  { os << ","; } \
+	os << "\"" << #name << "\":" << json_quote(user.name); \
+	first = false;
+// 宏定义结束
+
+	#include "userMembers.def"
+// userMembers.def 里面的内容被自动展开为上面的内容
+// 比如 ：
+// Expands to  
+// if (!first) {  
+// os << ",";  
+// }  
+// os << "\"" << "name" << "\":" << json_quote(user.name);  
+// first = false;
+// if (!first) {  
+// os << ",";  
+// }  
+// os << "\"" << "id" << "\":" << json_quote(user.id);  
+// first = false;
+
+#undef X
+	os << "}";
+}
+
+void fromJSON (User &user, const JsonObj &json) {
+#define X(type, name) json.get_to(#name, user.name);
+	#include "userMembers.def"
+#undef X
+}
+```
+
+通过 X 宏，可以实现自动生成结构体，自动生成对应的解析函数，唯一要做的修改就是在 `userMembers.def` 里面添加或删除变量。
+
+```cpp
+// userMembers.def
+// X(type, name)
+X(std::string, name)
+X(int,           id)
+X(int,        score)
+```
 ---
 
+## Macros FAQ
+
+### Operator Precedence
+
+```cpp
+#define SQUARE(x) x * x
+
+int result = SQUARE(3 + 2); 
+```
+
+我们期望得到结果 5 ，但是实际上得到是 `3  + 2 * 3 + 2` 。
+### Repeated Evaluation of Arguments
+
+```cpp
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+int x = 5;
+int y = 8;
+int z = MAX(x++, y++);
+// x 期望是 6, y 期望是 9, z 期望是 8
+```
+
+但实际上宏在展开的过程中 `x++` ， `y++` 都出现了两次，这个行为是未定义的，结果未知，但肯定和期望值不同。
+
+### Name Clashes
+
+宏的定义是全局的，这就很容易造成命名冲突。
+
+不过在 c++20 中，引入了模块化来解决 `#include` 和宏所带来的全局污染问题。
+### Semicolon Swallowing
+
+```cpp
+#define LOG(msg) printf("%s\n", msg);
+
+if (condition)
+    LOG("It was true");
+else
+    do_something_else();
+    
+// if (condition)
+//     printf("%s\n", "It was true");;
+// else
+//     do_something_else();
+```
+
+当然你也可以在第一个分支里选择不加分号，不过这种别扭的行为还是禁止的为好。
+
+常用的技巧是使用 `do-while(0)` 语句来形成一个完整的语义。
+
+```cpp
+#define LOG(msg) \
+    do { \
+        printf("%s\n", msg); \
+    } while(0)
+
+// 展开后:
+// if (condition)
+//     do { ... } while(0); // 这是一个单一的语句，需要一个分号
+// else
+//     ...
+```
+
+宏还有一些缺点，比如无法调试，阅读困难等等。现有的序列化和反序列化，枚举转化为字符串 ，ORM 等等操作都需要借助宏来实现，标准库的源代码也总会有宏的身影。总的来说，宏并不是一个很好的东西，但他也是一个不可或缺的东西。在现代 cpp 中，可以使用 template , constexpr 等等来替换宏，但仍然有很多地方宏是不可被替代的。这就是为什么 c++26 的反射被那么多人期待。
+
+---
+
+## References
 [^1]: 参考自[维基百科](https://en.wikipedia.org/wiki/C_preprocessor#)
 [^2]: 参考自[维基百科](https://en.wikipedia.org/wiki/C_preprocessor#Macro_string_replacement)
 [^3]: [宏定义黑魔法-从入门到奇技淫巧 (3) - function-like 的宏展开](zhuanlan.zhihu.com/p/27019165)
