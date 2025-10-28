@@ -212,11 +212,18 @@ menu:
         #   url: https://twitter.com
         #   params:
         #       icon: brand-twitter
+            
         - identifier: bilibili
           name: BiliBili
           url: https://space.bilibili.com/1325207877?spm_id_from=333.337.0.0
           params:
               icon: brand-bilibili
+
+        - identifier: bangumi
+          name: Bangumi
+          url: https://bangumi.tv/user/anfsity
+          params:
+              icon: brand-bangumi
 
 
 related:
