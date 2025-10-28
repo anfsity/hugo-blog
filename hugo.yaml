@@ -212,6 +212,12 @@ menu:
         #   url: https://twitter.com
         #   params:
         #       icon: brand-twitter
+
+        - identifier: zhihu
+          name: ZhiHu
+          url: https://www.zhihu.com/people/anfsity
+          params:
+              icon: brand-zhihu
             
         - identifier: bilibili
           name: BiliBili
