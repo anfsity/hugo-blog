@@ -20,7 +20,7 @@ image = "https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg"
 
 >  [Data Lab]({{< relref "DataLab.md" >}})
 >
->  Bomb Lab
+>  [Bomb Lab]({{< relref "BombLab.md" >}})
 >
 > Attack Lab
 >
