@@ -26,6 +26,12 @@
       .article-details {
         transition: transform 0.5s ease-out;
       }
+
+      .article-image img {
+        width: var(--image-size);
+        height: auto;
+        border-radius: 8px;
+      }
     }
   }
 }
@@ -122,8 +128,9 @@ html[data-scheme="dark"] {
 /* ══════════════════════════════════════════════════════════════ */
 /* 4. Dynamic Table of Contents                                   */
 /* ══════════════════════════════════════════════════════════════ */
-#TableOfContents > ul,
-#TableOfContents > ol {
+#TableOfContents>ul,
+#TableOfContents>ol {
+
   ul,
   ol {
     display: none;
