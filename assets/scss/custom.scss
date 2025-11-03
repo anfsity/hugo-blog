@@ -4,7 +4,7 @@
 @media (min-width: 1024px) {
   .article-list--compact {
     display: grid;
-    grid-template-columns: 1fr 1fr; // Two columns, add more 1fr for more columns
+    grid-template-columns: 1fr 1fr;
     background: none;
     box-shadow: none;
     gap: 1rem;
@@ -48,29 +48,16 @@ html[data-scheme="dark"] {
   --code-btn-icon-color: #c5c5c5;
 }
 
-/* Base code block styling with rounded corners and macOS header */
+/* Base code block styling with height limit for collapse */
 .highlight {
   border-radius: var(--card-border-radius);
   max-width: 100% !important;
   box-shadow: var(--shadow-l1) !important;
-  
-  /* Height control for collapse feature */
   max-height: 400px;
   overflow: hidden;
   position: relative;
   transition: max-height 0.3s ease-in-out;
   margin: 0 !important;
-}
-
-/* macOS-style code block header */
-.highlight:before {
-  content: "";
-  display: block;
-  background: url(../icons/macOS-code-header.svg) no-repeat 0;
-  background-size: contain;
-  height: 18px;
-  margin-top: -10px;
-  margin-bottom: 10px;
 }
 
 /* Expanded state - remove height limit */
@@ -89,11 +76,11 @@ html[data-scheme="dark"] {
   bottom: 0;
   z-index: 1;
   transition: background-image 0.3s;
-  pointer-events: none; /* Allow click-through to button */
+  pointer-events: none;
 }
 
 .highlight.code-show .code-more-box {
-  background-image: none; /* Remove fade when expanded */
+  background-image: none;
 }
 
 /* Expand/collapse button styling */
@@ -110,7 +97,7 @@ html[data-scheme="dark"] {
   position: relative;
   z-index: 2;
   transition: background-color 0.3s;
-  pointer-events: auto; /* Ensure button is clickable */
+  pointer-events: auto;
 }
 
 .code-more-img {
@@ -129,11 +116,11 @@ html[data-scheme="dark"] {
 #TableOfContents > ol {
   ul,
   ol {
-    display: none; /* Hide all nested lists by default */
+    display: none;
   }
 
   .open {
-    display: block; /* Show only active section's children */
+    display: block;
   }
 }
 
@@ -171,7 +158,6 @@ html[data-scheme="dark"] {
   border-style: solid;
 }
 
-/* Hover effects */
 #back-to-top:hover {
   transform: scale(1.1);
   background-color: var(--accent-background);
