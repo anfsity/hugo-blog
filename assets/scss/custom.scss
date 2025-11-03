@@ -1,12 +1,10 @@
-/* 
-友联，归档多列显示
-*/
-
+/* ══════════════════════════════════════════════════════════════ */
+/* 1. Archive & Links Multi-Column Layout                         */
+/* ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1024px) {
   .article-list--compact {
     display: grid;
-    // 目前是两列，如需三列，则后面再加一个1fr，以此类推
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; // Two columns, add more 1fr for more columns
     background: none;
     box-shadow: none;
     gap: 1rem;
@@ -22,16 +20,49 @@
   }
 }
 
-/*
-代码块圆角展示
-*/
+/* ══════════════════════════════════════════════════════════════ */
+/* 2. Mermaid Diagram Interactive Display                         */
+/* ══════════════════════════════════════════════════════════════ */
+.mermaid-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 500px;
+  cursor: grab;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 3. Code Block Styling & Collapse Feature                       */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* Color scheme variables for light/dark modes */
+:root {
+  --code-fade-color: white;
+  --code-btn-bg: #f0f0f5;
+  --code-btn-icon-color: #333;
+}
+
+html[data-scheme="dark"] {
+  --code-fade-color: #2e2e2e;
+  --code-btn-bg: #424242;
+  --code-btn-icon-color: #c5c5c5;
+}
+
+/* Base code block styling with rounded corners and macOS header */
 .highlight {
   border-radius: var(--card-border-radius);
   max-width: 100% !important;
-  margin: 0 !important;
   box-shadow: var(--shadow-l1) !important;
+  
+  /* Height control for collapse feature */
+  max-height: 400px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease-in-out;
+  margin: 0 !important;
 }
 
+/* macOS-style code block header */
 .highlight:before {
   content: "";
   display: block;
@@ -42,11 +73,189 @@
   margin-bottom: 10px;
 }
 
-/* Make the SVG inside responsive and interactive */
-.mermaid-container svg {
-  display: block;
+/* Expanded state - remove height limit */
+.highlight.code-show {
+  max-height: none !important;
+}
+
+/* Gradient fade overlay at bottom of code block */
+.code-more-box {
   width: 100%;
-  height: auto;
-  min-height: 500px;
-  cursor: grab; /* A nice visual cue that it's interactive */
+  padding-top: 78px;
+  background-image: linear-gradient(to bottom, transparent, var(--code-fade-color));
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transition: background-image 0.3s;
+  pointer-events: none; /* Allow click-through to button */
+}
+
+.highlight.code-show .code-more-box {
+  background-image: none; /* Remove fade when expanded */
+}
+
+/* Expand/collapse button styling */
+.code-more-btn {
+  display: block;
+  margin: auto;
+  width: 44px;
+  height: 22px;
+  background: var(--code-btn-bg);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding-top: 6px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: background-color 0.3s;
+  pointer-events: auto; /* Ensure button is clickable */
+}
+
+.code-more-img {
+  display: block;
+  margin: auto;
+  width: 22px;
+  height: 16px;
+  color: var(--code-btn-icon-color);
+  stroke: currentColor;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 4. Dynamic Table of Contents                                   */
+/* ══════════════════════════════════════════════════════════════ */
+#TableOfContents > ul,
+#TableOfContents > ol {
+  ul,
+  ol {
+    display: none; /* Hide all nested lists by default */
+  }
+
+  .open {
+    display: block; /* Show only active section's children */
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 5. Back to Top Button                                          */
+/* ══════════════════════════════════════════════════════════════ */
+#back-to-top {
+  display: none;
+  position: fixed;
+  bottom: 15px;
+  right: 25px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--body-background);
+  box-shadow: var(--shadow-l2);
+  font-size: 20px;
+  text-align: center;
+  line-height: 38px;
+  cursor: pointer;
+  z-index: 99;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Arrow icon using CSS border trick */
+#back-to-top:before {
+  content: "";
+  display: inline-block;
+  position: relative;
+  transform: rotate(135deg);
+  height: 8px;
+  width: 8px;
+  border-width: 0 0 2px 2px;
+  border-color: var(--back-to-top-color);
+  border-style: solid;
+}
+
+/* Hover effects */
+#back-to-top:hover {
+  transform: scale(1.1);
+  background-color: var(--accent-background);
+}
+
+#back-to-top:hover:before {
+  border-color: var(--accent-color);
+}
+
+/* Responsive adjustments for mobile */
+@media screen and (max-width: 768px) {
+  #back-to-top {
+    bottom: 10px;
+    right: var(--container-padding);
+    width: 35px;
+    height: 35px;
+    line-height: 32px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 6. Dynamic Quote Container                                     */
+/* ══════════════════════════════════════════════════════════════ */
+.dynamic-quote-container {
+  width: 100%;
+  margin: 40px auto;
+  padding: 32px 30px;
+  background-color: var(--card-background);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--shadow-l2);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.dynamic-quote-container blockquote {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 25px;
+  transition: opacity 0.5s;
+}
+
+.dynamic-quote-container blockquote p {
+  margin: 0;
+  flex-grow: 1;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: var(--card-text-color-main);
+}
+
+.dynamic-quote-container blockquote cite {
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-style: normal;
+  color: var(--card-text-color-secondary);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.dynamic-quote-container blockquote cite::before {
+  content: "— ";
+  margin-right: 2px;
+}
+
+.dynamic-quote-container blockquote i {
+  font-style: italic;
+  color: var(--card-text-color-tertiary);
+  text-align: center;
+  width: 100%;
+}
+
+/* Responsive: Stack vertically on narrow screens */
+@media (max-width: 680px) {
+  .dynamic-quote-container blockquote {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .dynamic-quote-container blockquote p {
+    width: 100%;
+    text-align: left;
+  }
 }
