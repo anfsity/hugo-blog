@@ -1,58 +1,111 @@
 <!-- ================================================================ -->
-<!-- 自定义全局样式 -->
+<!--                          GLOBAL STYLES                           -->
 <!-- ================================================================ -->
 <style>
-    /* 1. 动态目录样式：仅展开当前章节的子目录 */
+    /* ────────────────────────────────────────────────────────────── */
+    /* 1. Dynamic Table of Contents                                   */
+    /*    Only expand the current section's sub-items                 */
+    /* ────────────────────────────────────────────────────────────── */
     #TableOfContents > ul,
     #TableOfContents > ol {
         ul,
         ol {
-            display: none;
+            display: none; /* Hide all nested lists by default */
         }
         .open {
-            display: block;
+            display: block; /* Show only active section's children */
         }
     }
 
-    /* 2. 返回顶部按钮样式 */
-    {{ with resources.Get "icons/arrow-big-up.svg" }}
-    {{ $icon := .Content | base64Encode | safeURL }}
-    #backTopBtn {
+    /* ────────────────────────────────────────────────────────────── */
+    /* 2. Back to Top Button                                          */
+    /*    Floating button with smooth scroll behavior                 */
+    /* ────────────────────────────────────────────────────────────── */
+    #back-to-top {
         display: none;
         position: fixed;
-        bottom: 30px;
-        z-index: 99;
+        bottom: 15px;
+        right: 25px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--body-background);
+        box-shadow: var(--shadow-l2);
+        font-size: 20px;
+        text-align: center;
+        line-height: 38px;
         cursor: pointer;
-        width: 26px;
-        height: 26px;
-        background-image: url('{{ .Permalink }}');
+        z-index: 99;
+        transition:
+            transform 0.3s ease,
+            background-color 0.3s ease;
     }
-    {{ end }}
 
-    /* 3. 代码块折叠样式 */
+    /* Arrow icon using CSS border trick */
+    #back-to-top:before {
+        content: "";
+        display: inline-block;
+        position: relative;
+        transform: rotate(135deg);
+        height: 8px;
+        width: 8px;
+        border-width: 0 0 2px 2px;
+        border-color: var(--back-to-top-color);
+        border-style: solid;
+    }
+
+    /* Hover effects for better UX */
+    #back-to-top:hover {
+        transform: scale(1.1);
+        background-color: var(--accent-background);
+    }
+
+    #back-to-top:hover:before {
+        border-color: var(--accent-color);
+    }
+
+    /* Responsive adjustments for mobile devices */
+    @media screen and (max-width: 768px) {
+        #back-to-top {
+            bottom: 10px;
+            right: var(--container-padding);
+            width: 35px;
+            height: 35px;
+            line-height: 32px;
+        }
+    }
+
+    /* ────────────────────────────────────────────────────────────── */
+    /* 3. Code Block Collapse/Expand                                  */
+    /*    Adds expand button for tall code blocks with fade effect    */
+    /* ────────────────────────────────────────────────────────────── */
+    
+    /* Color scheme variables for light/dark modes */
     :root {
-        /* 亮色模式下的默认颜色 */
-        --code-fade-color: white; 
-        --code-btn-bg: #f0f0f5;  
-        --code-btn-icon-color: #333; 
+        --code-fade-color: white;
+        --code-btn-bg: #f0f0f5;
+        --code-btn-icon-color: #333;
     }
 
     html[data-scheme="dark"] {
-        /* 适配 Stack 主题的暗黑模式颜色 */
         --code-fade-color: #2e2e2e;
         --code-btn-bg: #424242;
         --code-btn-icon-color: #c5c5c5;
     }
 
+    /* Code block container with height limit */
     .highlight {
         max-height: 400px;
         overflow: hidden;
         position: relative;
         transition: max-height 0.3s ease-in-out;
     }
+
     .highlight.code-show {
-        max-height: none !important;
+        max-height: none !important; /* Remove limit when expanded */
     }
+
+    /* Gradient fade overlay at bottom of code block */
     .code-more-box {
         width: 100%;
         padding-top: 78px;
@@ -63,11 +116,14 @@
         bottom: 0;
         z-index: 1;
         transition: background-image 0.3s;
-        pointer-events: none; /* 让遮罩本身不响应点击 */
+        pointer-events: none; /* Allow click-through to button */
     }
+
     .highlight.code-show .code-more-box {
-        background-image: none;
+        background-image: none; /* Remove fade when expanded */
     }
+
+    /* Expand/collapse button styling */
     .code-more-btn {
         display: block;
         margin: auto;
@@ -81,8 +137,9 @@
         position: relative;
         z-index: 2;
         transition: background-color 0.3s;
-        pointer-events: auto; /* 确保按钮可以被点击 */
+        pointer-events: auto; /* Ensure button is clickable */
     }
+
     .code-more-img {
         display: block;
         margin: auto;
@@ -91,7 +148,13 @@
         color: var(--code-btn-icon-color);
         stroke: currentColor;
     }
-    /* 动态名言容器样式 */
+
+    /* ────────────────────────────────────────────────────────────── */
+    /* 4. Dynamic Quote Container                                     */
+    /*    Displays random quotes with author attribution              */
+    /* ────────────────────────────────────────────────────────────── */
+    
+    /* Main container with card styling */
     .dynamic-quote-container {
         width: 100%;
         margin: 40px auto;
@@ -104,42 +167,43 @@
         align-items: center;
     }
 
-    /* 2. 引用块：实现左右分离的核心 (Flexbox) */
+    /* Flexbox layout: quote text on left, author on right */
     .dynamic-quote-container blockquote {
         width: 100%;
         margin: 0;
-        display: flex; /* 启用 Flexbox 布局 */
-        justify-content: space-between; /* 关键：让子元素两端对齐 */
-        align-items: flex-end; /* 让作者和引言底部对齐，效果更好 */
-        gap: 25px; /* 在引言和作者之间保留一些间距 */
+        display: flex;
+        justify-content: space-between; /* Space between quote and author */
+        align-items: flex-end; /* Align baselines */
+        gap: 25px;
         transition: opacity 0.5s;
     }
 
-    /* 3. 引言正文样式 (左侧部分) */
+    /* Quote text styling (left side) */
     .dynamic-quote-container blockquote p {
         margin: 0;
-        flex-grow: 1; /* 占据所有剩余空间 */
-        font-size: 1.6rem; /* 清晰、适中的字体大小 */
+        flex-grow: 1; /* Take up remaining space */
+        font-size: 1.6rem;
         line-height: 1.8;
         color: var(--card-text-color-main);
     }
 
-    /* 4. 来源/作者样式 (右侧部分) */
+    /* Author/source citation (right side) */
     .dynamic-quote-container blockquote cite {
-        flex-shrink: 0; /* 防止作者信息被压缩 */
+        flex-shrink: 0; /* Prevent compression */
         font-size: 1.3rem;
         font-style: normal;
         color: var(--card-text-color-secondary);
-        white-space: nowrap; /* 防止作者和书名换行 */
+        white-space: nowrap;
         text-align: right;
     }
-    /* 用伪元素添加破折号，更符合排版规范 */
+
+    /* Add em dash before author name */
     .dynamic-quote-container blockquote cite::before {
         content: "— ";
         margin-right: 2px;
     }
 
-    /* 5. 加载时的提示信息样式 */
+    /* Loading state placeholder */
     .dynamic-quote-container blockquote i {
         font-style: italic;
         color: var(--card-text-color-tertiary);
@@ -147,130 +211,193 @@
         width: 100%;
     }
 
-    /* 6. 移动端响应式处理：当屏幕变窄时，自动切换为上下布局 */
+    /* Responsive: Stack vertically on narrow screens */
     @media (max-width: 680px) {
         .dynamic-quote-container blockquote {
-            flex-direction: column; /* 垂直排列 */
-            align-items: flex-end;  /* 整体靠右对齐 */
-            gap: 12px; /* 减小垂直间距 */
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
         }
 
         .dynamic-quote-container blockquote p {
             width: 100%;
-            text-align: left; /* 在垂直布局时，正文保持左对齐 */
+            text-align: left;
         }
     }
 </style>
 
 <!-- ================================================================ -->
-<!-- 自定义全局脚本 -->
+<!--                        GLOBAL SCRIPTS                            -->
 <!-- ================================================================ -->
-<script>
-    // 确保在整个文档加载完毕后再执行所有脚本
+<script id="custom-global-scripts"
+    {{ with resources.Get "icons/caret-down.svg" }}
+        data-more-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
+    {{ end }}
+    {{ with resources.Get "icons/caret-up.svg" }}
+        data-less-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
+    {{ end }}>
+    
+    // Wait for full DOM load before executing scripts
     document.addEventListener("DOMContentLoaded", function() {
 
+        /* ══════════════════════════════════════════════════════════ */
+        /* Feature 1: Dynamic Table of Contents                       */
+        /* ══════════════════════════════════════════════════════════ */
         /**
-         * 功能一：动态目录
-         * 根据页面滚动位置，自动展开和折叠当前章节的目录
+         * Automatically expands/collapses TOC sections based on scroll position
+         * - Collapses inactive sections to reduce visual clutter
+         * - Expands current section and all parent sections
+         * - Uses passive event listener for better scroll performance
          */
         function initTocHide() {
             const toc = document.querySelector(".widget--toc");
-            if (!toc) return;
+            if (!toc) return; // Exit if no TOC widget exists
 
             window.addEventListener('scroll', function() {
+                // Step 1: Collapse all currently open sections
                 const openUls = document.querySelectorAll("#TableOfContents .open");
                 openUls.forEach(ul => ul.classList.remove("open"));
 
+                // Step 2: Find the currently active heading
                 const currentLi = document.querySelector("#TableOfContents .active-class");
                 if (!currentLi) return;
 
+                // Step 3: Expand current section's children (if any)
                 if (currentLi.children.length > 1 && currentLi.children[1].matches('ul, ol')) {
                     currentLi.children[1].classList.add("open");
                 }
 
+                // Step 4: Expand all parent sections recursively
                 let parentUl = currentLi.parentElement;
                 while (parentUl && parentUl.closest('#TableOfContents')) {
                     if (parentUl.matches('ul, ol')) {
                         parentUl.classList.add("open");
                     }
+                    // Move up to next parent level
                     if (parentUl.parentElement && parentUl.parentElement.tagName === 'LI') {
                         parentUl = parentUl.parentElement.parentElement;
                     } else {
                         break;
                     }
                 }
-            }, { passive: true }); // 使用 passive listener 提升滚动性能
+            }, { passive: true }); // Passive listener improves scroll performance
         }
 
+        /* ══════════════════════════════════════════════════════════ */
+        /* Feature 2: Back to Top Button                              */
+        /* ══════════════════════════════════════════════════════════ */
         /**
-         * 功能二：返回顶部按钮
-         * 在右侧边栏动态创建并显示/隐藏返回顶部的按钮
+         * Floating button that scrolls page to top with smooth animation
+         * - Auto-shows when user scrolls down > 200px
+         * - Uses smooth scroll behavior for better UX
+         * - Positioned in bottom-right corner
          */
-        function initScrollTop() {
-            const rightSideBar = document.querySelector(".right-sidebar");
-            if (!rightSideBar) return;
+        function initBackToTop() {
+            const totopBtn = document.getElementById('back-to-top');
+            if (!totopBtn) return; // Exit if button doesn't exist
 
-            const btn = document.createElement("div");
-            btn.id = "backTopBtn";
-            btn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
-            rightSideBar.appendChild(btn);
+            /**
+             * Smooth scroll to page top
+             * @param {Event} event - Click event object
+             */
+            function backToTop(event) {
+                event.preventDefault(); // Prevent anchor jump
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth' // Native smooth scroll
+                });
+            }
 
-            window.addEventListener('scroll', function() {
-                btn.style.display = (window.scrollY > 20) ? "block" : "none";
-            }, { passive: true });
+            /**
+             * Show/hide button based on scroll position
+             * Threshold: 200px from top
+             */
+            function toggleVisibility() {
+                let scrollTop = window.scrollY || document.documentElement.scrollTop;
+                totopBtn.style.display = scrollTop < 200 ? 'none' : 'inline';
+            }
+
+            // Bind event listeners
+            totopBtn.addEventListener('click', backToTop, false);
+            window.addEventListener('scroll', toggleVisibility, { passive: true });
+
+            // Set initial state
+            toggleVisibility();
         }
 
+        /* ══════════════════════════════════════════════════════════ */
+        /* Feature 3: Code Block Collapse/Expand                      */
+        /* ══════════════════════════════════════════════════════════ */
         /**
-         * 功能三：代码块折叠/展开
-         * 为高度超过预设值的代码块添加“展开”按钮
+         * Adds expand/collapse functionality to tall code blocks
+         * - Only processes blocks taller than visible area
+         * - Uses inline Base64 SVG icons to avoid network requests
+         * - Toggles between "show more" and "show less" states
+         * - Triggers window resize event for layout recalculation
          */
         function initCodeMoreBox() {
             const codeBlocks = document.querySelectorAll(".highlight");
             if (!codeBlocks.length) return;
 
-            // 使用 Base64 内联 SVG，避免额外网络请求
-            let moreIconSrc = '', lessIconSrc = '';
-            {{ with resources.Get "icons/caret-down.svg" }}
-                {{ $iconContent := .Content | base64Encode }}
-                moreIconSrc = 'data:image/svg+xml;base64,{{ $iconContent }}';
-            {{ end }}
-            {{ with resources.Get "icons/caret-up.svg" }}
-                {{ $iconContent := .Content | base64Encode }}
-                lessIconSrc = 'data:image/svg+xml;base64,{{ $iconContent }}';
-            {{ end }}
+            // Retrieve icon data from script tag attributes
+            const scriptTag = document.getElementById('custom-global-scripts');
+            const moreIconSrc = scriptTag.dataset.moreIconSrc || '';
+            const lessIconSrc = scriptTag.dataset.lessIconSrc || '';
+
+            // Exit if icons are missing (prevents broken functionality)
+            if (!moreIconSrc || !lessIconSrc) return;
 
             codeBlocks.forEach(codeBlock => {
+                // Skip blocks that fit within height limit
                 if (codeBlock.scrollHeight <= codeBlock.offsetHeight) return;
 
+                // Create container for fade overlay and button
                 const codeMoreBox = document.createElement('div');
                 codeMoreBox.classList.add('code-more-box');
                 
+                // Create expand/collapse button
                 const codeMoreBtn = document.createElement('span');
                 codeMoreBtn.classList.add('code-more-btn');
                 
+                // Create icon image element
                 const img = document.createElement('img');
                 img.classList.add('code-more-img');
                 img.src = moreIconSrc;
                 img.setAttribute('alt', 'Expand code block'); 
 
+                /**
+                 * Toggle expanded/collapsed state
+                 * - Switches between caret-down and caret-up icons
+                 * - Updates accessibility attributes
+                 * - Dispatches resize event for other components
+                 */
                 codeMoreBtn.addEventListener('click', () => {
                     codeBlock.classList.toggle('code-show');
                     const isShown = codeBlock.classList.contains('code-show');
+                    
+                    // Update icon and alt text
                     img.src = isShown ? lessIconSrc : moreIconSrc;
                     img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
                     
+                    // Notify other components of layout change
                     window.dispatchEvent(new Event('resize'));
                 });
 
+                // Assemble and append elements
                 codeMoreBtn.appendChild(img);
                 codeMoreBox.appendChild(codeMoreBtn);
                 codeBlock.appendChild(codeMoreBox);
             });
         }
 
+        /* ══════════════════════════════════════════════════════════ */
+        /* Feature 4: Horizontal Scroll with Mouse Wheel              */
+        /* ══════════════════════════════════════════════════════════ */
         /**
-         * 功能四：鼠标滚轮控制横向滚动
-         * 监听特定区域，将垂直滚轮事件转换为水平滚动
+         * Converts vertical wheel scroll to horizontal scroll in specific areas
+         * - Useful for wide content like timelines or image galleries
+         * - Requires passive: false to call preventDefault()
+         * - Only applies to elements with .subsection-list class
          */
         function initHorizontalScroll() {
             const scrollArea = document.querySelector('.subsection-list');
@@ -278,19 +405,21 @@
 
             scrollArea.addEventListener('wheel', function(event) {
                 if (event.deltaY !== 0) {
-                    // 阻止默认的垂直滚动行为，这是实现横向滚动的关键
+                    // Prevent default vertical scroll
                     event.preventDefault();
-                    // 将垂直滚动量应用到水平滚动上
+                    // Apply vertical scroll delta to horizontal position
                     scrollArea.scrollLeft += event.deltaY;
                 }
-            }, { passive: false }); // 此处必须为 passive: false 才能调用 preventDefault()
+            }, { passive: false }); // Must be false to use preventDefault()
         }
 
-        // --- 统一调用所有初始化函数 ---
-        // 使用 try...catch 块包裹，防止一个功能的错误影响其他功能
+        /* ══════════════════════════════════════════════════════════ */
+        /*                    Initialize All Features                  */
+        /* ══════════════════════════════════════════════════════════ */
+        // Wrap in try-catch to prevent one feature's error from breaking others
         try {
             initTocHide();
-            initScrollTop();
+            initBackToTop();
             initCodeMoreBox();
             initHorizontalScroll();
         } catch (e) {

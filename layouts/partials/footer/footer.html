@@ -30,4 +30,6 @@
         Published {{ len (where .Site.RegularPages "Section" "post") }} aritcles · 
         Total {{ div ($scratch.Get "total") 1000.0 | lang.FormatNumber 2 }}k words
     </section>
+    <!-- Back to top button -->
+    <a href="#" id="back-to-top" title="back to top"></a>
 </footer>
