@@ -6,4 +6,5 @@ style:
     background: "#2a9d8f"
     color: "#fff"
 description: "Demanding but fascinating"
+on_topic: true
 ---
