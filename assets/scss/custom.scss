@@ -274,24 +274,22 @@ html[data-scheme="dark"] {
   min-height: 300px;
   padding: var(--card-padding);
   overflow: hidden;
-  
-  /* Text area styling */
+
   .section-details {
     flex: 1 1 50%;
     padding-right: calc(var(--card-padding) * 2);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: right; 
+    text-align: right;
   }
 
-  /* Image area styling */
   .section-image {
     flex-shrink: 0;
     width: 45%;
     max-width: 450px;
     height: calc(300px - var(--card-padding) * 2);
-    
+
     img {
       width: 100%;
       height: 100%;
@@ -300,7 +298,6 @@ html[data-scheme="dark"] {
     }
   }
 
-  /* Typography styling */
   .section-count {
     font-size: 1.2rem;
     font-weight: 500;
@@ -317,13 +314,11 @@ html[data-scheme="dark"] {
     color: var(--card-text-color-main);
     word-break: break-word;
     letter-spacing: 0.1em;
-    
-    /* Increase letter spacing for short titles */
+
     &[data-short-title] {
       letter-spacing: 0.2em;
     }
 
-    /* Style first letter of each word: bold and red */
     .first-letter-accent {
       font-weight: 400;
       color: var(--accent-color);
@@ -336,4 +331,55 @@ html[data-scheme="dark"] {
     margin-top: 12px;
     letter-spacing: 0.2em;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 8. Topic Page Style Overrides                                  */
+/* ══════════════════════════════════════════════════════════════ */
+.section-topic {
+  .article-list {
+    article {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: var(--shadow-l3);
+      }
+    }
+
+    .article-title {
+      font-size: 3.5rem;
+      letter-spacing: 0.2em;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .article-content p {
+      font-size: 2rem;
+      font-weight: 300;
+      line-height: 1.6;
+      letter-spacing: 0.2em;
+      margin-top: 0;
+      color: var(--card-text-color-secondary);
+    }
+
+    .article-image {
+      margin-bottom: 2rem;
+
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.section-topic .article-list .article-image {
+  max-height: 450px;
+  overflow: hidden;
+}
+
+.section-topic .article-list .article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover
 }

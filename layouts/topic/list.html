@@ -1,0 +1,42 @@
+{{ define "main" }}
+
+    {{ $homepageCategories := slice }}
+    {{ range .Site.Taxonomies.categories }}
+        {{ if .Page.Params.on_topic }}
+            {{ $homepageCategories = $homepageCategories | append .Page }}
+        {{ end }}
+    {{ end }}
+
+    {{ $paginator := .Paginate $homepageCategories }}
+
+    <section class="article-list">
+        {{ range $categoryPage := $paginator.Pages }}
+            {{ $hasImage := $categoryPage.Params.image }}
+            <article class="{{ if $hasImage }}has-image{{ end }}">
+                <header class="article-header">
+                    {{ with $categoryPage.Params.image }}
+                    <div class="article-image">
+                        <a href="{{ $categoryPage.Permalink }}">
+                            <img src="{{ . | relURL }}" loading="lazy"/>
+                        </a>
+                    </div>
+                    {{ end }}
+                </header>
+                <div class="article-content">
+                    <h2 class="article-title">
+                        <a href="{{ $categoryPage.Permalink }}">{{ $categoryPage.Title }}</a>
+                    </h2>
+                    {{ with $categoryPage.Params.description }}
+                    <p>{{ . }}</p>
+                    {{ end }}
+                </div>
+            </article>
+        {{ end }}
+    </section>
+
+    {{- partial "pagination.html" . -}}
+    {{- partial "footer/footer" . -}}
+{{ end }}
+
+{{ define "body-class" }}section-topic{{ end }}
+
