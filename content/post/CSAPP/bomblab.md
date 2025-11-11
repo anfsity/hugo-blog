@@ -42,7 +42,7 @@ Bomb Lab 是 CSAPP 的第二个实验。在这个实验中，你将获得一个�
 
 在一无所知的情况下，我们先来看看 bomb.c。
 
-![[Pasted image 20251101001912.png]]
+![image](https://i.111666.best/image/IdTE0LcssTIaCOV8U72OvG.png)
 
 通过这个源码，我们可以知道整个炸弹由 6 个 phase 和一个潜藏的 bonus 组成。那么我们要找的密码，肯定就在这些代码里面。问题是要怎么得到他们呢？
 
@@ -57,7 +57,7 @@ nvim bomb.strings
 
 刨去一堆看不太懂的东西，我们可以发现似乎有些可读句子在里面 ：
 
-![[Pasted image 20251101003011.png]]
+![image](https://i.111666.best/image/RWr7zf5fGtmq842xlwQ1MH.png)
 
 看看这些句子，除了祝贺你成功拆除了 phase，似乎还有些别的 "杂质" 在这里面，这些会不会是密码呢？
 
@@ -104,11 +104,11 @@ bomb:     file format elf64-x86-64
 
 看起来这个 explode_bomb 函数就是引爆炸弹的函数了，接下来找到我们的 main 函数 ：
 
-![[Pasted image 20251101004823.png]]
+![image](https://i.111666.best/image/F00YcWQkjvMJYTZAAmHEkH.png)
 
 不管那些奇奇怪怪的函数调用，基本和 bomb.c 的结构是一样的，再看看 phase_1 ：
 
-![[Pasted image 20251101004933.png]]
+![image](https://i.111666.best/image/h6ibRcE4zOBcTgV9zb15r3.png)
 
 很短，看起来是输入一个字符串，然后和一个字符串比较，根据结果引爆炸弹。我们当然可以直接通过分析得到得到这个密码，虽然手段有些复杂，但是为什么不使用更加强大和简单的工具呢？
 
@@ -254,9 +254,9 @@ End of assembler dump.
 
 这里要重点说一下。刚刚开始做 bomb lab 的时候，我搞不明白为什么程序要把这些值丢到这些寄存器里面，一开始只能靠猜，后面会打印寄存器的值来看，再后面学到了这些寄存器的惯用法。
 
-![[Pasted image 20251101015548.png]]
+![image](https://i.111666.best/image/SanLZAyfwiwuWD999873oD.png)
 
-![[Pasted image 20251101015608.png]]
+![image](https://i.111666.best/image/WZLS3RF0bInxziaf1ELX7O.png)
 
 这两张图很重要，他们很简洁，十分方便查阅。对于 esi ，它会被当作第二个函数的第二个参数使用，同时被用于存储字符串指针。
 
@@ -354,7 +354,7 @@ $8 = 1
 
 接下来是一个 test 指令 ：
 
-![[Pasted image 20251101030932.png]]
+![image](https://i.111666.best/image/C1fKnJcED2EzrMzsarRyQn.png)
 
 ```bash
 => 0x0000000000400eee <+14>:    test   %eax,%eax
@@ -501,7 +501,7 @@ int sscanf( const char *buffer, const char *format, ... );
 
 我们来详细解析一下这个过程，在调用这个 read 函数前， 程序先干了这么一件事 `mov    %rsp,%rsi` ，这个命令的作用暂且不表，看看前面一长串 mov lea 指令干了什么 ：
 
-![[Pasted image 20251101195910.png]]
+![image](https://i.111666.best/image/hLieyC6aUltRyUg24AUcMt.png)
 
 之前整个的 mov 和 lea 操作的 source 都是对 rsi 和 rsi 的偏移量进行操作。事实上，从 rsi 开始，每隔 4 个字节，就会把其地址放进寄存器里面，上面这个图给出了对应关系。
 
@@ -725,7 +725,7 @@ End of assembler dump.
 
 和我们的期望是一样的。下面的 ja 是 
 
-![[Pasted image 20251101215411.png]]
+![image](https://i.111666.best/image/9W7hqlF0ZJfUfiBAEM10PX.png)
 
 这限制了我们的第一个参数只能在 0 和 7 之间，接下来是这两个指令 ：
 
@@ -1067,7 +1067,7 @@ rbx            0x0                 0
 
 在跳到 41 行前，eax 被置 0，可以观察出这是一个长度为 6 的循环。
 
-![[Pasted image 20251102130811.png]]
+![image](https://i.111666.best/image/1pIj8B1qJbpeRW7OWWBN61.png)
 
 我们一步一步来，第一句 `movzbl (%rbx,%rax,1),%ecx` ，在 rax = 0 的时候，source 值是 M[rbx]，也就是我们输入的第一个 char 的 ASCII 码。movzbl 的全称是 move zero extend byte to long，也就是把 source 的 low-byte 给零拓展到 rcx 里面，用于 unsigned 类型，b 是一个字节，也就是说明这是一个对 char 类型的操作。在 c 语言里面，这个指令大概长这样子 `int target = (int)str` 。
 
@@ -1151,7 +1151,7 @@ $17 = 103 'g'
 
 phase 6 将是我们碰到的最复杂难度最高的一个phase 6，他很长，而且很复杂。anway, 做好心理准备，我们继续。
 
-![[Pasted image 20251102134714.png]]
+![image](https://i.111666.best/image/oOAwRtn89AHg5YwZTgvWOL.png)
 
 这里 read six numbers 和 phase 2 是同一个函数，同样的 rsp 存放 num1 的地址。
 
@@ -1418,11 +1418,11 @@ rcx 里面就会依次保存 num1 到 num6 了。166 行到 169 行：
 
 是不是有点感觉了，一口气把这里的内容都打印出来 ：
 
-![[Pasted image 20251102151457.png]]
+![image](https://i.111666.best/image/yGPqsDBE7MUirmBT5VYrVY.png)
 
 地址表示是小端法，如图 ：
 
-![[Pasted image 20251102152225.png]]
+![image](https://i.111666.best/image/Usmyl9dZqe7CRYOi6Nn6Ym.png)
 
 也就是 ：
 
@@ -1458,7 +1458,7 @@ edx 被直接赋值了 node1，这是因为 eax 里的默认值是 1，而小循
 
 所以我们可以画出这个内存 。
 
-![[Pasted image 20251102155808.png]]
+![image](https://i.111666.best/image/ZtUiSgBO854ZUxag8UszoA.png)
 
 跳出这个给链表分配内存的循环，来到 183 行：
 
@@ -1601,11 +1601,11 @@ Therefore, we have a correspondence ： 1 -> 6 -> node6
 
 还记得我们的 bomb.asm 吗，我们在里面看到了一个 phase，就在 phase_6 下面。
 
-![[Pasted image 20251102163842.png]]
+![image](blob:https://111666.best/85b417b9-4040-4106-8027-75a02497b2b1)
 
 这就是我们的隐藏奖励，我们看到他在 phase_defused 里面被调用 ：
 
-![[Pasted image 20251102164034.png]]
+![image](https://i.111666.best/image/6RmeT1X3mS0fBA7wOQlPfF.png)
 
 4015d8 行告诉我们，这里必须要输入六个字符串后才被调用。看看输入格式 ：
 
@@ -1741,7 +1741,7 @@ eax = -1;
 
 我们知道 rdi 的初始值是这个地址 `0x6030f0`，看他左跳右跳的，我们打印一下从这个地址开始的内容 ：
 
-![[Pasted image 20251102175913.png]]
+![image](https://i.111666.best/image/pCJ9ghRvfEmVFLZ99m0jmE.png)
 
 和看起来和链表差不多，从一个地址指向另一个地址。
 
@@ -1754,7 +1754,8 @@ eax = -1;
 
 这说明，偏移 0x8 指向一个地址， 偏移 0x10 指向另一个地址，我们把这个图完全画出来：
 
-![[Pasted image 20251102180936.png]]
+![image](https://i.111666.best/image/vIOjO1TZiM18lhJhIwmONE.png)
+
 这是一个完全二叉树，这样，我们就可以写出大概的代码了。
 
 ```cpp
@@ -1791,7 +1792,7 @@ int fun7 (Node* root, int input_num) {
 
 至此，我们拆解了所有的 phase。
 
-![[Pasted image 20251102182533.png]]
+![image](https://i.111666.best/image/nWfv1lYzKyB69IgQVWbIx4.png)
 
 ## Conclusion
 
