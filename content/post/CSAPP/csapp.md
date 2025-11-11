@@ -14,7 +14,7 @@ image = "https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg"
 
 +++
 
-目前施工正在进行中，目前仅做完 DataLab
+目前施工正在进行中，目前仅做完 AttackLab
 
 ## 目录
 
@@ -22,7 +22,7 @@ image = "https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg"
 >
 >  [Bomb Lab]({{< relref "BombLab.md" >}})
 >
-> Attack Lab
+>  [Attack Lab]({{< relref "attacklab.md" >}})
 >
 > Architechture Lab
 >
