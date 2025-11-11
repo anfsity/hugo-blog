@@ -11,6 +11,7 @@ categories = [
 ]
 description = "板切cf"
 image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
+img_style = "object-fit: cover; object-position: 0% 30%;"
 +++
 
 ![ycy](https://t.alcy.cc/ycy)
