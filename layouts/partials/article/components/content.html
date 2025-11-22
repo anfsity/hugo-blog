@@ -1,31 +1,16 @@
 <section class="article-content">
-    {{/* 1. 获取原始内容 */}}
     {{- $content := .Content -}}
-
-    {{/* 2. 稳健的路径计算逻辑 */}}
-    {{/* 直接获取文件全路径，例如: content/post/CSAPP/archlab.md */}}
     {{- $filePath := .File.Path -}}
-    
-    {{/* 获取目录: content/post/CSAPP */}}
     {{- $dir := path.Dir $filePath -}}
-    
-    {{/* 统一路径分隔符为 / (解决 Windows/Linux 差异) */}}
     {{- $dir = replace $dir "\\" "/" -}}
-    
-    {{/* 去除开头的 "content/" */}}
     {{- $relDir := strings.TrimPrefix "content/" $dir -}}
-    
-    {{/* 构建最终图片前缀: /post/CSAPP/images/ */}}
     {{- $imagePrefix := printf "/%s/images/" $relDir -}}
 
-    {{/* 3. 替换 Obsidian 语法 */}}
     {{- $obsidianImgTag := printf `<img src="%s$1" alt="$1" loading="lazy" />` $imagePrefix -}}
     {{- $content = $content | replaceRE `!\[\[([^|\]]+)(?:\|[^\]]+)?\]\]` $obsidianImgTag -}}
 
-    {{/* 4. 处理表格 (保留原有功能) */}}
     {{- $wrappedTable := printf "<div class=\"table-wrapper\">${1}</div>" -}}
     {{- $content = $content | replaceRE "(<table>(?:.|\n)+?</table>)" $wrappedTable -}}
 
-    {{/* 5. 输出 HTML */}}
     {{- $content | safeHTML -}}
 </section>
