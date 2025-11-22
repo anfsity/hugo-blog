@@ -14,7 +14,7 @@ image = "https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg"
 
 +++
 
-目前施工正在进行中，目前仅做完 AttackLab
+目前施工正在进行中，目前仅做完 Arch Lab
 
 ## 目录
 
@@ -24,7 +24,7 @@ image = "https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg"
 >
 >  [Attack Lab]({{< relref "attacklab.md" >}})
 >
-> Architechture Lab
+>  [Arch Lab]({{< relref "archlab.md" >}})
 >
 > Cache Lab
 >
