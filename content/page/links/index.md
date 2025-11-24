@@ -5,6 +5,10 @@ links:
     description: 只因"现在"深爱其中
     website: https://www.elainafan.one/
     image: https://www.elainafan.one/img/avatar_hu1071812203031902840.jpg
+  - title: 柳上川
+    description: 宁可清贫自乐, 不作浊富多忧
+    website: https://kawayww.com
+    image: https://kawayww.com/images/blog/avatar.avif
 
 menu:
     main: 
