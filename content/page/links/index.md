@@ -34,4 +34,4 @@ image: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298
 
 按照我的链接格式在下面留言或者发邮件给 anfsity@anfstiy.me 都可以。
 
-欢迎来玩啊 QAQ
+要来玩喵 QAQ

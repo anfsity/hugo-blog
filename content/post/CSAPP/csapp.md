@@ -28,8 +28,6 @@ image = "https://i.111666.best/image/WlxWjkwsJem51r4djTr0Bl.jpeg"
 >
 > Cache Lab
 >
-> Performance Lab
->
 > Shell Lab
 >
 > Malloc Lab
