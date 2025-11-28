@@ -14,8 +14,6 @@ image = "https://i.111666.best/image/nTg9J6fvwtRlQlqoZluwMQ.jpeg"
 img_style = "object-fit: cover; object-position: 0% 30%;"
 +++
 
-![ycy](https://t.alcy.cc/ycy)
-
 ## Index
 
  - [1400]({{< relref "1400.md" >}})
