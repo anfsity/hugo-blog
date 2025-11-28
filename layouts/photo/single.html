@@ -182,6 +182,22 @@
         nextBtn.addEventListener('click', () => { if (imageData.length > 0) showImage((currentIndex + 1) % imageData.length); });
         prevBtn.addEventListener('click', () => { if (imageData.length > 0) showImage((currentIndex - 1 + imageData.length) % imageData.length); });
 
+        carousel.addEventListener('click', (e) => {
+            if (e.target.closest('.carousel-btn')) return;
+
+            const rect = carousel.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const width = rect.width;
+            const clickRatio = x / width;
+
+            if (clickRatio < 0.3) {
+                if (imageData.length > 0) showImage((currentIndex - 1 + imageData.length) % imageData.length);
+            } 
+            else if (clickRatio > 0.7) {
+                if (imageData.length > 0) showImage((currentIndex + 1) % imageData.length);
+            }
+        });
+
         async function init() {
             await fetchImageUrls(5);
             if (imageData.length > 0) {
