@@ -341,10 +341,6 @@ html[data-scheme="dark"] {
     article {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-      &:hover {
-        transform: translateY(-5px) scale(1.01);
-        box-shadow: var(--shadow-l3);
-      }
     }
 
     .article-title {
@@ -357,7 +353,7 @@ html[data-scheme="dark"] {
 
     .article-content p {
       font-size: 2rem;
-      font-weight: 300;
+      font-weight: 350;
       line-height: 1.6;
       letter-spacing: 0.2em;
       margin-top: 0;
@@ -374,7 +370,7 @@ html[data-scheme="dark"] {
 }
 
 .section-topic .article-list .article-image {
-  max-height: 450px;
+  max-height: 380px;
   overflow: hidden;
 }
 
