@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function initTocHide() {
         const toc = document.querySelector(".widget--toc");
-        if (!toc) return; // Exit if no TOC widget exists
+        if (!toc) return;
 
         window.addEventListener('scroll', function () {
             // Step 1: Collapse all currently open sections
@@ -41,49 +41,62 @@ document.addEventListener("DOMContentLoaded", function () {
                     break;
                 }
             }
-        }, { passive: true }); // Passive listener improves scroll performance
+        }, { passive: true });
     }
 
     /* ══════════════════════════════════════════════════════════ */
-    /* Feature 2: Back to Top Button                              */
+    /* Feature 2: Back to Top Button (With Progress %)            */
     /* ══════════════════════════════════════════════════════════ */
-    /**
-     * Floating button that scrolls page to top with smooth animation
-     * - Auto-shows when user scrolls down > 200px
-     * - Uses smooth scroll behavior for better UX
-     * - Positioned in bottom-right corner
-     */
     function initBackToTop() {
         const totopBtn = document.getElementById('back-to-top');
-        if (!totopBtn) return; // Exit if button doesn't exist
+        if (!totopBtn) return;
 
-        /**
-         * Smooth scroll to page top
-         * @param {Event} event - Click event object
-         */
-        function backToTop(event) {
-            event.preventDefault(); // Prevent anchor jump
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth' // Native smooth scroll
-            });
+        const progressNum = totopBtn.querySelector('.progress-num') as HTMLElement;
+
+        function backToTop(event: Event) {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /**
-         * Show/hide button based on scroll position
-         * Threshold: 200px from top
-         */
-        function toggleVisibility() {
-            let scrollTop = window.scrollY || document.documentElement.scrollTop;
-            totopBtn.style.display = scrollTop < 200 ? 'none' : 'inline';
+        function updateState() {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = document.documentElement.clientHeight;
+
+            const validHeight = scrollHeight - clientHeight;
+            let percent = 0;
+
+            if (validHeight > 0) {
+                percent = Math.round((scrollTop / validHeight) * 100);
+            }
+            if (percent > 100) percent = 100;
+            if (percent < 0) percent = 0;
+
+            if (progressNum) {
+                progressNum.innerText = `${percent}%`;
+            }
+
+            if (scrollTop > 100) {
+                totopBtn?.classList.add('show');
+            } else {
+                totopBtn?.classList.remove('show');
+            }
         }
 
-        // Bind event listeners
         totopBtn.addEventListener('click', backToTop, false);
-        window.addEventListener('scroll', toggleVisibility, { passive: true });
 
-        // Set initial state
-        toggleVisibility();
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateState();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+
+        updateState();
     }
 
     /* ══════════════════════════════════════════════════════════ */
@@ -105,22 +118,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const moreIconSrc = scriptTag.dataset.moreIconSrc || '';
         const lessIconSrc = scriptTag.dataset.lessIconSrc || '';
 
-        // Exit if icons are missing (prevents broken functionality)
         if (!moreIconSrc || !lessIconSrc) return;
 
         codeBlocks.forEach(codeBlock => {
             // Skip blocks that fit within height limit
             if (codeBlock.scrollHeight <= codeBlock.offsetHeight) return;
 
-            // Create container for fade overlay and button
             const codeMoreBox = document.createElement('div');
             codeMoreBox.classList.add('code-more-box');
 
-            // Create expand/collapse button
             const codeMoreBtn = document.createElement('span');
             codeMoreBtn.classList.add('code-more-btn');
 
-            // Create icon image element
             const img = document.createElement('img');
             img.classList.add('code-more-img');
             img.src = moreIconSrc;
@@ -136,15 +145,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 codeBlock.classList.toggle('code-show');
                 const isShown = codeBlock.classList.contains('code-show');
 
-                // Update icon and alt text
                 img.src = isShown ? lessIconSrc : moreIconSrc;
                 img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
 
-                // Notify other components of layout change
                 window.dispatchEvent(new Event('resize'));
             });
 
-            // Assemble and append elements
             codeMoreBtn.appendChild(img);
             codeMoreBox.appendChild(codeMoreBtn);
             codeBlock.appendChild(codeMoreBox);
@@ -166,23 +172,111 @@ document.addEventListener("DOMContentLoaded", function () {
 
         scrollArea.addEventListener('wheel', function (event) {
             if (event.deltaY !== 0) {
-                // Prevent default vertical scroll
                 event.preventDefault();
-                // Apply vertical scroll delta to horizontal position
                 scrollArea.scrollLeft += event.deltaY;
             }
-        }, { passive: false }); // Must be false to use preventDefault()
+        }, { passive: false });
+    }
+
+    /* ══════════════════════════════════════════════════════════ */
+    /* Feature 5: Music Player & Lyrics Auto-Scroll               */
+    /* ══════════════════════════════════════════════════════════ */
+    /**
+     * Initializes the NyxPlayer and handles dynamic lyrics scrolling
+     * - Dynamically imports the player module
+     * - Sets up a safe MutationObserver to detect long lyrics
+     * - Toggles .is-long class to trigger CSS scrolling animation
+     */
+    async function initMusicPlayer() {
+        const playerMount = document.getElementById('nyx-player-mount');
+        if (!playerMount) return;
+
+        try {
+            console.log('NyxPlayer: Initializing...');
+            
+            // @ts-ignore: Ignore TS error for absolute path import
+            const module = await import('/lib/nyx-player.js');
+            const { initPlayer } = module;
+
+            initPlayer(
+                '#nyx-player-mount',
+                '#music-btn',
+                [
+                    {
+                        name: '我喜欢',
+                        url: 'https://music.163.com/#/my/m/music/playlist?id=2921261234'
+                    }
+                ],
+                null,
+                'html[data-scheme="dark"]'
+            );
+
+            const observeLyrics = () => {
+                const lrcContainer = document.querySelector('#MusicPlayerRoot .lrc');
+                if (!lrcContainer) return;
+
+                const checkCurrentLine = () => {
+                    const current = lrcContainer.querySelector('p.current');
+                    if (!current) return;
+
+                    const isOverflow = Math.ceil(current.scrollWidth) > Math.ceil(current.clientWidth);
+                    
+                    if (isOverflow && !current.classList.contains('is-long')) {
+                        current.classList.add('is-long');
+                    } else if (!isOverflow && current.classList.contains('is-long')) {
+                        current.classList.remove('is-long');
+                    }
+                };
+
+                const observer = new MutationObserver((mutations) => {
+                    let shouldCheck = false;
+                    
+                    for (const mutation of mutations) {
+                        if (mutation.attributeName === 'class') {
+                            shouldCheck = true;
+                            break; 
+                        }
+                    }
+
+                    if (shouldCheck) {
+                        observer.disconnect();
+                        checkCurrentLine();
+                        observer.observe(lrcContainer, {
+                            attributes: true,
+                            subtree: true,
+                            attributeFilter: ['class']
+                        });
+                    }
+                });
+
+                observer.observe(lrcContainer, {
+                    attributes: true,
+                    subtree: true,
+                    attributeFilter: ['class']
+                });
+            };
+
+            const checkPlayerTimer = setInterval(() => {
+                if (document.querySelector('#MusicPlayerRoot .lrc')) {
+                    clearInterval(checkPlayerTimer);
+                    observeLyrics();
+                }
+            }, 1000);
+
+        } catch (error) {
+            console.error('NyxPlayer Init Failed:', error);
+        }
     }
 
     /* ══════════════════════════════════════════════════════════ */
     /*                    Initialize All Features                  */
     /* ══════════════════════════════════════════════════════════ */
-    // Wrap in try-catch to prevent one feature's error from breaking others
     try {
         initTocHide();
         initBackToTop();
         initCodeMoreBox();
         initHorizontalScroll();
+        initMusicPlayer();
     } catch (e) {
         console.error("Error initializing custom scripts:", e);
     }

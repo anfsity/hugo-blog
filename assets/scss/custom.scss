@@ -142,61 +142,7 @@ html[data-scheme="dark"] {
 }
 
 /* ══════════════════════════════════════════════════════════════ */
-/* 5. Back to Top Button                                          */
-/* ══════════════════════════════════════════════════════════════ */
-#back-to-top {
-  display: none;
-  position: fixed;
-  bottom: 15px;
-  right: 25px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--body-background);
-  box-shadow: var(--shadow-l2);
-  font-size: 20px;
-  text-align: center;
-  line-height: 38px;
-  cursor: pointer;
-  z-index: 99;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-/* Arrow icon using CSS border trick */
-#back-to-top:before {
-  content: "";
-  display: inline-block;
-  position: relative;
-  transform: rotate(135deg);
-  height: 8px;
-  width: 8px;
-  border-width: 0 0 2px 2px;
-  border-color: var(--back-to-top-color);
-  border-style: solid;
-}
-
-#back-to-top:hover {
-  transform: scale(1.1);
-  background-color: var(--accent-background);
-}
-
-#back-to-top:hover:before {
-  border-color: var(--accent-color);
-}
-
-/* Responsive adjustments for mobile */
-@media screen and (max-width: 768px) {
-  #back-to-top {
-    bottom: 10px;
-    right: var(--container-padding);
-    width: 35px;
-    height: 35px;
-    line-height: 32px;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════ */
-/* 6. Dynamic Quote Container                                     */
+/* 5. Dynamic Quote Container                                     */
 /* ══════════════════════════════════════════════════════════════ */
 .dynamic-quote-container {
   width: 100%;
@@ -263,9 +209,8 @@ html[data-scheme="dark"] {
   }
 }
 
-
 /* ══════════════════════════════════════════════════════════════ */
-/* 7. Enhanced Section Header with Image                          */
+/* 6. Enhanced Section Header with Image                          */
 /* ══════════════════════════════════════════════════════════════ */
 .section-card.enhanced-header {
   /* Base layout and sizing */
@@ -334,7 +279,7 @@ html[data-scheme="dark"] {
 }
 
 /* ══════════════════════════════════════════════════════════════ */
-/* 8. Topic Page Style Overrides                                  */
+/* 7. Topic Page Style Overrides                                  */
 /* ══════════════════════════════════════════════════════════════ */
 .section-topic {
   .article-list {
@@ -378,4 +323,264 @@ html[data-scheme="dark"] {
   width: 100%;
   height: 100%;
   object-fit: cover
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 8. Right Sidebar Tools (Music + Back to Top)                   */
+/* ══════════════════════════════════════════════════════════════ */
+
+.right-sidebar-tools {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;            
+    align-items: center; 
+}
+
+.sidebar-btn {
+    width: 44px; 
+    height: 44px;
+    background: var(--card-background);
+    border: 1px solid var(--body-background); 
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    
+    display: flex;  
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    user-select: none;
+    color: var(--secondary-text-color); 
+}
+
+.sidebar-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(231, 124, 142, 0.25);
+    border-color: #e77c8e;
+    color: #e77c8e;
+}
+
+#music-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+#music-btn[data-play="true"] {
+    color: #e77c8e;
+    animation: rotate-btn 3s linear infinite;
+}
+@keyframes rotate-btn { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+#back-to-top {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+}
+
+#back-to-top.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+#back-to-top svg {
+    width: 18px;
+    height: 18px;
+    margin-bottom: -2px;
+}
+
+#back-to-top .progress-num {
+    font-size: 10px;
+    font-weight: bold;
+    font-family: sans-serif;
+    margin-top: 0px;
+}
+
+/* Mobile Adaptation */
+@media screen and (max-width: 768px) {
+    .right-sidebar-tools {
+        bottom: 80px; 
+        right: 15px;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 9. Music Player Panel Customization (500px Wide)               */
+/* ══════════════════════════════════════════════════════════════ */
+
+#MusicPlayerRoot {
+    width: 500px !important;
+    height: 480px;
+    max-width: 90vw !important;
+    right: 75px !important;
+    bottom: 20px !important;
+    z-index: 1000 !important;
+    background: var(--card-background) !important;
+    border: 1px solid var(--body-background) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: none !important;
+    padding: 25px !important;
+    box-sizing: border-box !important;
+}
+
+#MusicPlayerRoot .cover {
+    width: 140px;
+    height: 140px;
+}
+
+#MusicPlayerRoot .cover .disc {
+    width: 130px !important;
+    height: 130px !important;
+}
+
+#MusicPlayerRoot .cover .disc > div {
+    width: 100% !important;
+    height: 100% !important;
+    
+    max-width: none !important;
+    max-height: none !important;
+}
+
+#MusicPlayerRoot .cover::before {
+    top: 0px !important;
+    width: 55px !important;
+    height: 85px !important;
+}
+
+#MusicPlayerRoot .cover img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    border: 4px solid var(--body-background) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important;
+}
+
+#MusicPlayerRoot h4 {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: var(--card-text-color-main) !important;
+    margin-top: 10px !important;
+    margin-bottom: 4px !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+#MusicPlayerRoot span.text-3 {
+    font-size: 1.3rem !important;
+    color: var(--card-text-color-secondary) !important;
+    font-weight: 500 !important;
+    display: block !important;
+    text-align: center !important;
+}
+
+#MusicPlayerRoot .lrc p {
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    font-size: 1.4rem !important;
+    line-height: 30px !important;
+    height: 30px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--card-text-color-tertiary) !important;
+    opacity: 0.4;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    text-align: center !important;
+    font-weight: 400 !important;
+}
+
+#MusicPlayerRoot .lrc p::-webkit-scrollbar {
+    display: none; /* Hide scrollbar (Chrome/Safari) */
+}
+
+#MusicPlayerRoot .lrc p.current {
+    opacity: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+}
+
+#MusicPlayerRoot .controller {
+    margin-bottom: 15px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 1px solid var(--body-background) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+#MusicPlayerRoot .controller svg {
+    width: 24px !important;
+    height: 24px !important;
+    color: var(--body-text-color) !important;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#MusicPlayerRoot .controller svg:hover {
+    color: var(--primary-color) !important;
+    transform: scale(1.1);
+}
+
+#MusicPlayerRoot .tabs .nav li {
+    line-height: 1.3;
+}
+
+#MusicPlayerRoot ol {
+    height: 180px;
+    padding-right: 5px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+}
+
+#MusicPlayerRoot ol > li {
+    align-items: center !important;
+    width: 100% !important;
+    padding: 20px 15px !important;
+    margin-bottom: 5px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    color: var(--body-text-color) !important;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#MusicPlayerRoot ol > li:hover {
+    background: var(--body-background) !important;
+}
+
+#MusicPlayerRoot ol > li.current {
+    background-color: rgba(231, 124, 142, 0.1) !important; 
+    filter: hue-rotate(230deg);
+    color: inherit !important; 
+}
+
+#MusicPlayerRoot ol > li::before {
+    margin-right: 15px !important;
+    width: 25px !important;
+    text-align: center !important;
+    opacity: 0.5;
+}
+
+#MusicPlayerRoot ol::-webkit-scrollbar {
+    width: 4px;
+}
+
+#MusicPlayerRoot ol::-webkit-scrollbar-thumb {
+    background: var(--secondary-text-color);
+    border-radius: 2px;
+    opacity: 0.2;
 }

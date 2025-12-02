@@ -1,14 +1,48 @@
-<a href="#" id="back-to-top" title="back to top"></a>
+<div class="right-sidebar-tools">
+
+    {{/* 1. Music Button */}}
+    <div id="music-btn" class="sidebar-btn music-btn" title="Play Music">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+        </svg>
+    </div>
+
+    {{/* 2. Back to Top Button (With Percentage) */}}
+    <div id="back-to-top" class="sidebar-btn" title="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-arrow">
+            <path d="M12 19V5" />
+            <path d="M5 12l7-7 7 7" />
+        </svg>
+        <span class="progress-num">0%</span>
+    </div>
+
+</div>
+
+{{/* --- Player Mount Point --- */}}
+<div id="nyx-player-mount"></div>
+<link rel="stylesheet" href="/lib/nyx-player.css">
+
+{{/* --- Stack Theme Core Scripts (Strictly preserve data attributes) --- */}}
 {{- $scriptOptions := dict "targetPath" "js/custom.js" -}}
 {{- $customScripts := resources.Get "ts/custom.ts" | js.Build $scriptOptions | minify | fingerprint -}}
 
-<script id="custom-scripts" 
-        src="{{ $customScripts.RelPermalink }}" 
-        integrity="{{ $customScripts.Data.Integrity }}"
-        {{ with resources.Get "icons/caret-down.svg" }}
-            data-more-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
-        {{ end }}
-        {{ with resources.Get "icons/caret-up.svg" }}
-            data-less-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
-        {{ end }}>
+<script id="custom-scripts" src="{{ $customScripts.RelPermalink }}" integrity="{{ $customScripts.Data.Integrity }}" {{
+    with resources.Get "icons/caret-down.svg" }}
+    data-more-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}" {{ end }} {{ with
+    resources.Get "icons/caret-up.svg" }} data-less-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
+    {{ end }}>
+    </script>
+
+{{/* --- Import Map for Player Dependencies --- */}}
+<script type="importmap">
+{
+    "imports": {
+        "vue": "https://esm.sh/vue@3.3.4/dist/vue.esm-browser.js",
+        "pinia": "https://esm.sh/pinia@2.1.6/dist/pinia.esm-browser.js"
+    }
+}
 </script>
