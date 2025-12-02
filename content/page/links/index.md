@@ -9,6 +9,11 @@ links:
     description: 宁可清贫自乐, 不作浊富多忧
     website: https://kawayww.com
     image: https://kawayww.com/images/blog/avatar.avif
+  - title: 拔剑Sketon
+    website: https://d-sketon.github.io/
+    description: 东方人的日常
+    image: https://d-sketon.github.io/avatar/avatar.webp
+
 
 menu:
     main: 
