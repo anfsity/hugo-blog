@@ -230,6 +230,12 @@ menu:
           url: https://bangumi.tv/user/anfsity
           params:
               icon: brand-bangumi
+              
+        - identifier: netease-music
+          name: Netease Music
+          url: https://music.163.com/#/my/m/music/playlist?id=2921261234
+          params:
+              icon: brand-netease-music
 
 
 related:
