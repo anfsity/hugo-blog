@@ -1,5 +1,13 @@
-// Wait for full DOM load before executing scripts
-document.addEventListener("DOMContentLoaded", function () {
+// Helper to ensure code runs only after DOM is ready
+function onDOMReady(fn: () => void) {
+    if (document.readyState !== 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+
+onDOMReady(function () {
 
     /* ══════════════════════════════════════════════════════════ */
     /* Feature 1: Dynamic Table of Contents                       */
@@ -187,15 +195,24 @@ document.addEventListener("DOMContentLoaded", function () {
      * - Sets up a safe MutationObserver to detect long lyrics
      * - Toggles .is-long class to trigger CSS scrolling animation
      */
-    async function initMusicPlayer() {
+    function initMusicPlayer() {
         const playerMount = document.getElementById('nyx-player-mount');
         if (!playerMount) return;
 
-        try {
-            console.log('NyxPlayer: Initializing...');
-            
-            // @ts-ignore: Ignore TS error for absolute path import
-            const module = await import('/lib/nyx-player.js');
+        // --- Fix: Prevent Double Initialization ---
+        // Check if player root already exists or if we are currently initializing
+        if (document.getElementById('MusicPlayerRoot') || (window as any)._nyxPlayerInitializing) {
+            console.warn('NyxPlayer: Already initialized or initializing. Skipping.');
+            return;
+        }
+        
+        // Set global flag
+        (window as any)._nyxPlayerInitializing = true;
+
+        console.log('NyxPlayer: Initializing...');
+        
+        // @ts-ignore
+        import('/lib/nyx-player.js').then(module => {
             const { initPlayer } = module;
 
             initPlayer(
@@ -204,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 [
                     {
                         name: '我喜欢',
-                        url: 'https://music.163.com/#/my/m/music/playlist?id=2921261234'
+                        url: 'https://music.163.com/#/my/m/music/playlist?id=2921261234',
                     }
                 ],
                 null,
@@ -230,7 +247,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const observer = new MutationObserver((mutations) => {
                     let shouldCheck = false;
-                    
                     for (const mutation of mutations) {
                         if (mutation.attributeName === 'class') {
                             shouldCheck = true;
@@ -263,9 +279,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }, 1000);
 
-        } catch (error) {
+        }).catch(error => {
             console.error('NyxPlayer Init Failed:', error);
-        }
+            // Reset flag on error so we can retry if needed (though usually page reload is better)
+            (window as any)._nyxPlayerInitializing = false;
+        });
     }
 
     /* ══════════════════════════════════════════════════════════ */

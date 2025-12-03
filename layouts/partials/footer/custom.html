@@ -26,6 +26,16 @@
 <div id="nyx-player-mount"></div>
 <link rel="stylesheet" href="/lib/nyx-player.css">
 
+{{/* --- Import Map for Player Dependencies --- */}}
+<script type="importmap">
+{
+    "imports": {
+        "vue": "https://esm.sh/vue@3.3.4/dist/vue.esm-browser.js",
+        "pinia": "https://esm.sh/pinia@2.1.6/dist/pinia.esm-browser.js"
+    }
+}
+</script>
+
 {{/* --- Stack Theme Core Scripts (Strictly preserve data attributes) --- */}}
 {{- $scriptOptions := dict "targetPath" "js/custom.js" -}}
 {{- $customScripts := resources.Get "ts/custom.ts" | js.Build $scriptOptions | minify | fingerprint -}}
@@ -36,13 +46,3 @@
     resources.Get "icons/caret-up.svg" }} data-less-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
     {{ end }}>
     </script>
-
-{{/* --- Import Map for Player Dependencies --- */}}
-<script type="importmap">
-{
-    "imports": {
-        "vue": "https://esm.sh/vue@3.3.4/dist/vue.esm-browser.js",
-        "pinia": "https://esm.sh/pinia@2.1.6/dist/pinia.esm-browser.js"
-    }
-}
-</script>
