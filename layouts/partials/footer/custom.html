@@ -1,32 +1,40 @@
-<div class="right-sidebar-tools">
+{{/* 1. Import Turbo (enable SPA-like navigation) */}}
+<script type="module">
+    import * as Turbo from 'https://esm.sh/@hotwired/turbo@7.3.0';
+</script>
 
-    {{/* 1. Music Button */}}
-    <div id="music-btn" class="sidebar-btn music-btn" title="Play Music">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18V5l12-2v13"></path>
-            <circle cx="6" cy="18" r="3"></circle>
-            <circle cx="18" cy="16" r="3"></circle>
-        </svg>
+{{/* 2. Wrap persistent UI in a Turbo-permanent container so it survives navigations */}}
+<div id="global-persistent-ui" data-turbo-permanent>
+    <div class="right-sidebar-tools">
+
+        {{/* Music button (opens player) */}}
+        <div id="music-btn" class="sidebar-btn music-btn" title="Play Music">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+        </div>
+
+        {{/* Back-to-top button with percentage indicator */}}
+        <div id="back-to-top" class="sidebar-btn" title="Back to Top">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-arrow">
+                <path d="M12 19V5" />
+                <path d="M5 12l7-7 7 7" />
+            </svg>
+            <span class="progress-num">0%</span>
+        </div>
+
     </div>
 
-    {{/* 2. Back to Top Button (With Percentage) */}}
-    <div id="back-to-top" class="sidebar-btn" title="Back to Top">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-arrow">
-            <path d="M12 19V5" />
-            <path d="M5 12l7-7 7 7" />
-        </svg>
-        <span class="progress-num">0%</span>
-    </div>
-
+    {{/* Player mount node (kept across navigations) */}}
+    <div id="nyx-player-mount"></div>
+    <link rel="stylesheet" href="/lib/nyx-player.css">
 </div>
 
-{{/* --- Player Mount Point --- */}}
-<div id="nyx-player-mount"></div>
-<link rel="stylesheet" href="/lib/nyx-player.css">
-
-{{/* --- Import Map for Player Dependencies --- */}}
+{{/* Import map for runtime module resolution used by the player */}}
 <script type="importmap">
 {
     "imports": {
@@ -36,7 +44,8 @@
 }
 </script>
 
-{{/* --- Stack Theme Core Scripts (Strictly preserve data attributes) --- */}}
+{{/* Build and include the site's custom script bundle.
+     Keep the data attributes (icons) — they are used by runtime code. */}}
 {{- $scriptOptions := dict "targetPath" "js/custom.js" -}}
 {{- $customScripts := resources.Get "ts/custom.ts" | js.Build $scriptOptions | minify | fingerprint -}}
 
@@ -45,4 +54,4 @@
     data-more-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}" {{ end }} {{ with
     resources.Get "icons/caret-up.svg" }} data-less-icon-src="data:image/svg+xml;base64,{{ .Content | base64Encode }}"
     {{ end }}>
-    </script>
+</script>

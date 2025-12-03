@@ -67,13 +67,18 @@ html[data-scheme="dark"] {
 /* Base code block styling with height limit for collapse */
 .highlight {
   border-radius: var(--card-border-radius);
-  max-width: 100% !important;
-  box-shadow: var(--shadow-l1) !important;
+  max-width: 100%;
+  box-shadow: none;
   max-height: 400px;
   overflow: hidden;
   position: relative;
   transition: max-height 0.3s ease-in-out;
   margin: 0 !important;
+}
+
+.highlight .copy-code-button,
+.highlight button {
+    box-shadow: none !important;
 }
 
 /* Expanded state - remove height limit */
