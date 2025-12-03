@@ -1,189 +1,264 @@
-// Wait for full DOM load before executing scripts
-document.addEventListener("DOMContentLoaded", function () {
+// @ts-ignore
+import { createApp } from 'vue';
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* Feature 1: Dynamic Table of Contents                       */
-    /* ══════════════════════════════════════════════════════════ */
-    /**
-     * Automatically expands/collapses TOC sections based on scroll position
-     * - Collapses inactive sections to reduce visual clutter
-     * - Expands current section and all parent sections
-     * - Uses passive event listener for better scroll performance
-     */
-    function initTocHide() {
-        const toc = document.querySelector(".widget--toc");
-        if (!toc) return; // Exit if no TOC widget exists
+/* ===========================================================
+   1) Rebind/repair theme UI that Turbo navigation breaks
+      - Dark mode toggle, mobile menu toggle
+      - Trigger theme scripts (search, LaTeX) after DOM swap
+   =========================================================== */
+function fixStackTheme() {
+    // Rebind dark mode toggle: replace node to remove stale listeners,
+    // then attach a concise handler that updates data-scheme and notifies listeners.
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    if (toggleBtn) {
+        const newBtn = toggleBtn.cloneNode(true);
+        toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
 
-        window.addEventListener('scroll', function () {
-            // Step 1: Collapse all currently open sections
-            const openUls = document.querySelectorAll("#TableOfContents .open");
-            openUls.forEach(ul => ul.classList.remove("open"));
-
-            // Step 2: Find the currently active heading
-            const currentLi = document.querySelector("#TableOfContents .active-class");
-            if (!currentLi) return;
-
-            // Step 3: Expand current section's children (if any)
-            if (currentLi.children.length > 1 && currentLi.children[1].matches('ul, ol')) {
-                currentLi.children[1].classList.add("open");
-            }
-
-            // Step 4: Expand all parent sections recursively
-            let parentUl = currentLi.parentElement;
-            while (parentUl && parentUl.closest('#TableOfContents')) {
-                if (parentUl.matches('ul, ol')) {
-                    parentUl.classList.add("open");
-                }
-                // Move up to next parent level
-                if (parentUl.parentElement && parentUl.parentElement.tagName === 'LI') {
-                    parentUl = parentUl.parentElement.parentElement;
-                } else {
-                    break;
-                }
-            }
-        }, { passive: true }); // Passive listener improves scroll performance
-    }
-
-    /* ══════════════════════════════════════════════════════════ */
-    /* Feature 2: Back to Top Button                              */
-    /* ══════════════════════════════════════════════════════════ */
-    /**
-     * Floating button that scrolls page to top with smooth animation
-     * - Auto-shows when user scrolls down > 200px
-     * - Uses smooth scroll behavior for better UX
-     * - Positioned in bottom-right corner
-     */
-    function initBackToTop() {
-        const totopBtn = document.getElementById('back-to-top');
-        if (!totopBtn) return; // Exit if button doesn't exist
-
-        /**
-         * Smooth scroll to page top
-         * @param {Event} event - Click event object
-         */
-        function backToTop(event) {
-            event.preventDefault(); // Prevent anchor jump
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth' // Native smooth scroll
-            });
-        }
-
-        /**
-         * Show/hide button based on scroll position
-         * Threshold: 200px from top
-         */
-        function toggleVisibility() {
-            let scrollTop = window.scrollY || document.documentElement.scrollTop;
-            totopBtn.style.display = scrollTop < 200 ? 'none' : 'inline';
-        }
-
-        // Bind event listeners
-        totopBtn.addEventListener('click', backToTop, false);
-        window.addEventListener('scroll', toggleVisibility, { passive: true });
-
-        // Set initial state
-        toggleVisibility();
-    }
-
-    /* ══════════════════════════════════════════════════════════ */
-    /* Feature 3: Code Block Collapse/Expand                      */
-    /* ══════════════════════════════════════════════════════════ */
-    /**
-     * Adds expand/collapse functionality to tall code blocks
-     * - Only processes blocks taller than visible area
-     * - Uses inline Base64 SVG icons to avoid network requests
-     * - Toggles between "show more" and "show less" states
-     * - Triggers window resize event for layout recalculation
-     */
-    function initCodeMoreBox() {
-        const codeBlocks = document.querySelectorAll(".highlight");
-        if (!codeBlocks.length) return;
-
-        // Retrieve icon data from script tag attributes
-        const scriptTag = document.getElementById('custom-scripts');
-        const moreIconSrc = scriptTag.dataset.moreIconSrc || '';
-        const lessIconSrc = scriptTag.dataset.lessIconSrc || '';
-
-        // Exit if icons are missing (prevents broken functionality)
-        if (!moreIconSrc || !lessIconSrc) return;
-
-        codeBlocks.forEach(codeBlock => {
-            // Skip blocks that fit within height limit
-            if (codeBlock.scrollHeight <= codeBlock.offsetHeight) return;
-
-            // Create container for fade overlay and button
-            const codeMoreBox = document.createElement('div');
-            codeMoreBox.classList.add('code-more-box');
-
-            // Create expand/collapse button
-            const codeMoreBtn = document.createElement('span');
-            codeMoreBtn.classList.add('code-more-btn');
-
-            // Create icon image element
-            const img = document.createElement('img');
-            img.classList.add('code-more-img');
-            img.src = moreIconSrc;
-            img.setAttribute('alt', 'Expand code block');
-
-            /**
-             * Toggle expanded/collapsed state
-             * - Switches between caret-down and caret-up icons
-             * - Updates accessibility attributes
-             * - Dispatches resize event for other components
-             */
-            codeMoreBtn.addEventListener('click', () => {
-                codeBlock.classList.toggle('code-show');
-                const isShown = codeBlock.classList.contains('code-show');
-
-                // Update icon and alt text
-                img.src = isShown ? lessIconSrc : moreIconSrc;
-                img.setAttribute('alt', isShown ? 'Collapse code block' : 'Expand code block');
-
-                // Notify other components of layout change
-                window.dispatchEvent(new Event('resize'));
-            });
-
-            // Assemble and append elements
-            codeMoreBtn.appendChild(img);
-            codeMoreBox.appendChild(codeMoreBtn);
-            codeBlock.appendChild(codeMoreBox);
+        newBtn.addEventListener('click', () => {
+            const html = document.documentElement;
+            const current = html.dataset.scheme;
+            const target = current === 'dark' ? 'light' : 'dark';
+            html.dataset.scheme = target;
+            localStorage.setItem('scheme', target);
+            // Notify other subsystems (player, widgets) of scheme change.
+            window.dispatchEvent(new Event('colorSchemeChange'));
         });
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /* Feature 4: Horizontal Scroll with Mouse Wheel              */
-    /* ══════════════════════════════════════════════════════════ */
-    /**
-     * Converts vertical wheel scroll to horizontal scroll in specific areas
-     * - Useful for wide content like timelines or image galleries
-     * - Requires passive: false to call preventDefault()
-     * - Only applies to elements with .subsection-list class
-     */
-    function initHorizontalScroll() {
-        const scrollArea = document.querySelector('.subsection-list');
-        if (!scrollArea) return;
+    // Rebind mobile menu toggle in an idempotent way.
+    const menu = document.getElementById('main-menu');
+    const menuToggle = document.getElementById('toggle-menu');
+    if (menu && menuToggle) {
+        const newToggle = menuToggle.cloneNode(true);
+        menuToggle.parentNode?.replaceChild(newToggle, menuToggle);
 
-        scrollArea.addEventListener('wheel', function (event) {
-            if (event.deltaY !== 0) {
-                // Prevent default vertical scroll
-                event.preventDefault();
-                // Apply vertical scroll delta to horizontal position
-                scrollArea.scrollLeft += event.deltaY;
-            }
-        }, { passive: false }); // Must be false to use preventDefault()
+        (newToggle as HTMLElement).addEventListener('click', () => {
+            menu.classList.toggle('is-active');
+            (newToggle as HTMLElement).classList.toggle('is-active');
+        });
     }
 
-    /* ══════════════════════════════════════════════════════════ */
-    /*                    Initialize All Features                  */
-    /* ══════════════════════════════════════════════════════════ */
-    // Wrap in try-catch to prevent one feature's error from breaking others
+    // Ensure theme-related initialization runs again after Turbo body swap.
+    // Small timeout to allow DOM replacement to settle, then dispatch events
+    // and rerun LaTeX renderer if available.
+    setTimeout(() => {
+        window.dispatchEvent(new Event('DOMContentLoaded'));
+        window.dispatchEvent(new Event('load'));
+
+        if ((window as any).renderMathInElement) {
+            (window as any).renderMathInElement(document.body);
+        }
+    }, 50);
+}
+
+/* ===========================================================
+   2) Table of Contents (TOC) open/close management
+   =========================================================== */
+function initTocHide() {
+    const toc = document.querySelector(".widget--toc");
+    if (!toc) return;
+
+    const links = toc.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.setAttribute('data-turbo', 'false');
+        
+        const newLink = link.cloneNode(true) as HTMLElement;
+        link.parentNode?.replaceChild(newLink, link);
+        
+        newLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = newLink.getAttribute('href')?.substring(1);
+            const targetElement = document.getElementById(targetId || '');
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+                history.pushState(null, '', `#${targetId}`);
+            }
+        });
+    });
+
+    if ((window as any)._tocScrollHandler) {
+        window.removeEventListener('scroll', (window as any)._tocScrollHandler);
+    }
+
+    const scrollHandler = () => {
+        const openUls = document.querySelectorAll("#TableOfContents .open");
+        openUls.forEach(ul => ul.classList.remove("open"));
+
+        const currentLi = document.querySelector("#TableOfContents .active-class");
+        if (!currentLi) return;
+
+        if (currentLi.children.length > 1 && currentLi.children[1].matches('ul, ol')) {
+            currentLi.children[1].classList.add("open");
+        }
+
+        let parentUl = currentLi.parentElement;
+        while (parentUl && parentUl.closest('#TableOfContents')) {
+            if (parentUl.matches('ul, ol')) parentUl.classList.add("open");
+            parentUl = parentUl.parentElement?.parentElement || null;
+        }
+    };
+
+    (window as any)._tocScrollHandler = scrollHandler;
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+}
+
+/* ===========================================================
+   3) Back-to-top button and progress indicator
+      - Idempotent binding and scroll handler replacement.
+   =========================================================== */
+function initBackToTop() {
+    const totopBtn = document.getElementById('back-to-top');
+    if (!totopBtn) return;
+
+    if ((window as any)._backTopScrollHandler) {
+        window.removeEventListener('scroll', (window as any)._backTopScrollHandler);
+    }
+
+    // Rebind click to scroll to top smoothly.
+    totopBtn.onclick = (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const progressNum = totopBtn.querySelector('.progress-num') as HTMLElement;
+    const scrollHandler = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const validHeight = scrollHeight - clientHeight;
+
+        if (progressNum && validHeight > 0) {
+            let percent = Math.round((scrollTop / validHeight) * 100);
+            percent = Math.min(100, Math.max(0, percent));
+            progressNum.innerText = `${percent}%`;
+        }
+
+        if (scrollTop > 100) totopBtn.classList.add('show');
+        else totopBtn.classList.remove('show');
+    };
+
+    (window as any)._backTopScrollHandler = scrollHandler;
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    scrollHandler();
+}
+
+/* ===========================================================
+   4) Code block "more" toggle
+      - Insert a toggle control for long code blocks.
+      - Prevent duplicate insertion on repeated runs.
+   =========================================================== */
+function initCodeMoreBox() {
+    const codeBlocks = document.querySelectorAll(".highlight");
+    const scriptTag = document.getElementById('custom-scripts');
+    if (!codeBlocks.length || !scriptTag) return;
+
+    const moreIconSrc = scriptTag.dataset.moreIconSrc;
+    const lessIconSrc = scriptTag.dataset.lessIconSrc;
+    if (!moreIconSrc || !lessIconSrc) return;
+
+    codeBlocks.forEach(block => {
+        const codeBlock = block as HTMLElement;
+
+        // Skip if content fits or control already exists.
+        if (codeBlock.scrollHeight <= codeBlock.offsetHeight) return;
+        if (codeBlock.querySelector('.code-more-box')) return;
+
+        const codeMoreBox = document.createElement('div');
+        codeMoreBox.classList.add('code-more-box');
+        const codeMoreBtn = document.createElement('span');
+        codeMoreBtn.classList.add('code-more-btn');
+        const img = document.createElement('img');
+        img.classList.add('code-more-img');
+        img.src = moreIconSrc;
+
+        codeMoreBtn.addEventListener('click', () => {
+            codeBlock.classList.toggle('code-show');
+            const isShown = codeBlock.classList.contains('code-show');
+            img.src = isShown ? lessIconSrc : moreIconSrc;
+            // Notify layout changes.
+            window.dispatchEvent(new Event('resize'));
+        });
+
+        codeMoreBtn.appendChild(img);
+        codeMoreBox.appendChild(codeMoreBtn);
+        codeBlock.appendChild(codeMoreBox);
+    });
+}
+
+/* ===========================================================
+   5) Horizontal scroll: convert vertical wheel -> horizontal
+   =========================================================== */
+function initHorizontalScroll() {
+    const scrollArea = document.querySelector('.subsection-list');
+    if (!scrollArea) return;
+
+    scrollArea.addEventListener('wheel', function (event: any) {
+        if (event.deltaY !== 0) {
+            event.preventDefault();
+            scrollArea.scrollLeft += event.deltaY;
+        }
+    }, { passive: false });
+}
+
+/* ===========================================================
+   6) Music player initialization with Turbo guards
+      - Dynamically imports player script and initializes once.
+      - If player DOM already exists (Turbo preserved), skip init.
+      - Protects against concurrent init attempts.
+   =========================================================== */
+function initMusicPlayer() {
+    // If player root exists, Turbo preserved the instance — do nothing.
+    if (document.getElementById('MusicPlayerRoot')) {
+        console.log('NyxPlayer: Persistent instance detected. Skipping init.');
+        return;
+    }
+
+    if ((window as any)._nyxPlayerInitializing) return;
+    (window as any)._nyxPlayerInitializing = true;
+
+    // Dynamically import and initialize the player.
+    // @ts-ignore
+    import('/lib/nyx-player.js').then(module => {
+        const { initPlayer } = module;
+        initPlayer(
+            '#nyx-player-mount',
+            '#music-btn',
+            [{ name: '我喜欢', url: 'https://music.163.com/#/my/m/music/playlist?id=2921261234' }],
+            null,
+            'html[data-scheme="dark"]'
+        );
+
+        const checkTimer = setInterval(() => {
+            if (document.querySelector('#MusicPlayerRoot')) {
+                clearInterval(checkTimer);
+                (window as any)._nyxPlayerInitializing = false;
+            }
+        }, 4);
+    }).catch(() => { (window as any)._nyxPlayerInitializing = false; });
+}
+
+/* ===========================================================
+   Main entry:
+   - Run initializers on first load.
+   - Re-run safe, idempotent initializers on turbo:load.
+   =========================================================== */
+try {
+    initTocHide();
+    initCodeMoreBox();
+    initBackToTop();
+    initHorizontalScroll();
+    initMusicPlayer();
+    fixStackTheme();
+} catch (e) { console.error(e); }
+
+document.addEventListener('turbo:load', () => {
     try {
         initTocHide();
-        initBackToTop();
         initCodeMoreBox();
+        initBackToTop();
         initHorizontalScroll();
-    } catch (e) {
-        console.error("Error initializing custom scripts:", e);
-    }
+        initMusicPlayer();
+        fixStackTheme();
+    } catch (e) { console.error(e); }
 });
