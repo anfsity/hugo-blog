@@ -193,7 +193,10 @@ function initHorizontalScroll() {
     const scrollArea = document.querySelector('.subsection-list');
     if (!scrollArea) return;
 
-    scrollArea.addEventListener('wheel', function (event: any) {
+    if (scrollArea.getAttribute('data-h-scroll') === 'true') return;
+    scrollArea.setAttribute('data-h-scroll', 'true');
+
+    scrollArea.addEventListener('wheel', (event: WheelEvent) => {
         if (event.deltaY !== 0) {
             event.preventDefault();
             scrollArea.scrollLeft += event.deltaY;
