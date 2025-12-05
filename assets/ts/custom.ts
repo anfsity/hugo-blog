@@ -242,6 +242,26 @@ function initMusicPlayer() {
 }
 
 /* ===========================================================
+   7) Turbo Cache Cleanup
+      - Remove attributes that track event binding state before
+        Turbo caches the page. This ensures that when the page
+        is restored (e.g. via Back button), initialization logic
+        runs again to re-bind lost event listeners.
+   =========================================================== */
+document.addEventListener('turbo:before-cache', () => {
+    // Clean up horizontal scroll marker
+    document.querySelectorAll('[data-h-scroll]').forEach(el => {
+        el.removeAttribute('data-h-scroll');
+    });
+
+    // Clean up TOC markers if necessary (though TOC usually rebuilds)
+    document.querySelectorAll('[data-turbo="false"]').forEach(el => {
+    });
+    
+    // Clean up code block "more" buttons to prevent duplication on restore
+});
+
+/* ===========================================================
    Main entry:
    - Run initializers on first load.
    - Re-run safe, idempotent initializers on turbo:load.
