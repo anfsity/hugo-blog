@@ -1,0 +1,49 @@
+{{ $image := partialCached "helper/image" (dict "Context" .context "Type" .Type) .context.RelPermalink .Type }}
+
+{{ $defaultImage := "https://i.111666.best/image/QN5wB9Q41ektMyKQ0eRqvc.jpg" }}
+
+<article class="has-image">
+    <a href="{{ .context.RelPermalink }}">
+        
+        <div class="article-image">
+            {{ if $image.exists }}
+                {{ if $image.resource }}
+                    {{- $imageRaw := $image.resource | resources.Fingerprint "md5" -}}
+                    {{- $Permalink := $imageRaw.RelPermalink -}}
+                    {{- $Width := $imageRaw.Width -}}
+                    {{- $Height := $imageRaw.Height -}}
+
+                    {{- if .context.Site.Params.imageProcessing.cover.enabled -}}
+                        {{- $thumbnail := $imageRaw.Fill .size -}}
+                        {{- $Permalink = $thumbnail.RelPermalink -}}
+                        {{- $Width = $thumbnail.Width -}}
+                        {{- $Height = $thumbnail.Height -}}
+                    {{- end -}}
+                    
+                    <img src="{{ $Permalink }}" 
+                        width="{{ $Width }}" 
+                        height="{{ $Height }}" 
+                        loading="lazy"
+                        alt="Featured image of post {{ .context.Title }}"
+                        {{ with .context.Slug }}data-key="{{ . }}" {{ end }}
+                        data-hash="{{ $imageRaw.Data.Integrity }}">
+                {{ else }}
+                    <img src="{{ $image.permalink }}" loading="lazy" data-key="{{ .context.Slug }}" data-hash="{{ $image.permalink }}"/>
+                {{ end }}
+            {{ else }}
+                {{/* 没有图片时显示默认图 */}}
+                <img src="{{ $defaultImage }}" 
+                     width="250" height="150" 
+                     loading="lazy" 
+                     alt="Default Category Image"
+                     style="object-fit: cover; width: 100%; height: 100%;">
+            {{ end }}
+        </div>
+
+        <div class="article-details">
+            <h2 class="article-title">
+                {{- .context.Title -}}
+            </h2>
+        </div>
+    </a>
+</article>
