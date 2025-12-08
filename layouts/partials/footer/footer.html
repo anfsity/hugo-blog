@@ -29,7 +29,11 @@
         {{$scratch.Add "total" .WordCount}}
         {{ end }}
         Published {{ len (where .Site.RegularPages "Section" "post") }} aritcles ·
-        Total {{ div ($scratch.Get "total") 1000.0 | lang.FormatNumber 2 }}k words
+        {{ $totalWordCount := 0 }}
+        {{ range (where .Site.RegularPages "Section" "post") }}
+            {{ $totalWordCount = add $totalWordCount .WordCount }}
+        {{ end }}
+        Total {{ div $totalWordCount 1000.0 | lang.FormatNumber 2 }}k words
     </section>
 
 </footer>

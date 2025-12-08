@@ -1,20 +1,21 @@
 +++
-title = "Play Arknights In ArchLinux(cn)"
-date = 2025-12-02T17:56:52+08:00
+title = "Play Arknights In ArchLinux"
+translationKey = "play-arknights-archlinux"
+date = 2025-12-02T17:54:36+08:00
 draft = false
 author = "Anfsity"
 tags = [
-    "",
+    "Linux",
+    "Game",
 ]
 categories = [
-    "",
+    "Linux",
+    "Game",
 ]
 description = ""
 image = ""
-hidden = true
 +++
 
- > [English version]({{< relref "PlayArknightsInArchLinux.md" >}})
 
 ## Install binder
 
