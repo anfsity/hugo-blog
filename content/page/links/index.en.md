@@ -2,17 +2,21 @@
 title: Friends
 links:
   - title: Elainafan's blog
-    description: "Only because I deeply love it 'now'"
+    description: 只因"现在"深爱其中
     website: https://www.elainafan.one/
-    image: https://www.elainafan.one/img/avatar_hu1071812203031902840.jpg
+    image: https://www.elainafan.one/avatars/elainafan.jpg
   - title: 柳上川
-    description: "Rather be poor and content, than rich and worried"
+    description: 宁可清贫自乐, 不作浊富多忧
     website: https://kawayww.com
     image: https://kawayww.com/images/blog/avatar.avif
   - title: 拔剑Sketon
     website: https://d-sketon.github.io/
-    description: "Daily life of an Easterner"
+    description: 东方人的日常
     image: https://d-sketon.github.io/avatar/avatar.webp
+  - title: Ethan
+    website: https://hanlife02.com/
+    description: Don't stay awake for too long.
+    image: https://hanlife02.com/api/v2/objects/avatar/vrkkxm60zb217or1qu.jpg
 
 
 menu:
