@@ -2,6 +2,67 @@
 import { createApp } from 'vue';
 
 /* ===========================================================
+   0) History guard for Turbo Drive
+      - Turbo stores navigation metadata in history.state.
+      - Some scripts call pushState/replaceState with empty state
+        (null / '' / {}) for hash/query updates, which can overwrite
+        Turbo metadata and break browser back/forward.
+      - Also, hash-only navigation should not create extra entries.
+   =========================================================== */
+function patchHistoryForTurbo() {
+    const w = window as any;
+    if (w._historyPatchedForTurbo) return;
+    w._historyPatchedForTurbo = true;
+
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    const hasTurboState = (state: any) => {
+        return state && typeof state === 'object' && Object.prototype.hasOwnProperty.call(state, 'turbo');
+    };
+
+    const mergeTurboState = (state: any) => {
+        const current = window.history.state;
+        if (!hasTurboState(current)) return state;
+
+        if (!state || typeof state !== 'object') {
+            return { turbo: current.turbo };
+        }
+        if (!hasTurboState(state)) {
+            return { ...(state as any), turbo: current.turbo };
+        }
+        return state;
+    };
+
+    const isHashOnlyUrlChange = (url: any) => {
+        if (!url || typeof url !== 'string') return false;
+        try {
+            const from = new URL(window.location.href);
+            const to = new URL(url, window.location.href);
+            return from.origin === to.origin && from.pathname === to.pathname && from.search === to.search && from.hash !== to.hash;
+        } catch {
+            return url[0] === '#';
+        }
+    };
+
+    window.history.pushState = function (state: any, title: string, url?: string | null) {
+        const nextState = mergeTurboState(state);
+        // Hash-only changes should not create a new entry, and should not duplicate Turbo metadata.
+        if (hasTurboState(window.history.state) && isHashOnlyUrlChange(url)) {
+            return originalReplaceState.apply(window.history, [nextState, title, url]);
+        }
+        return originalPushState.apply(window.history, [nextState, title, url]);
+    } as any;
+
+    window.history.replaceState = function (state: any, title: string, url?: string | null) {
+        const nextState = mergeTurboState(state);
+        return originalReplaceState.apply(window.history, [nextState, title, url]);
+    } as any;
+}
+
+patchHistoryForTurbo();
+
+/* ===========================================================
    1) Rebind/repair theme UI that Turbo navigation breaks
       - Dark mode toggle, mobile menu toggle
       - Trigger theme scripts (search, LaTeX) after DOM swap
@@ -72,7 +133,10 @@ function initTocHide() {
             
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: 'smooth' });
-                history.pushState(null, '', `#${targetId}`);
+                // Keep Turbo's internal history.state metadata intact.
+                const currentState = window.history.state;
+                const nextState = currentState && typeof currentState === 'object' ? { ...currentState } : currentState;
+                history.replaceState(nextState, '', `#${targetId}`);
             }
         });
     });
