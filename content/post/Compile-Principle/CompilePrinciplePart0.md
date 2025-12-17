@@ -17,7 +17,7 @@ image = ""
 
 [maxXing](https://github.com/MaxXSoft) 提供为实验提供了 `docker` 镜像，所以我们只需要将 `docker` 下载下来拉取镜像即可。
 
-使用 `pacman` 拉取：
+使用 `pacman` 下载 `docker`：
 
 ```bash
 sudo pacman -S docker
@@ -134,6 +134,8 @@ tree -d 1
 我们在顶层目录和 `src` 目录都放一个 `CMakelists` 来管理。
 
  > 这是我学习 Cmake 的[入门视频](https://www.bilibili.com/video/BV1nu411u7rb/?spm_id_from=333.1387.favlist.content.click)。
+
+{{< bilibili BV1nu411u7rb >}}
 
 ```cmake
 # root CMakelists.txt
