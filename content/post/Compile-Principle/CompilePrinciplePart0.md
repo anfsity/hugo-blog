@@ -49,7 +49,7 @@ Chain FORWARD (policy DROP 1735 packets, 177K bytes)
 
 如果你之前有跑在宿主机上的类似容器应用，就需要将对应的端口开放给 `iptables`。
 
- > [Article]({{< relref "post/Linux/PlayArknightsInArchLinux.zh-cn.md">}})
+ > [Article]({{< relref "post/Linux/PlayArknightsInArchLinux.zh-cn.md/#docker-禁用-ip-转发">}})
 
 关于 `docker` 的流量转发我没有做过多的了解，可以看官方文档自行了解。
 
@@ -123,19 +123,26 @@ docker-build:
 按照现代 CMake 的思想，一切皆为 target 和模块化，我们来调整一下 `CMakelists`。
 
 ```bash
-tree -d 1
+~ anfsity  main  zsh                                     
+ tree -d
 .
 ├── debug
 ├── include
+│   ├── backend
+│   └── ir
+├── scripts
 ├── src
+│   ├── backend
+│   ├── frontend
+│   └── ir
 └── tests
+
+11 directories
 ```
 
-我们在顶层目录和 `src` 目录都放一个 `CMakelists` 来管理。
+我们在顶层目录和 `src/include` 目录都放一个 `CMakelists` 来管理。
 
  > 这是我学习 Cmake 的[入门视频](https://www.bilibili.com/video/BV1nu411u7rb/?spm_id_from=333.1387.favlist.content.click)。
-
-{{< bilibili BV1nu411u7rb >}}
 
 ```cmake
 # root CMakelists.txt
@@ -148,12 +155,45 @@ project(
     VERSION 0.1.0
 )
 
+# c++ settings
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# binary_dir : the output dir like build/cmake-build
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+# library fmt
+include(FetchContent)
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG         12.1.0
+)
+FetchContent_MakeAvailable(fmt)
+
+# Flex & Bsion
+find_package(FLEX REQUIRED)
+find_package(BISON REQUIRED)
+
+add_subdirectory(include)
 add_subdirectory(src)
+
+enable_testing()
+
+file(GLOB_RECURSE test_cases "tests/*.c")
+
+foreach(test_file ${test_cases})
+    get_filename_component(test_name ${test_file} NAME_WE)
+    get_filename_component(parent_dir ${test_file} DIRECTORY)
+    get_filename_component(group_name ${parent_dir} NAME)
+    add_test(
+        NAME ${group_name}/${test_name}
+        COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/test_runner.py
+                $<TARGET_FILE:compiler>
+                ${test_file}
+    )
+endforeach()
 ```
 
 看了一下 `docker` 里面的环境配置：
@@ -179,72 +219,71 @@ add_subdirectory(src)
 
 ```cmake
 # src/CMakelists.txt
-set(FB_EXT ".cpp")
-message(STATUS "Flex/Bison generated source file extension: ${FB_EXT}")
-
-# options about libraries and includes
-set(LIB_DIR "$ENV{CDE_LIBRARY_PATH}/native" CACHE STRING "directory of libraries")
-set(INC_DIR "$ENV{CDE_INCLUDE_PATH}" CACHE STRING "directory of includes")
-message(STATUS "Library directory: ${LIB_DIR}")
-message(STATUS "Include directory: ${INC_DIR}")
-
-# library fmt
-include(FetchContent)
-FetchContent_Declare(
-    fmt
-    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG         12.1.0
-)
-FetchContent_MakeAvailable(fmt)
-
-# require flex/bison
-find_package(FLEX REQUIRED)
-find_package(BISON REQUIRED)
-
 # generate lexer/parser
-file(GLOB_RECURSE L_SOURCES "*.lx")
-file(GLOB_RECURSE Y_SOURCES "*.y")
-if(NOT (L_SOURCES STREQUAL "" AND Y_SOURCES STREQUAL ""))
-    string(REGEX REPLACE ".*/(.*)\\.lx" "${CMAKE_CURRENT_BINARY_DIR}/\\1.lex${FB_EXT}" L_OUTPUTS "${L_SOURCES}")
-    string(REGEX REPLACE ".*/(.*)\\.y" "${CMAKE_CURRENT_BINARY_DIR}/\\1.tab${FB_EXT}" Y_OUTPUTS "${Y_SOURCES}")
-    flex_target(Lexer ${L_SOURCES} ${L_OUTPUTS})
-    bison_target(Parser ${Y_SOURCES} ${Y_OUTPUTS})
-    add_flex_bison_dependency(Lexer Parser)
-endif()
+set(LEXER_SRC frontend/sysy.lx)
+set(YACC_SRC frontend/sysy.y)
 
-# project link directories
-link_directories(${LIB_DIR})
+# generate the lexer and parser files
+flex_target(Lexer ${LEXER_SRC} ${CMAKE_CURRENT_BINARY_DIR}/sysy.lex.cpp)
+bison_target(Parser ${YACC_SRC} ${CMAKE_CURRENT_BINARY_DIR}/sysy.tab.cpp)
+add_flex_bison_dependency(Lexer Parser)
+message(STATUS "[INFO]  Generated lexer: ${CMAKE_CURRENT_BINARY_DIR}/sysy.lex.cpp")
+message(STATUS "[INFO]  Generated parser: ${CMAKE_CURRENT_BINARY_DIR}/sysy.tab.cpp")
+message(STATUS "[INFO]  Generated lexer outpus ${FLEX_Lexer_OUTPUTS}")
+message(STATUS "[INFO]  Generated parser outpus ${BISON_Parser_OUTPUT_SOURCE}")
 
-set(CXX_SOURCES main.cpp ast.cpp backend.cpp)
-set(SOURCES ${CXX_SOURCES}
-${FLEX_Lexer_OUTPUTS} ${BISON_Parser_OUTPUT_SOURCE})
-
-add_executable(compiler ${SOURCES})
-
-# project include directories
-target_include_directories(compiler PRIVATE
-    .                                       # current dir
-    ${CMAKE_CURRENT_BINARY_DIR}             # generated header by flex/bison
-    ${INC_DIR}
-    ${CMAKE_SOURCE_DIR}/include
+set(CORE_SOURCES
+    ir/ast.cpp
+    backend/backend.cpp
+    ${FLEX_Lexer_OUTPUTS}
+    ${BISON_Parser_OUTPUT_SOURCE}
 )
 
-# link libraries
-target_link_libraries(compiler PRIVATE
+add_library(compiler_core STATIC ${CORE_SOURCES})
+
+target_include_directories(compiler_core PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}  # cmake-build/src/* for generated lexer/parser
+)
+
+# compiler core link libraries
+target_link_libraries(compiler_core PUBLIC
     koopa
     pthread
     dl
     fmt::fmt
+    headers
 )
 
 # complie options
+target_compile_options(compiler_core PRIVATE -O2 -Wall -Wno-register -Wextra)
+
+# executable
+add_executable(compiler main.cpp)
 target_compile_options(compiler PRIVATE -O2 -Wall -Wno-register -Wextra)
+target_include_directories(compiler PRIVATE $ENV{CDE_INCLUDE_PATH})
+
+# compiler link libraries
+target_link_libraries(compiler PRIVATE compiler_core)
+target_link_directories(compiler PRIVATE $ENV{CDE_LIBRARY_PATH}/native)
 ```
 
-这是我目前做了一阵子的目录结构，稍微有点混乱，有时间我会调整一下：
+```cmake
+# include/CMakeLists.txt
+add_library(headers INTERFACE)
+
+target_include_directories(headers INTERFACE
+    # include/
+    ${CMAKE_CURRENT_SOURCE_DIR} 
+)
+
+message(STATUS "[INFO]  Compiler Headers Target created: headers")
+```
+
+这是我目前做了一阵子的目录结构，测试还没写完。
 
 ```bash
-tree 
+ tree
+.
 ├── CMakeLists.txt
 ├── debug
 │   ├── binary.koopa
@@ -254,23 +293,33 @@ tree
 │   ├── logic.koopa
 │   └── unary.koopa
 ├── include
-│   ├── ast.hpp
-│   ├── backend.hpp
-│   ├── ir_builder.hpp
-│   ├── koopa.h
-│   ├── symbol_table.hpp
-│   └── type.hpp
-├── Makefile
-├── src
-│   ├── ast.cpp
-│   ├── backend.cpp
+│   ├── backend
+│   │   └── backend.hpp
 │   ├── CMakeLists.txt
-│   ├── main.cpp
-│   ├── sysy.lx
-│   └── sysy.y
+│   ├── ir
+│   │   ├── ast.hpp
+│   │   ├── ir_builder.hpp
+│   │   ├── symbol_table.hpp
+│   │   └── type.hpp
+│   └── koopa.h
+├── Makefile
+├── scripts
+│   └── test_runner.py
+├── src
+│   ├── backend
+│   │   └── backend.cpp
+│   ├── CMakeLists.txt
+│   ├── frontend
+│   │   ├── sysy.lx
+│   │   └── sysy.y
+│   ├── ir
+│   │   └── ast.cpp
+│   └── main.cpp
 └── tests
     ├── binary.c
     ├── hello.c
     ├── logic.c
     └── unary.c
+
+11 directories, 26 files
 ```
