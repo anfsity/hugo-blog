@@ -596,13 +596,13 @@ html[data-scheme="dark"] {
 /* ══════════════════════════════════════════════════════════════ */
 
 /* Apply a specific font stack for the body text only when the language is Chinese. */
-:lang(zh-cn) {
-    body {
-        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
-            "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei",
-            sans-serif;
-    }
-}
+// :lang(zh-cn) {
+//     body {
+//         font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+//             "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei",
+//             sans-serif;
+//     }
+// }
 
 /* Apply a custom font for all code blocks globally with increased specificity to override theme defaults. */
 body pre,
