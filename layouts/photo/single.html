@@ -169,6 +169,7 @@
             { name: "nekosia", getUrl: () => 'https://api.nekosia.cat/api/v1/images/random', parse: (d) => d.image.original.url },
             // { name: "nekosapi", getUrl: () => 'https://api.nekosapi.com/v4/images/random?rating=safe&limit=1', parse: (d) => d[0].url },
             { name: "waifu.im", getUrl: () => 'https://api.waifu.im/search?is_nsfw=false', parse: (d) => d.images[0].url },
+            { name: "ohaapi", getUrl: () => 'https://api.oha.li/image?meta=1', parse: (d) => d.image.path },
         ];
 
             const PRELOAD_AHEAD = 3;
