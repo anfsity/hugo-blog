@@ -21,7 +21,10 @@ links:
     website: https://blog.woo.moe
     image: https://data.woo.moe/img/ico/104491469_0_r.png
     description: 曇花一現
-
+  - title: lyc8503
+    website: https://blog.lyc8503.net
+    description: 「」
+    image: https://blog.lyc8503.net/img/avatar.png
 
 menu:
     main: 
