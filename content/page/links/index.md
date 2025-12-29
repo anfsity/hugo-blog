@@ -25,6 +25,10 @@ links:
     website: https://blog.lyc8503.net
     description: 「」
     image: https://blog.lyc8503.net/img/avatar.png
+  - title: Collapse179
+    description: Try my 120%
+    website: https://collapse179.github.io/
+    image: https://collapse179.github.io/img/avatar.png
 
 menu:
     main: 
