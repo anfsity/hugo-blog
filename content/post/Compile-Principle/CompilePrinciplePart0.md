@@ -57,6 +57,8 @@ Chain FORWARD (policy DROP 1735 packets, 177K bytes)
  >
  > [Packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/)
 
+### 配置 `clangd`
+
 如果你使用 `c++` 进行 Lab 的话，可能你像我一样使用 `clangd` 。
 
 但是由于每次运行都是在 `docker` 里面进行的，这就造成一个问题--如果你使用 `cmake` 来自动生成 `cdb` 文件的话，它的路径是 `docker` 里面的路径而不是宿主机里的路径。
@@ -112,11 +114,13 @@ docker-build:
 		sh -c "cmake -S . -B $(BUILD_DIR) && cmake --build $(BUILD_DIR) -j12"
 ```
 
+你可以在根目录下 `make shell` 直接进入 `docker`，`make` 进行编译。
+
 ## CMake
 
 谈到 `CMake` ，只能说又爱又恨。众所周知，C++ 没有好用的包管理器，目前流行的包管理器各有各的缺陷。
 
-不过包管理器相关的知识太过庞杂，就不在这里展开叙述了。
+不过包管理器相关的知识太过庞杂，而我并不熟悉，就不在这里展开叙述了。
 
 我们来魔改一下 maxXing 的 `CMakelists` 👍
 
@@ -209,13 +213,13 @@ endforeach()
 | **Clang**                  | 21.1.6  | 版本极新。但是可能由于 libc++ 限制，可能无法使用 std::print 。 |
 | **LLVM**                   | 21.1.6  | Clang 的底层框架，版本与 Clang 一致。                 |
 
-环境可以说是非常现代了，但是它的 `clang` 居然不能让我用 `std::println` ?
+环境可以说是非常现代，但是它的 `clang` 居然不能让我使用 `print` 库？
 
-我早受够用 `cout` 的 `<</>>` 来拼接字符串了，不让我用我也要弄过来。便把 `print` 的原型库 `fmt` 拉过来使用。
+我早受够用 `cout` 的 `<</>>` 来输出字符串了，真的很难用，不让我用我也要弄过来。便把 `print` 的原型库 `fmt` 拉过来使用。
 
-不过这么做有一个缺陷，因为一些个人喜好原因，我是拉取的 `fmt` 仓库。这导致每次测试的时候都要进行一次拉取。有时候我在想是不是应该直接下载下来。
+我的实现有一个缺陷，因为一些个人喜好原因，我是拉取的 `fmt` 仓库。这导致每次测试的时候都要进行一次拉取。如果网络好的时候还算顺畅，但是校园网不好(哭哭)，偶尔要等待半天。
 
-如果网络好的时候还好，但是校园网不好(哭哭)，偶尔要等待半天。
+不过也可以指定输出目录进行增量编译，这也不算是什么大问题了。
 
 ```cmake
 # src/CMakelists.txt
@@ -323,3 +327,8 @@ message(STATUS "[INFO]  Compiler Headers Target created: headers")
 
 11 directories, 26 files
 ```
+
+## 额外内容(CI)
+
+其实我觉得这个 lab 没有必要配置 CI，但是为了今后的编译优化做准备，加之想尝试新东西，便给仓库配置了 CI（持续性集成）。
+
