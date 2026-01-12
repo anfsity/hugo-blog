@@ -305,3 +305,9 @@ ro.dalvik.vm.isa.arm64=x86_64
 
  - [waydroid docs](https://docs.waydro.id/)
  - [archwiki waydroid](https://wiki.archlinux.org/title/Waydroid)
+
+ ---
+
+ $upd:$
+ 
+ 这个 bug 实在太多，我也不强求一定要在 linux 上玩游戏，遂以抛弃 `waydroid`，特此纪念。

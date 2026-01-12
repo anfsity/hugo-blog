@@ -303,3 +303,9 @@ ro.dalvik.vm.isa.arm64=x86_64
 
  - [waydroid docs](https://docs.waydro.id/)
  - [archwiki waydroid](https://wiki.archlinux.org/title/Waydroid)
+
+---
+
+$upd:$
+
+There are just too many bugs. I don't strictly need to game on Linux anyway, so I'm ditching waydroid. R.I.P.
