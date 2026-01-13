@@ -328,6 +328,67 @@ message(STATUS "[INFO]  Compiler Headers Target created: headers")
 11 directories, 26 files
 ```
 
+## 模块
+
+什么？都 2026 了，我们还在使用传统 cpp 的 pch Σ(ﾟ∀ﾟﾉ)ﾉ
+
+关于模块，已经有人系统的介绍了，下面的内容引用自模块化功能的实现者许传奇的博文 [C++20 Modules 用户视角下的最佳实践](https://chuanqixu9.github.io/c++/2025/12/30/C++20-Modules-Best-Practices.html)。
+
+### C++20 Modules 的好处
+
+在介绍实践方式之前，我们先介绍下 C++20 Modules 的好处有哪些，为之后介绍不同的实践方式的原因做铺垫。C++20 Modules 的设计目的主要有：
+
+- 更快的编译速度
+- 避免 ODR Violation
+- 控制 API 可见性
+- 避免宏污染
+
+其中更快的编译速度和避免 ODR Violation 两个目的都是通过 C++20 Modules 可以为每一个声明提供唯一一个归属的 TU 来达到的。
+
+
+#### 更快的编译速度 (和更小的代码体积)
+
+之前有人认为 C++20 Modules 不过是标准化的 PCH 或者标准化的 Clang Header Modules。这都不对。PCH 或 Clang Header Modules 通过避免不同 TU 重复的预处理/语法分析以减少编译时间。
+
+而 C++20 Modules 在此之上，还可以避免相同声明在编译器中后端的重复优化与编译。而对于很多项目而言，编译器中后端的优化和编译才是耗时的主要来源。
+
+例如
+
+```C++
+// a.h
+inline void func_a() {
+    ...
+}
+```
+
+这个写法会让每一个包含 `a.h` 且引用到了 `func_a()` 的 TU 都对 `func_a()` 做优化以及代码生成。
+
+而使用 Modules 的写法
+
+```C++
+export module a;
+export int func_a() {
+    ...
+}
+```
+
+无论有多少 TU 引用了 `func_a()`，这些 TU 被编译时都不会再对 `func_a()` 做重复的优化和代码生成。这是 C++20 Modules 相比于 PCH 或 Clang Header Modules 能提升更多编译速度的一个点。
+
+比起全局函数，更常见的是 `in class inline function`，即：
+
+```C++
+class A {
+public:
+    void a() { ... }
+};
+```
+
+C++20 标准规定，位于 Named Modules 中的 in class inline function 不再是 `implicitly inline`。即当 `A::a()` 位于 Named Modules 中时， `A::a()` 的定义只应该被放到 Named Modules 对应的 Object File 中，而不会被不同的 Consumer 重复优化/编译。
+
+而除了这样显式的函数定义之外，诸如虚表和 debug info 等信息，都应该遵循相同的原则，即此类信息应该只在相关定义对应的 Named Modules 中生成，避免在各个 Consumer 中都生成一遍，即浪费时间还浪费空间。是的，我们在实践中发现，应用 C++20 Modules 不但可以减少编译时间，对于减少构建产物的体积也有显著帮助。
+
+
+
 ## 额外内容(CI)
 
 其实我觉得这个 lab 没有必要配置 CI，但是为了今后的编译优化做准备，加之想尝试新东西，便给仓库配置了 CI（持续性集成）。
