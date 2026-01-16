@@ -1,5 +1,5 @@
 +++
-title = "Compile Principle Part 0 - Environment Configuration"
+title = "Compile Principle Part 0 : Before Everything Begins"
 date = 2025-12-17T13:57:23+08:00
 draft = false
 author = "Anfsity"
@@ -11,6 +11,7 @@ categories = [
 ]
 description = ""
 image = ""
+last_mod = 2026-01-16T15:57:23+08:00
 +++
 
 ## Docker
@@ -77,7 +78,7 @@ Chain FORWARD (policy DROP 1735 packets, 177K bytes)
 
 为了发扬懒人精神，我把这些命令整合到了 `Makefile` 中。
 
- > 我只会 `Makefile` QAQ，而且它也足够简单(?)，只要不写太多东西。犹记得初见 `Makefile` 时的语法，神似鬼画符🤔
+ > 我只会 `Makefile` QAQ，而且它也足够简单(简单吗...?)，只要不写太多东西。犹记得初见 `Makefile` 时的语法，神似鬼画符🤔
 
 ```make
 IMAGE = maxxing/compiler-dev
@@ -118,9 +119,9 @@ docker-build:
 
 ## CMake
 
-谈到 `CMake` ，只能说又爱又恨。众所周知，C++ 没有好用的包管理器，目前流行的包管理器各有各的缺陷。
+谈到 `CMake` ，只能说又爱又恨。众所周知，C++ 没有像 rs，py 那样好用的包管理器，目前流行的包管理器各有各的缺陷。
 
-不过包管理器相关的知识太过庞杂，而我并不熟悉，就不在这里展开叙述了。
+不过包管理器相关的知识太过庞杂，而且我也并不熟悉，就不在这里展开叙述了。
 
 我们来魔改一下 maxXing 的 `CMakelists` 👍
 
@@ -213,11 +214,13 @@ endforeach()
 | **Clang**                  | 21.1.6  | 版本极新。但是可能由于 libc++ 限制，可能无法使用 std::print 。 |
 | **LLVM**                   | 21.1.6  | Clang 的底层框架，版本与 Clang 一致。                 |
 
-环境可以说是非常现代，但是它的 `clang` 居然不能让我使用 `print` 库？
+环境可以说是非常现代，但是很遗憾无法使用 `print` 库。
 
-我早受够用 `cout` 的 `<</>>` 来输出字符串了，真的很难用，不让我用我也要弄过来。便把 `print` 的原型库 `fmt` 拉过来使用。
+我早受够用 `cout` 的 `<</>>` 来输出字符串了，真的很难用，便把 `print` 的原型库 `fmt` 拉过来使用。
 
-我的实现有一个缺陷，因为一些个人喜好原因，我是拉取的 `fmt` 仓库。这导致每次测试的时候都要进行一次拉取。如果网络好的时候还算顺畅，但是校园网不好(哭哭)，偶尔要等待半天。
+没想到 `fmt` 比 `print` 还好用。
+
+我的实现有一个缺陷，为了避免引入依赖，我直接使用 `cmake` 拉取 `fmt` 仓库。这导致每次测试的时候都要进行一次拉取。如果网络好的时候还算顺畅，但是校园网时常抽风，偶尔要等待半天。
 
 不过也可以指定输出目录进行增量编译，这也不算是什么大问题了。
 
@@ -283,54 +286,60 @@ target_include_directories(headers INTERFACE
 message(STATUS "[INFO]  Compiler Headers Target created: headers")
 ```
 
-这是我目前做了一阵子的目录结构，测试还没写完。
+这是我目前做了一阵子的目录结构，~~测试还没写完~~，从别处剽窃了一些测试过来。
 
 ```bash
  tree
 .
 ├── CMakeLists.txt
 ├── debug
-│   ├── binary.koopa
-│   ├── hello.asm
-│   ├── hello.koopa
-│   ├── logic.asm
-│   ├── logic.koopa
-│   └── unary.koopa
+│   ├── hello.asm
+│   ├── hello.koopa
+│   └── test_temp
+│       └── **
 ├── include
-│   ├── backend
-│   │   └── backend.hpp
-│   ├── CMakeLists.txt
-│   ├── ir
-│   │   ├── ast.hpp
-│   │   ├── ir_builder.hpp
-│   │   ├── symbol_table.hpp
-│   │   └── type.hpp
-│   └── koopa.h
+│   ├── backend
+│   │   ├── backend.hpp
+│   │   └── koopawrapper.hpp
+│   ├── CMakeLists.txt
+│   ├── ir
+│   │   ├── ast.hpp
+│   │   ├── ir_builder.hpp
+│   │   ├── symbol_table.hpp
+│   │   └── type.hpp
+│   ├── koopa.h
+│   └── Log
+│       └── log.hpp
 ├── Makefile
 ├── scripts
-│   └── test_runner.py
+│   └── test_runner.py
 ├── src
-│   ├── backend
-│   │   └── backend.cpp
-│   ├── CMakeLists.txt
-│   ├── frontend
-│   │   ├── sysy.lx
-│   │   └── sysy.y
-│   ├── ir
-│   │   └── ast.cpp
-│   └── main.cpp
+│   ├── backend
+│   │   └── backend.cpp
+│   ├── CMakeLists.txt
+│   ├── frontend
+│   │   ├── sysy.lx
+│   │   └── sysy.y
+│   ├── ir
+│   │   ├── ast.cpp
+│   │   └── codegen.cpp
+│   └── main.cpp
 └── tests
-    ├── binary.c
     ├── hello.c
-    ├── logic.c
-    └── unary.c
+    └── resources
+        ├── functional
+        │   └── **
+        └── hidden_functional
+            └── **
 
-11 directories, 26 files
+16 directories, 620 files
 ```
 
 ## 模块
 
 什么？都 2026 了，我们还在使用传统 cpp 的 pch Σ(ﾟ∀ﾟﾉ)ﾉ
+
+`modules` 现在处于一个很尴尬的处境，大家都夸他，但是没人用。
 
 关于模块，已经有人系统的介绍了，下面的内容引用自模块化功能的实现者许传奇的博文 [C++20 Modules 用户视角下的最佳实践](https://chuanqixu9.github.io/c++/2025/12/30/C++20-Modules-Best-Practices.html)。
 
@@ -387,9 +396,149 @@ C++20 标准规定，位于 Named Modules 中的 in class inline function 不再
 
 而除了这样显式的函数定义之外，诸如虚表和 debug info 等信息，都应该遵循相同的原则，即此类信息应该只在相关定义对应的 Named Modules 中生成，避免在各个 Consumer 中都生成一遍，即浪费时间还浪费空间。是的，我们在实践中发现，应用 C++20 Modules 不但可以减少编译时间，对于减少构建产物的体积也有显著帮助。
 
+#### 避免 ODR Violation
 
+ODR（One Definition Rule）指的是一个程序中每个实体都应该只有一个相同的定义。当一个实体有多个不同的定义时，这个程序是就违反了 ODR，称为 ODR Violation，此时程序是 ill-formed。
+
+实践中，若一个实体的多个定义是强符号，则会在链接时报错并提示 multiple definition。而如果一个实体的多个定义全是弱符号，则会在链接时挑选任意一个定义，实践上链接器一般会选择遇到的第一个定义。（忽略一个强符号多种弱符号的情况，这种情况一般是特意设计的）。两种情况相比，在链接时报错比在运行时报错要强很多，安全很多。
+
+头文件机制因为其自身不是 TU 却要被许多 TU 共享的特征，天然地会将头文件内的几乎所有符号都设计为弱符号，为 ODR 安全埋下了很大的隐患。当一个大项目因为各种原因引入了同一个三方库的不同版本时，可能就陷入了 ODR Violation 的潜在危机中。
+
+而 C++20 Modules 基于每一个实体都有唯一的 Owning TU 的原则，会为每一个实体都提供强符号，天然地可以避免这类 ODR Violation。
+
+此外 C++20 Modules 还引入了独特的 Mangling 机制，为 Named Modules 中的每个实体添加和 Module 名强相关的后缀，可以避免不同库开发人员之间不经意的重名冲突。例如
+
+export module M;
+namespace NS {
+  export int foo();
+}
+
+NS::foo() 的链接名在 Demangle 后为显示为 NS::foo@M()。进一步降低和其他 Module 中的 foo() 函数重名的概率。
+
+至于 Module 的重名，C++20 Modules 要求每个 Module Unit 都生成一个 Module Initializer 用于初始化其内部状态（哪怕这个 Module 内部实际上不需要初始化任何东西），这个 Module Initializer 是一个强符号。从这个角度我们可以避免一个程序中出现重名的 Module Unit。
+
+ > 就简要放一段介绍了，如果你对模块感兴趣，可以前往许传奇的博客了解，也可以参阅 reddit 的社区讨论，或是草案。
+
+## 简单的日志打印
+
+一个小巧且漂亮的日志打印可以很好的帮助你进行 debug，在 cpp 20 （还是 23 ？我忘了）引进了 `source_location`，它可以很好的取代部分宏调试的功能，使用起来更加方便和舒适。
+
+`fmt` 库的强大功能中包含了颜色调节，这是标准库还没有实现的功能。`fmt` 看起来比较麻烦，但用起来意外的舒服，很符合“人体工学”。
+
+```cpp
+/**
+ * @file log.hpp
+ * @brief Logging and error handling utilities for the compiler.
+ */
+#pragma once
+
+#include <fmt/color.h>
+#include <fmt/core.h>
+#include <source_location>
+#include <string>
+
+namespace detail {
+
+/**
+ * @brief Formats a message with source location information.
+ * @param loc The source location.
+ * @param fmt_str Format string.
+ * @param args Format arguments.
+ * @return Formatted string including location info.
+ */
+template <typename... Args>
+static auto format_msg(const std::source_location &loc,
+                       std::string_view fmt_str, Args &&...args)
+    -> std::string {
+  std::string user_msg =
+      fmt::format(fmt::runtime(fmt_str), std::forward<Args>(args)...);
+
+  return fmt::format(fmt::fg(fmt::color::alice_blue), "{} (at {}:{} in {})", user_msg, loc.file_name(),
+                     loc.line(), loc.function_name());
+}
+
+/**
+ * @brief Custom exception for compilation errors.
+ */
+class CompileError : public std::runtime_error {
+public:
+  explicit CompileError(const std::string &message)
+      : std::runtime_error(message) {}
+};
+
+} // namespace detail
+
+/**
+ * @brief Static logging utility.
+ */
+class Log {
+public:
+  /**
+   * @brief Reports a fatal error, prints debug info, and throws a CompileError.
+   * 
+   * @param fmt_str Format string for the error message.
+   * @param args Arguments for the format string.
+   * @param loc Source location (defaults to caller site).
+   */
+  template <typename... Args>
+  static auto
+  panic(std::string_view fmt_str, Args &&...args,
+        const std::source_location &loc = std::source_location::current())
+      -> void {
+    fmt::print(stderr, fmt::emphasis::bold | fmt::fg(fmt::color::red),
+               "[PANIC] ");
+    std::string msg =
+        fmt::format(fmt::runtime(fmt_str), std::forward<Args>(args)...);
+    fmt::println(stderr, "{}", msg);
+    fmt::print(stderr, fmt::fg(fmt::color::slate_gray), " --> {}:{}:{}\n",
+               loc.file_name(), loc.line(), loc.function_name());
+
+    throw detail::CompileError(
+        detail::format_msg(loc, fmt_str, std::forward<Args>(args)...));
+  }
+
+  /**
+   * @brief Prints a trace message for debugging.
+   * 
+   * @param fmt_str Format string for the trace message.
+   * @param args Arguments for the format string.
+   * @param loc Source location (defaults to caller site).
+   */
+  template <typename... Args>
+  static auto
+  trace(std::string_view fmt_str, Args &&...args,
+        const std::source_location &loc = std::source_location::current())
+      -> void {
+    fmt::print(stdout, fmt::fg(fmt::color::cyan), "[TRACE] ");
+    fmt::print(stdout, "{} ",
+               fmt::format(fmt::runtime(fmt_str), std::forward<Args>(args)...));
+    fmt::print(stdout, fmt::fg(fmt::color::dark_violet), "[{}]\n",
+               loc.function_name());
+  }
+};
+```
+
+## 代码风格
+
+### 代码注释
+
+尽可能的写注释......写全写明白.....否则你就会像我一样，一个星期不看就看不懂要重新把所有源码再看一遍...
+
+为什么会一两个星期没看呢，因为要期末考试...
+
+Anyway，就算不是因为这个原因，良好风格的注释在项目中也是非常重要的，
+
+TODO
+
+### 内存管理
+
+TODO
 
 ## 额外内容(CI)
 
-其实我觉得这个 lab 没有必要配置 CI，但是为了今后的编译优化做准备，加之想尝试新东西，便给仓库配置了 CI（持续性集成）。
+ > 完成此项目不需要配置任何 CI，仅仅是~~为了好玩~~我才配置了 CI
 
+
+x）除此之外，为了将来的 IR 优化做准备，配置 CI 也是一种考量。
+
+CI 提供了一个干净的可复现环境（本项目用不到），并且为你做出的修改提供自动化测试。
