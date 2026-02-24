@@ -39,24 +39,24 @@ sudo usermod -aG docker $USER
 
 ```bash
 sudo iptables -nvL FORWARD
-[sudo] password for anfsity: 
+[sudo] password for anfsity:
 Chain FORWARD (policy DROP 1735 packets, 177K bytes)
- pkts bytes target     prot opt in     out     source               destination         
- 1735  177K DOCKER-USER  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
- 1735  177K DOCKER-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0  
+ pkts bytes target     prot opt in     out     source               destination
+ 1735  177K DOCKER-USER  all  --  *      *       0.0.0.0/0            0.0.0.0/0
+ 1735  177K DOCKER-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0
 ```
 
 可以看到，`docker` 将策略改成了 `DROP` ...
 
 如果你之前有跑在宿主机上的类似容器应用，就需要将对应的端口开放给 `iptables`。
 
- > [Article]({{< relref "post/Linux/PlayArknightsInArchLinux.zh-cn.md/#docker-禁用-ip-转发">}})
+> [Article]({{< relref "post/Linux/PlayArknightsInArchLinux.zh-cn.md/#docker-禁用-ip-转发">}})
 
 关于 `docker` 的流量转发我没有做过多的了解，可以看官方文档自行了解。
 
- > [Networking overview](https://docs.docker.com/engine/network/)
- >
- > [Packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/)
+> [Networking overview](https://docs.docker.com/engine/network/)
+>
+> [Packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/)
 
 ### 配置 `clangd`
 
@@ -78,7 +78,7 @@ Chain FORWARD (policy DROP 1735 packets, 177K bytes)
 
 为了发扬懒人精神，我把这些命令整合到了 `Makefile` 中。
 
- > 我只会 `Makefile` QAQ，而且它也足够简单(简单吗...?)，只要不写太多东西。犹记得初见 `Makefile` 时的语法，神似鬼画符🤔
+> 我只会 `Makefile` QAQ，而且它也足够简单(简单吗...?)，只要不写太多东西。犹记得初见 `Makefile` 时的语法，神似鬼画符🤔
 
 ```make
 IMAGE = maxxing/compiler-dev
@@ -117,6 +117,14 @@ docker-build:
 
 你可以在根目录下 `make shell` 直接进入 `docker`，`make` 进行编译。
 
+> 由于是在 user 模式进入的 docker, 你无法使用 sudo, 这意味着， 你没有办法使用此类需要 root 权限的指令 `sudo apt update && sudo apt install ***`。
+>
+> 同时需要注意的是，我个人习惯的构建目录是 `cmake-build` 而不是 `build`。
+>
+> 在我对编译器进行了模块化改造后，就是使用的第一种方法，这种方法可以使用 devconatiner 插件简单的实现。这是我的 [json](https://github.com/anfsity/Compile-Principle/blob/main/.devcontainer/devcontainer.json) 配置，你可以参考它。
+>
+> 好消息是我为上游推送了 clangd 支持，到时候 docker 应该内置 clangd，不过上面的内容依然适用。
+
 ## CMake
 
 谈到 `CMake` ，只能说又爱又恨。众所周知，C++ 没有像 rs，py 那样好用的包管理器，目前流行的包管理器各有各的缺陷。
@@ -128,7 +136,7 @@ docker-build:
 按照现代 CMake 的思想，一切皆为 target 和模块化，我们来调整一下 `CMakelists`。
 
 ```bash
-~ anfsity  main  zsh                                     
+~ anfsity  main  zsh
  tree -d
 .
 ├── debug
@@ -147,7 +155,7 @@ docker-build:
 
 我们在顶层目录和 `src/include` 目录都放一个 `CMakelists` 来管理。
 
- > 这是我学习 Cmake 的[入门视频](https://www.bilibili.com/video/BV1nu411u7rb/?spm_id_from=333.1387.favlist.content.click)。
+> 这是我学习 Cmake 的[入门视频](https://www.bilibili.com/video/BV1nu411u7rb/?spm_id_from=333.1387.favlist.content.click)。
 
 ```cmake
 # root CMakelists.txt
@@ -203,16 +211,16 @@ endforeach()
 
 看了一下 `docker` 里面的环境配置：
 
-| Tool                       | Version | Status/Notes                              |
-| :------------------------- | :------ | :---------------------------------------- |
-| **CMake**                  | 3.28.3  | 现代版本，但离目前的 head 还是稍旧。                     |
-| **Python3**                | 3.12.3  | 最新的稳定版本之一。                                |
-| **Rust Toolchain (Cargo)** | 1.91.1  | 版本非常新 (构建日期 2025-10-10)，处于前沿。             |
-| **flex**                   | 2.6.4   | 标准版本。                                     |
-| **bison**                  | 3.8.2   | 标准版本 (GNU Bison)。                         |
-| **GCC**                    | 13.3.0  | 构建于 Ubuntu 24.04。支持 C++20 标准。             |
+| Tool                       | Version | Status/Notes                                                   |
+| :------------------------- | :------ | :------------------------------------------------------------- |
+| **CMake**                  | 3.28.3  | 现代版本，但离目前的 head 还是稍旧。                           |
+| **Python3**                | 3.12.3  | 最新的稳定版本之一。                                           |
+| **Rust Toolchain (Cargo)** | 1.91.1  | 版本非常新 (构建日期 2025-10-10)，处于前沿。                   |
+| **flex**                   | 2.6.4   | 标准版本。                                                     |
+| **bison**                  | 3.8.2   | 标准版本 (GNU Bison)。                                         |
+| **GCC**                    | 13.3.0  | 构建于 Ubuntu 24.04。支持 C++20 标准。                         |
 | **Clang**                  | 21.1.6  | 版本极新。但是可能由于 libc++ 限制，可能无法使用 std::print 。 |
-| **LLVM**                   | 21.1.6  | Clang 的底层框架，版本与 Clang 一致。                 |
+| **LLVM**                   | 21.1.6  | Clang 的底层框架，版本与 Clang 一致。                          |
 
 环境可以说是非常现代，但是很遗憾无法使用 `print` 库。
 
@@ -280,13 +288,13 @@ add_library(headers INTERFACE)
 
 target_include_directories(headers INTERFACE
     # include/
-    ${CMAKE_CURRENT_SOURCE_DIR} 
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 message(STATUS "[INFO]  Compiler Headers Target created: headers")
 ```
 
-这是我目前做了一阵子的目录结构，~~测试还没写完~~，从别处剽窃了一些测试过来。
+这是我最终的目录结构，~~测试还没写完~~，从别处剽窃了一些测试过来。
 
 ```bash
  tree
@@ -335,89 +343,25 @@ message(STATUS "[INFO]  Compiler Headers Target created: headers")
 16 directories, 620 files
 ```
 
+> 如果你想使用这个 CMake 文件，你必须严格遵循我的目录结构，并且把对应的 CMake 文件放到正确的位置，如果你对 CMake 不了解的话，还是使用课程提供的模板文件比较好。权当我为你提供了一种 CMake 参考配置。
+>
+> 这个配置是使用了 module 之前的配置，当前仓库的配置是适配了 module 之后的配置。
+
 ## 模块
 
 什么？都 2026 了，我们还在使用传统 cpp 的 pch Σ(ﾟ∀ﾟﾉ)ﾉ
 
 `modules` 现在处于一个很尴尬的处境，大家都夸他，但是没人用。
 
-关于模块，已经有人系统的介绍了，下面的内容引用自模块化功能的实现者许传奇的博文 [C++20 Modules 用户视角下的最佳实践](https://chuanqixu9.github.io/c++/2025/12/30/C++20-Modules-Best-Practices.html)。
+模块的好处及用法可以参见这篇文章 [C++20 Modules 用户视角下的最佳实践](https://chuanqixu9.github.io/c++/2025/12/30/C++20-Modules-Best-Practices.html)。
 
-### C++20 Modules 的好处
+经过亲身体验后，我建议这个还是不要碰的好，因为弄好环境其实挺麻烦的。如果一定要引入的话，最好从一开始就原生支持，并且需要修改 CMake 文件。
 
-在介绍实践方式之前，我们先介绍下 C++20 Modules 的好处有哪些，为之后介绍不同的实践方式的原因做铺垫。C++20 Modules 的设计目的主要有：
+CMake 进行模块构建目前好像只能使用 ninja （还有谁我忘了），所以你还需要配置 ninja。
 
-- 更快的编译速度
-- 避免 ODR Violation
-- 控制 API 可见性
-- 避免宏污染
+你可以使用我的 devcontainer 配置，相关环境都已经弄好了 [devcontainer.json](https://github.com/anfsity/Compile-Principle/blob/main/.devcontainer/devcontainer.json)。
 
-其中更快的编译速度和避免 ODR Violation 两个目的都是通过 C++20 Modules 可以为每一个声明提供唯一一个归属的 TU 来达到的。
-
-
-#### 更快的编译速度 (和更小的代码体积)
-
-之前有人认为 C++20 Modules 不过是标准化的 PCH 或者标准化的 Clang Header Modules。这都不对。PCH 或 Clang Header Modules 通过避免不同 TU 重复的预处理/语法分析以减少编译时间。
-
-而 C++20 Modules 在此之上，还可以避免相同声明在编译器中后端的重复优化与编译。而对于很多项目而言，编译器中后端的优化和编译才是耗时的主要来源。
-
-例如
-
-```C++
-// a.h
-inline void func_a() {
-    ...
-}
-```
-
-这个写法会让每一个包含 `a.h` 且引用到了 `func_a()` 的 TU 都对 `func_a()` 做优化以及代码生成。
-
-而使用 Modules 的写法
-
-```C++
-export module a;
-export int func_a() {
-    ...
-}
-```
-
-无论有多少 TU 引用了 `func_a()`，这些 TU 被编译时都不会再对 `func_a()` 做重复的优化和代码生成。这是 C++20 Modules 相比于 PCH 或 Clang Header Modules 能提升更多编译速度的一个点。
-
-比起全局函数，更常见的是 `in class inline function`，即：
-
-```C++
-class A {
-public:
-    void a() { ... }
-};
-```
-
-C++20 标准规定，位于 Named Modules 中的 in class inline function 不再是 `implicitly inline`。即当 `A::a()` 位于 Named Modules 中时， `A::a()` 的定义只应该被放到 Named Modules 对应的 Object File 中，而不会被不同的 Consumer 重复优化/编译。
-
-而除了这样显式的函数定义之外，诸如虚表和 debug info 等信息，都应该遵循相同的原则，即此类信息应该只在相关定义对应的 Named Modules 中生成，避免在各个 Consumer 中都生成一遍，即浪费时间还浪费空间。是的，我们在实践中发现，应用 C++20 Modules 不但可以减少编译时间，对于减少构建产物的体积也有显著帮助。
-
-#### 避免 ODR Violation
-
-ODR（One Definition Rule）指的是一个程序中每个实体都应该只有一个相同的定义。当一个实体有多个不同的定义时，这个程序是就违反了 ODR，称为 ODR Violation，此时程序是 ill-formed。
-
-实践中，若一个实体的多个定义是强符号，则会在链接时报错并提示 multiple definition。而如果一个实体的多个定义全是弱符号，则会在链接时挑选任意一个定义，实践上链接器一般会选择遇到的第一个定义。（忽略一个强符号多种弱符号的情况，这种情况一般是特意设计的）。两种情况相比，在链接时报错比在运行时报错要强很多，安全很多。
-
-头文件机制因为其自身不是 TU 却要被许多 TU 共享的特征，天然地会将头文件内的几乎所有符号都设计为弱符号，为 ODR 安全埋下了很大的隐患。当一个大项目因为各种原因引入了同一个三方库的不同版本时，可能就陷入了 ODR Violation 的潜在危机中。
-
-而 C++20 Modules 基于每一个实体都有唯一的 Owning TU 的原则，会为每一个实体都提供强符号，天然地可以避免这类 ODR Violation。
-
-此外 C++20 Modules 还引入了独特的 Mangling 机制，为 Named Modules 中的每个实体添加和 Module 名强相关的后缀，可以避免不同库开发人员之间不经意的重名冲突。例如
-
-export module M;
-namespace NS {
-  export int foo();
-}
-
-NS::foo() 的链接名在 Demangle 后为显示为 NS::foo@M()。进一步降低和其他 Module 中的 foo() 函数重名的概率。
-
-至于 Module 的重名，C++20 Modules 要求每个 Module Unit 都生成一个 Module Initializer 用于初始化其内部状态（哪怕这个 Module 内部实际上不需要初始化任何东西），这个 Module Initializer 是一个强符号。从这个角度我们可以避免一个程序中出现重名的 Module Unit。
-
- > 就简要放一段介绍了，如果你对模块感兴趣，可以前往许传奇的博客了解，也可以参阅 reddit 的社区讨论，或是草案。
+怎么用就自行询问 AI 吧。
 
 ## 简单的日志打印
 
@@ -475,7 +419,7 @@ class Log {
 public:
   /**
    * @brief Reports a fatal error, prints debug info, and throws a CompileError.
-   * 
+   *
    * @param fmt_str Format string for the error message.
    * @param args Arguments for the format string.
    * @param loc Source location (defaults to caller site).
@@ -499,7 +443,7 @@ public:
 
   /**
    * @brief Prints a trace message for debugging.
-   * 
+   *
    * @param fmt_str Format string for the trace message.
    * @param args Arguments for the format string.
    * @param loc Source location (defaults to caller site).
@@ -520,25 +464,57 @@ public:
 
 ## 代码风格
 
+代码风格可以参考 llvm 和 google 的 style 手册，应该在网上一搜就有。
+
+或者可以使用 clang-format 一键格式化，clangd 会包含它。
+
+对于某某特性应不应该使用的问题，我觉得只要你在项目保持前后一致性，就没什么问题。由于是 toy project，~~我会把语言特性拉的尽可能的新~~。
+
 ### 代码注释
 
-尽可能的写注释......写全写明白.....否则你就会像我一样，一个星期不看就看不懂要重新把所有源码再看一遍...
+尽可能的写注释......且要写明白.....否则你就会像我一样，一个星期不看就看不懂要重新把所有源码再看一遍...
 
 为什么会一两个星期没看呢，因为要期末考试...
 
 Anyway，就算不是因为这个原因，良好风格的注释在项目中也是非常重要的，
 
-TODO
+我目前的观点是，好的代码应该做到：代码即注释。但是对于复杂的逻辑，以及一些危险的操作，需要用注释来补全。
 
-### 内存管理
+## 内存管理
 
-TODO
+为了支持 RAII，我个人的做法是把所有的函数和过程都用类包装起来了，为了兼容 bison 还写了一套构造函数用于从裸指针构造。
 
-## 额外内容(CI)
+简单举个例子：
 
- > 完成此项目不需要配置任何 CI，仅仅是~~为了好玩~~我才配置了 CI
+```bison
+/**
+ * @brief Left-value expression (variable / array access).
+ */
+LVal
+  : IDENT {
+    $$ = new LValAST(std::move(*$1), {});
+    delete $1;
+  }
+  | IDENT ArraySuffix {
+    $$ = new LValAST(std::move(*$1), std::move(*$2));
+    delete $1;
+    delete $2;
+  };
+```
 
-
-x）除此之外，为了将来的 IR 优化做准备，配置 CI 也是一种考量。
-
-CI 提供了一个干净的可复现环境（本项目用不到），并且为你做出的修改提供自动化测试。
+```cpp
+class LValAST : public ExprAST {
+public:
+  std::string ident;
+  std::vector<std::unique_ptr<ExprAST>> indices;
+  /**
+   * @brief Constructs an LVal node.
+   * @param _ident The variable name.
+   */
+  LValAST(std::string _ident, std::vector<std::unique_ptr<ExprAST>> _indices)
+      : ident(std::move(_ident)), indices(std::move(_indices)) {};
+  auto dump(int depth) const -> void override;
+  auto codeGen(ir::KoopaBuilder &builder) const -> std::string override;
+  auto CalcValue(ir::KoopaBuilder &builder) const -> int override;
+};
+```
