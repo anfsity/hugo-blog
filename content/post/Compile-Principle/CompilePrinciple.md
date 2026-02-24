@@ -25,7 +25,9 @@ CS143 是经典课程，但是 pku 的 lab 又足够诱人，它给予了你高�
 
 写了一些笔记：
 
->  [Before Everything Begins]({{< relref "compilePrinciplePart0.md" >}})
+> - [Before Everything Begins]({{< relref "compilePrinciplePart0.md" >}})
+>
+> - [Quickly Skip The First Half]({{< relref "compilePrinciplePart1.md" >}})
 
 ---
 

@@ -106,22 +106,22 @@ vim.env.PATH = table.concat({ vim.fn.stdpath "data", "mason", "bin" }, sep) .. d
 ```
 
 - `laststauts` ： 状态栏显示模式。
-	- `0` : 从不显示
-	- `1` : 只有超过一个窗口才显示
-	- `2` : 总是显示
-	- `3` : 总是显示， 并且是全局的。
+  - `0` : 从不显示
+  - `1` : 只有超过一个窗口才显示
+  - `2` : 总是显示
+  - `3` : 总是显示， 并且是全局的。
 
 具体区别可以使用控制变量法直观查看。
 
 - `showmode` ： 字面意思， 时候显示当前模式。
 - `cursorline` ： 高亮显示光标所在的当前行。
-- `cursorlineopt` 
-	- `line` 高亮整行。
-	- `number` 高亮行号。
-	- `both` 都高亮。
+- `cursorlineopt`
+  - `line` 高亮整行。
+  - `number` 高亮行号。
+  - `both` 都高亮。
 - `expandtab` ：按下 `Tab` 后， 是否将 `/t` 转化为空格。
 - `shiftwidth` ： 当执行自动缩进时，包括智能缩进， 一次缩进或取消缩进的宽度。
-- `ignorecase`  ： 搜索时忽略大小写。
+- `ignorecase` ： 搜索时忽略大小写。
 - `mouse` 鼠标支持， `a` (all) 表示所有模式下都支持鼠标。
 
 实在是很多， 每个都解释太过麻烦。查阅文档或者 `:h options` 。
@@ -152,16 +152,16 @@ o.tabstop = 4
 o.softtabstop = 4
 ```
 
- > 如果你对 vim.o ，vim.opt 等感到疑惑，这些内容也许可以帮助你。
- >
- > [Difference between vim.o and vim.opt?](https://www.reddit.com/r/neovim/comments/qgwkcu/difference_between_vimo_and_vimopt/)
- >
- > [neovim入门指南(一)：基础配置](https://youngxhui.top/2023/07/nvim-guideline-1basic-config/)
- >
- > 其实官方文档也是一个不错的选择， 但是选择官方文档不太可能。太难阅读了。
- >
- > 他的定位更像是字典而不是教科书，更适合查阅，而不是理解。
- 
+> 如果你对 vim.o ，vim.opt 等感到疑惑，这些内容也许可以帮助你。
+>
+> [Difference between vim.o and vim.opt?](https://www.reddit.com/r/neovim/comments/qgwkcu/difference_between_vimo_and_vimopt/)
+>
+> [neovim入门指南(一)：基础配置](https://youngxhui.top/2023/07/nvim-guideline-1basic-config/)
+>
+> 其实官方文档也是一个不错的选择， 但是选择官方文档不太可能。太难阅读了。
+>
+> 他的定位更像是字典而不是教科书，更适合查阅，而不是理解。
+
 ---
 
 ## 快捷键
@@ -182,7 +182,7 @@ map("i", "<A-l>", "<End>", { desc = "move end of line" })
 map("n", "F", "%", { desc = "jump between match-pair" })
 
 
--- use windows like keymaps 
+-- use windows like keymaps
 map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>", { desc = "file save" })
 map({ "n" }, "<C-a>", "ggVG", { desc = "select all file" })
 map({ "n", "i", "v" }, "<C-z>", "<cmd> undo <cr>", { desc = "history undo" })
@@ -209,13 +209,14 @@ map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
 
 接下来我们来解析一下常用的 `lua` 语句。
 
-`<C>`  代表 `ctrl` ， `<A>` 代表 `Alt` ，默认的主键 `<Leader>` 是空格。
+`<C>` 代表 `ctrl` ， `<A>` 代表 `Alt` ，默认的主键 `<Leader>` 是空格。
 
 `remap` 作为递归标志来使用，如果说映射 `A` 指向 `B` ，现在我想要创建一个新的映射 `C` 通过指向 `A` 来做到使用 `B` 的效果，此时就需要告诉 `map` 函数，我要创建一个这样的连续映射，请帮我创建。在代码中 `gcc` 本身其实就已经是一个映射了，所以我们需要使用 `remap`。
 
 由于我使用 `linux` 作为自己的主力机器，不保证该配置在 `windows` 上同样有用。
 
 ---
+
 ## 插件
 
 `NvChad` 通过 `LazyNvim` 进行管理，需要注意的是，有的时候懒加载会导致异步问题，对于常用的功能，我并不推荐进行懒加载处理。
@@ -254,7 +255,7 @@ require("lazy").setup({
 }, lazy_config)
 ```
 
- > 该逻辑引用自此文[环境配置指南/编辑器 – Neovim 安装配置教程（基于 NvChad）](https://zhuanlan.zhihu.com/p/712125953)
+> 该逻辑引用自此文[环境配置指南/编辑器 – Neovim 安装配置教程（基于 NvChad）](https://zhuanlan.zhihu.com/p/712125953)
 
 这里 `require("lazy").setup()` 需要一个 `table` 作为作为返回值来接受。
 
@@ -352,9 +353,9 @@ return {
 }
 ```
 
- > 配置来自于[lazy.nvim](https://lazy.folke.io/spec/examples)
- 
- 里面其实返回了一个包含多个 [Plugin Spec](https://lazy.folke.io/spec) 的数组，你肯定发现了，每一个数组的长短都不一定相同， `lazy.nvim` 支持你返回单个 `Spec` 或者包含多个 `Spec` 的数组，方便你更灵活的组织你的插件配置。
+> 配置来自于[lazy.nvim](https://lazy.folke.io/spec/examples)
+
+里面其实返回了一个包含多个 [Plugin Spec](https://lazy.folke.io/spec) 的数组，你肯定发现了，每一个数组的长短都不一定相同， `lazy.nvim` 支持你返回单个 `Spec` 或者包含多个 `Spec` 的数组，方便你更灵活的组织你的插件配置。
 
 `"folke/tokyonight.nvim"` 代表的是 `github` 仓库名称，用于让 `lazy.nvim` 自动从 `github` 上拉取代码。
 
@@ -458,6 +459,7 @@ luaSnip.add_snippets("cpp", {
 ```
 
 最后， 你需要关掉插件的 `lazyload` ，`Lazy.nvim` 会出现些许 bug 导致插件无法被正确启用。我没有细究里面的细节，大概的怀疑方向是懒加载导致的异步问题。
+
 ## LSP(Language Server Protocol)
 
 需要承认的是， `LSP` 可能是配置 `Neovim` 最复杂的一部分。这或许也是这篇文章最重要的一部分，只有配置好了它，你才能在 `Neovim` 上享受完整的代码补全能力 ------ but first, what is LSP ?
@@ -491,14 +493,14 @@ graph TD
         F -->|Improves| G[Syntax Highlighting];
         F -->|Enables| H["Text Objects, e.g., [a] for argument"];
     end
-    
+
     subgraph "✨ User Experience & UI"
         E -->|Provides Completion Data| I[nvim-cmp];
         J[luasnip, etc.] -->|Provides Snippet Data| I;
         I -->|Renders UI| K[Autocomplete Popup Menu];
-        
+
         E -->|Provides Signature Help| L[Signature Help Popup];
-        
+
         I -->|Triggers Auto-Pairing| M[nvim-autopairs];
         K -- Triggers --> M;
     end
@@ -517,7 +519,7 @@ graph TD
             G; H; K; L;
         end
     end
-    
+
     %% Styling
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
@@ -588,7 +590,7 @@ vim.lsp.config("*", {
 })
 
 --- Start: LuaLS config
---- 
+---
 dofile(vim.g.base46_cache .. "lsp")
 --- dofile 是 lua 的一个内置函数，用来直接执行一个 lua 文件的代码
 --- vim.g.base56_cache 是 nvchad 设置的路径

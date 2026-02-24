@@ -106,19 +106,19 @@ vim.env.PATH = table.concat({ vim.fn.stdpath "data", "mason", "bin" }, sep) .. d
 ```
 
 - `laststatus`: The status bar display mode.
-	- `0`: Never show.
-	- `1`: Only show if there are at least two windows.
-	- `2`: Always show.
-	- `3`: Always show, and it is global (one status bar for all splits).
+  - `0`: Never show.
+  - `1`: Only show if there are at least two windows.
+  - `2`: Always show.
+  - `3`: Always show, and it is global (one status bar for all splits).
 
 You can visually check the difference by toggling these values.
 
 - `showmode`: Literally what it says, displays the current mode.
 - `cursorline`: Highlights the line where the cursor is currently located.
 - `cursorlineopt`:
-	- `line`: Highlights the entire line.
-	- `number`: Highlights the line number.
-	- `both`: Highlights both.
+  - `line`: Highlights the entire line.
+  - `number`: Highlights the line number.
+  - `both`: Highlights both.
 - `expandtab`: Converts `\t` (tabs) to spaces when `Tab` is pressed.
 - `shiftwidth`: The width for auto-indenting (or shifting via `>>` and `<<`).
 - `ignorecase`: Ignores case when searching.
@@ -179,7 +179,7 @@ map("i", "<A-l>", "<End>", { desc = "move end of line" })
 map("n", "F", "%", { desc = "jump between match-pair" })
 
 
--- use windows like keymaps 
+-- use windows like keymaps
 map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>", { desc = "file save" })
 map({ "n" }, "<C-a>", "ggVG", { desc = "select all file" })
 map({ "n", "i", "v" }, "<C-z>", "<cmd> undo <cr>", { desc = "history undo" })
@@ -247,7 +247,7 @@ require("lazy").setup({
     import = "nvchad.plugins",
   },
 
-  -- Then look for and load plugins from the `plugins/` directory 
+  -- Then look for and load plugins from the `plugins/` directory
   -- (i.e., `lua/plugins/` in your current config folder)
   { import = "plugins" },
 }, lazy_config)
@@ -432,14 +432,14 @@ graph TD
         F -->|Improves| G[Syntax Highlighting];
         F -->|Enables| H["Text Objects, e.g., [a] for argument"];
     end
-    
+
     subgraph "✨ User Experience & UI"
         E -->|Provides Completion Data| I[nvim-cmp];
         J[luasnip, etc.] -->|Provides Snippet Data| I;
         I -->|Renders UI| K[Autocomplete Popup Menu];
-        
+
         E -->|Provides Signature Help| L[Signature Help Popup];
-        
+
         I -->|Triggers Auto-Pairing| M[nvim-autopairs];
         K -- Triggers --> M;
     end
@@ -458,7 +458,7 @@ graph TD
             G; H; K; L;
         end
     end
-    
+
     %% Styling
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
@@ -529,7 +529,7 @@ vim.lsp.config("*", {
 })
 
 --- Start: LuaLS config
---- 
+---
 dofile(vim.g.base46_cache .. "lsp")
 --- dofile is a built-in Lua function to execute a Lua file directly
 --- vim.g.base56_cache is the path set by NvChad
