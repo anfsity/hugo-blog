@@ -5,7 +5,7 @@
     <img id="lightbox-img" src="" alt="Fullscreen view" />
 
     <!-- Win10 Style Controls -->
-    <button id="lightbox-prev" class="lightbox-btn" title="上一张 (Left Arrow)">
+    <button id="lightbox-prev" class="lightbox-btn" title="Left Arrow">
       <svg viewBox="0 0 24 24" width="32" height="32">
         <path
           fill="currentColor"
@@ -27,7 +27,7 @@
     </button>
   </div>
 
-  <button id="lightbox-close" class="lightbox-btn-close" title="关闭 (Esc)">
+  <button id="lightbox-close" class="lightbox-btn-close" title="Esc">
     <svg viewBox="0 0 24 24" width="28" height="28">
       <path
         fill="currentColor"
@@ -152,7 +152,6 @@
     height: 44px;
   }
 
-  /* 让所有绑定的图片有鼠标手势 */
   img.lightbox-enabled {
     cursor: zoom-in;
   }
@@ -186,7 +185,12 @@
           document.querySelectorAll(".fluent-card img"),
         );
 
-        const allImages = [...articleImages, ...galleryImages];
+        const allImages = [...articleImages, ...galleryImages].filter((img) => {
+          if (img.closest("a, button, .highlight, .chroma, .copy-code, .icon, nav, header")) return false;
+          if (img.clientWidth > 0 && img.clientWidth < 40) return false;
+          if (img.naturalWidth > 0 && img.naturalWidth < 40) return false;
+          return true;
+        });
 
         currentImageArray = [];
 
