@@ -1,0 +1,269 @@
+<!-- Global Elegant Lightbox -->
+<div id="elegant-lightbox" class="elegant-lightbox">
+  <div class="lightbox-backdrop"></div>
+  <div class="lightbox-content">
+    <img id="lightbox-img" src="" alt="Fullscreen view" />
+
+    <!-- Win10 Style Controls -->
+    <button id="lightbox-prev" class="lightbox-btn" title="上一张 (Left Arrow)">
+      <svg viewBox="0 0 24 24" width="32" height="32">
+        <path
+          fill="currentColor"
+          d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"
+        />
+      </svg>
+    </button>
+    <button
+      id="lightbox-next"
+      class="lightbox-btn"
+      title="Right Arrow"
+    >
+      <svg viewBox="0 0 24 24" width="32" height="32">
+        <path
+          fill="currentColor"
+          d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <button id="lightbox-close" class="lightbox-btn-close" title="关闭 (Esc)">
+    <svg viewBox="0 0 24 24" width="28" height="28">
+      <path
+        fill="currentColor"
+        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+      />
+    </svg>
+  </button>
+</div>
+
+<style>
+  .elegant-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .elegant-lightbox.active {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .lightbox-content {
+    position: relative;
+    z-index: 2;
+    max-width: 95vw;
+    max-height: 95vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.98);
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .elegant-lightbox.active .lightbox-content {
+    transform: scale(1);
+  }
+
+  #lightbox-img {
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: 6px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+    user-select: none;
+  }
+
+  .lightbox-btn,
+  .lightbox-btn-close {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      transform 0.15s,
+      background 0.15s;
+    z-index: 3;
+  }
+
+  .lightbox-btn:hover,
+  .lightbox-btn-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
+
+  .lightbox-btn {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+  }
+
+  .lightbox-btn:hover {
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  #lightbox-prev {
+    left: -70px;
+  }
+  #lightbox-next {
+    right: -70px;
+  }
+
+  @media (max-width: 1024px) {
+    #lightbox-prev {
+      left: 16px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    #lightbox-next {
+      right: 16px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .lightbox-btn-close {
+      background: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .lightbox-btn-close {
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+  }
+
+  /* 让所有绑定的图片有鼠标手势 */
+  img.lightbox-enabled {
+    cursor: zoom-in;
+  }
+</style>
+
+<script>
+  (function () {
+    if (window.globalLightboxInit) return;
+    window.globalLightboxInit = true;
+
+    document.addEventListener("DOMContentLoaded", initGlobalLightbox);
+    document.addEventListener("turbo:load", initGlobalLightbox);
+
+    let currentImageArray = [];
+    let currentIndex = 0;
+
+    function initGlobalLightbox() {
+      const lightbox = document.getElementById("elegant-lightbox");
+      if (!lightbox) return;
+
+      const lightboxImg = document.getElementById("lightbox-img");
+      const btnClose = document.getElementById("lightbox-close");
+      const btnPrev = document.getElementById("lightbox-prev");
+      const btnNext = document.getElementById("lightbox-next");
+      const backdrop = document.querySelector(".lightbox-backdrop");
+
+      function scanImages() {
+        const articleImages = Array.from(
+          document.querySelectorAll(".article-content img:not(.no-lightbox)"),
+        );
+        const galleryImages = Array.from(
+          document.querySelectorAll(".fluent-card img"),
+        );
+
+        const allImages = [...articleImages, ...galleryImages];
+
+        currentImageArray = [];
+
+        allImages.forEach((img, idx) => {
+          if (!img.classList.contains("lightbox-enabled")) {
+            img.classList.add("lightbox-enabled");
+            img.addEventListener("click", (e) => {
+              e.preventDefault();
+              openLightbox(img.src, allImages);
+            });
+          }
+        });
+      }
+
+      const observer = new MutationObserver((mutations) => {
+        let shouldScan = false;
+        mutations.forEach((m) => {
+          if (m.addedNodes.length > 0) {
+            shouldScan = true;
+          }
+        });
+        if (shouldScan) scanImages();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      function openLightbox(src, contextArray) {
+        currentImageArray = contextArray.map((img) => img.src).filter((s) => s);
+        currentIndex = currentImageArray.indexOf(src);
+        if (currentIndex === -1) currentIndex = 0;
+
+        lightboxImg.src = src;
+        lightbox.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          if (!lightbox.classList.contains("active")) lightboxImg.src = "";
+        }, 200);
+      }
+
+      function showPrev(e) {
+        if (e) e.stopPropagation();
+        if (currentImageArray.length > 0) {
+          currentIndex =
+            (currentIndex - 1 + currentImageArray.length) %
+            currentImageArray.length;
+          lightboxImg.src = currentImageArray[currentIndex];
+        }
+      }
+
+      function showNext(e) {
+        if (e) e.stopPropagation();
+        if (currentImageArray.length > 0) {
+          currentIndex = (currentIndex + 1) % currentImageArray.length;
+          lightboxImg.src = currentImageArray[currentIndex];
+        }
+      }
+
+      btnClose.onclick = closeLightbox;
+      backdrop.onclick = closeLightbox;
+      btnPrev.onclick = showPrev;
+      btnNext.onclick = showNext;
+
+      lightboxImg.onclick = (e) => e.stopPropagation();
+
+      document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("active")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") showPrev();
+        if (e.key === "ArrowRight") showNext();
+      });
+
+      scanImages();
+    }
+  })();
+</script>

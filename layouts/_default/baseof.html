@@ -26,6 +26,7 @@
         </main>
     </div>
     {{ partial "footer/include.html" . }}
+    {{ partial "global_lightbox.html" . }}
     
     {{ if .Store.Get "hasMermaid" }}
     {{/* Load both Mermaid and the SVG Pan Zoom library */}}
