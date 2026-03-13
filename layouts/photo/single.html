@@ -66,10 +66,16 @@
     break-inside: avoid;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    transition:
-      transform 0.2s cubic-bezier(0.2, 0, 0, 1),
-      box-shadow 0.2s;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, box-shadow 0.2s;
+    will-change: opacity, transform;
     min-height: 200px;
+  }
+
+  .fluent-card.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .fluent-card.skeleton {
@@ -88,7 +94,7 @@
     }
   }
 
-  .fluent-card:hover {
+  .fluent-card.visible:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-l);
     z-index: 10;
@@ -124,7 +130,9 @@
       transparent 40%
     );
     padding: 1.5px;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
@@ -253,8 +261,22 @@
 
       const fetchedUrls = new Set();
       let isFetching = false;
+      let requestQueue = 0;
+      let activeRequests = 0;
+      const MAX_CONCURRENT = 3;
+      const MAX_QUEUE = 6;
+      let isLoaderVisible = false;
 
-      // 并发请求单张图片
+      const cardVisibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          } else {
+            entry.target.classList.remove("visible");
+          }
+        });
+      }, { threshold: 0.05, rootMargin: "50px" });
+
       async function fetchOneImage() {
         const api = apiConfigs[Math.floor(Math.random() * apiConfigs.length)];
         try {
@@ -281,6 +303,7 @@
 
         card.appendChild(inner);
         gallery.appendChild(card);
+        cardVisibilityObserver.observe(card);
         return card;
       }
 
@@ -310,36 +333,47 @@
         cardElement.querySelector(".fluent-card-inner").appendChild(img);
       }
 
-      async function loadBatch(count = 6) {
-        if (isFetching) return;
-        isFetching = true;
+      function processQueue() {
+        if (activeRequests >= MAX_CONCURRENT || requestQueue <= 0) return;
+
+        activeRequests++;
+        requestQueue--;
         loader.style.opacity = "1";
 
-        const skeletons = Array.from({ length: count }).map(() =>
-          createSkeletonCard(),
-        );
+        const sk = createSkeletonCard();
+        loadIndividually(sk).finally(() => {
+          activeRequests--;
+          if (activeRequests === 0 && requestQueue === 0) {
+             loader.style.opacity = "0";
+             if (isLoaderVisible) {
+               // Continue loading if user is still at the bottom
+               loadBatch(3);
+             }
+          }
+          // Slight delay between subsequent loops to distribute network load
+          setTimeout(processQueue, 300);
+        });
 
-        const promises = skeletons.map((sk) => loadIndividually(sk));
+        // Try processing next items right away up to max concurrency
+        processQueue();
+      }
 
-        await Promise.allSettled(promises);
-
-        loader.style.opacity = "0";
-        isFetching = false;
-
-        if (document.body.scrollHeight <= window.innerHeight + 100) {
-          loadBatch(3);
-        }
+      function loadBatch(count = 3) {
+        requestQueue += count;
+        if (requestQueue > MAX_QUEUE) requestQueue = MAX_QUEUE;
+        processQueue();
       }
 
       loadBatch(6);
 
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && !isFetching) {
+          isLoaderVisible = entries[0].isIntersecting;
+          if (isLoaderVisible) {
             loadBatch(3);
           }
         },
-        { rootMargin: "600px" },
+        { rootMargin: "300px" },
       );
 
       observer.observe(loader);
