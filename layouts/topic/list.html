@@ -11,20 +11,10 @@
 
     <section class="article-list">
         {{ range $categoryPage := $paginator.Pages }}
-            {{ $hasImage := $categoryPage.Params.image }}
-            <article class="{{ if $hasImage }}has-image{{ end }}">
-                <header class="article-header">
-                    {{ with $categoryPage.Params.image }}
-                    <div class="article-image">
-                        <a href="{{ $categoryPage.Permalink }}">
-                            <img src="{{ . | relURL }}" loading="lazy"/>
-                        </a>
-                    </div>
-                    {{ end }}
-                </header>
+            <article>
                 <div class="article-content">
                     <h2 class="article-title">
-                        <a href="{{ $categoryPage.Permalink }}">{{ $categoryPage.Title }}</a>
+                        <a href="{{ $categoryPage.RelPermalink }}">{{ $categoryPage.Title }}</a>
                     </h2>
                     {{ with $categoryPage.Params.description }}
                     <p>{{ . }}</p>

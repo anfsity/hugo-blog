@@ -1,16 +1,26 @@
 {{ define "main" }}
     <header>
         <h3 class="section-title">
-            {{ if eq .Parent (.GetPage "/") }}
-                {{ T "list.section" }}
+            {{ if .Params.on_topic }}
+                TOPIC
             {{ else }}
-                {{ .Parent.Title }}
+                {{ if eq .Parent (.GetPage "/") }}
+                    {{ T "list.section" }}
+                {{ else }}
+                    {{ .Parent.Title }}
+                {{ end }}
             {{ end }}
         </h3>
 
         <div class="section-card enhanced-header">
             <div class="section-details">
-                <h3 class="section-count">{{ T "list.page" (len .Pages) }}</h3>
+                <h3 class="section-count">
+                    {{ if .Params.on_topic }}
+                        {{ len .Pages }} PAGES
+                    {{ else }}
+                        {{ T "list.page" (len .Pages) }}
+                    {{ end }}
+                </h3>
                 <h1 class="section-term" {{ if lt (len .Title) 10 }}data-short-title{{ end }}>
                     {{/* Split title by spaces and wrap first letter of each word */}}
                     {{ $words := split .Title " " }}
@@ -77,12 +87,21 @@
     {{- end -}}
     
     {{/* List only pages that are not a subsection */}}
-    {{ $paginator := .Paginate $pages }}
-    <section class="article-list--compact">
-        {{ range $paginator.Pages }}
-            {{ partial "article-list/compact" . }}
-        {{ end }}
-    </section>
+    {{ if .Params.on_topic }}
+        {{ $paginator := .Paginate $pages.ByDate }}
+        <section class="article-list--timeline">
+            {{ range $paginator.Pages }}
+                {{ partial "article-list/timeline" . }}
+            {{ end }}
+        </section>
+    {{ else }}
+        {{ $paginator := .Paginate $pages }}
+        <section class="article-list--compact">
+            {{ range $paginator.Pages }}
+                {{ partial "article-list/compact" . }}
+            {{ end }}
+        </section>
+    {{ end }}
 
     {{- partial "pagination.html" . -}}
 
@@ -90,5 +109,7 @@
 {{ end }}
 
 {{ define "right-sidebar" }}
-    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+    {{ if not .Params.on_topic }}
+        {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+    {{ end }}
 {{ end }}
