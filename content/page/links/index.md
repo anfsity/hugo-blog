@@ -16,7 +16,7 @@ links:
   - title: Ethan
     website: https://hanlife02.com/
     description: Don't stay awake for too long.
-    image: https://hanlife02.com/api/v2/objects/avatar/vrkkxm60zb217or1qu.jpg
+    image: https://hanlife02.com/avatar.svg
   - title: Hinai
     website: https://blog.woo.moe
     image: https://data.woo.moe/img/ico/104491469_0_r.png
