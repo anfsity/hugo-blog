@@ -1,0 +1,27 @@
+{{ define "main" }}
+<div class="article-content">
+    <div class="bangumi-container" data-userid="{{ .Site.Params.bangumi.userId }}" data-cachedays="{{ .Site.Params.bangumi.cacheDays | default 1 }}">
+        <div id="bangumi-loading" style="text-align: center; padding: 2rem;">Loading...</div>
+        <div id="bangumi-error" style="display: none; text-align: center; padding: 2rem; color: red;">
+            Failed to load Bangumi data. <button id="bangumi-retry">Retry</button>
+        </div>
+        <div id="bangumi-content" style="display: none; flex-direction: column;">
+            <div id="bangumi-tabs" class="bangumi-tabs"></div>
+            <div class="bangumi-layout-split">
+                <div class="bangumi-main">
+                    <div id="bangumi-toolbar" class="bangumi-toolbar"></div>
+                    <div id="bangumi-grid" class="bangumi-grid"></div>
+                    <div id="bangumi-pagination" class="bangumi-pagination"></div>
+                </div>
+                <div id="bangumi-sidebar" class="bangumi-sidebar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ $bangumiStyle := resources.Get "scss/custom.scss" | toCSS | minify }}
+<link rel="stylesheet" href="{{ $bangumiStyle.RelPermalink }}">
+
+{{ $bangumiScript := resources.Get "ts/custom-bangumi.ts" | js.Build | minify }}
+<script src="{{ $bangumiScript.RelPermalink }}" defer></script>
+{{ end }}

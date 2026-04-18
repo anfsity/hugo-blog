@@ -448,6 +448,8 @@ html[data-scheme="dark"] {
     margin-bottom: -2px;
 }
 
+@import "partials/bangumi";
+
 #back-to-top .progress-num {
     font-size: 10px;
     font-weight: bold;
@@ -583,3 +585,4 @@ body code,
     }
   }
 }
+@import "partials/bangumi";

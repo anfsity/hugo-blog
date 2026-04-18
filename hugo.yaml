@@ -46,6 +46,11 @@ permalinks:
     page: /:slug/
 
 params:
+    bangumi:
+        enable: true
+        userId: "anfsity"
+        cacheDays: 1
+
     mainSections:
         - post
     featuredImageField: image

@@ -1,0 +1,242 @@
+.bangumi-container {
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: var(--sys-font-family);
+
+    .bangumi-loading, .bangumi-error {
+        text-align: center;
+        padding: 2rem;
+        color: var(--body-text-color);
+        font-size: 1.1rem;
+    }
+
+    .bangumi-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        button {
+            padding: 0.4rem 1.2rem;
+            background: transparent;
+            border: none;
+            color: var(--body-text-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.5rem;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            &.active {
+                background: #505c6d;
+                color: #fff;
+            }
+        }
+    }
+
+    .bangumi-layout-split {
+        display: flex;
+        gap: 2rem;
+        flex-direction: column;
+
+        @media (min-width: 1024px) {
+            flex-direction: column;
+        }
+
+        .bangumi-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bangumi-sidebar {
+            width: 100%;
+            margin-top: 1rem;
+
+            h3 {
+                font-size: 1.1rem;
+                margin-bottom: 1.2rem;
+                padding-left: 0.5rem;
+                border-left: 4px solid #505c6d;
+                color: var(--body-text-color);
+            }
+
+            .bangumi-tag-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+
+                button.bangumi-tag-btn {
+                    padding: 0.3rem 0.6rem;
+                    background: transparent;
+                    border: 1px solid var(--border-color);
+                    border-radius: 4px;
+                    font-size: 1.3rem;
+                    color: var(--body-text-color);
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+
+                    .count {
+                        opacity: 0.7;
+                    }
+
+                    &:hover {
+                        background: rgba(0, 0, 0, 0.05);
+                    }
+
+                    &.active {
+                        background: #505c6d;
+                        color: #fff;
+                        border-color: #505c6d;
+                    }
+                }
+            }
+        }
+    }
+
+    .bangumi-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        align-items: center;
+        font-size: 1.3rem;
+        color: var(--secondary-text-color);
+
+        button {
+            padding: 0.25rem 0.5rem;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--body-text-color);
+            border-radius: 4px;
+            font-size: 1.3rem;
+            cursor: pointer;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            &.active {
+                background: var(--card-background);
+                border-color: var(--border-color);
+                font-weight: bold;
+            }
+        }
+    }
+
+    .bangumi-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 480px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .bangumi-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--body-text-color);
+            padding: 2rem 0;
+        }
+    }
+
+    .bangumi-card {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        background: transparent;
+        overflow: hidden;
+        border-radius: 8px;
+        transition: transform 0.2s;
+        
+        &:hover {
+            transform: translateY(-2px);
+        }
+
+        .bangumi-card-cover {
+            position: relative;
+            width: 100%;
+            padding-top: 133%; // 3:4 aspect ratio
+            background-size: cover;
+            background-position: center;
+            background-color: var(--body-background);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .bangumi-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 0.5rem 0.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+
+            .bangumi-card-score {
+                font-size: 0.95rem;
+                color: #ffd700;
+                font-weight: bold;
+            }
+
+            .bangumi-card-title {
+                font-size: 1.1rem;
+                font-weight: bold;
+                line-height: 1.3;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            }
+        }
+    }
+
+    .bangumi-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+
+        button.bangumi-page-btn {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--body-text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            &.active {
+                background: #505c6d;
+                color: #fff;
+                border-color: #505c6d;
+                pointer-events: none;
+            }
+        }
+    }
+}
