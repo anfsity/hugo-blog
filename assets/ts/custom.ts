@@ -131,7 +131,8 @@ function initHorizontalScroll() {
     if (scrollArea.getAttribute('data-h-scroll') === 'true') return;
     scrollArea.setAttribute('data-h-scroll', 'true');
 
-    scrollArea.addEventListener('wheel', (event: WheelEvent) => {
+    scrollArea.addEventListener('wheel', (e: Event) => {
+        const event = e as WheelEvent;
         if (event.deltaY !== 0) {
             event.preventDefault();
             scrollArea.scrollLeft += event.deltaY;
