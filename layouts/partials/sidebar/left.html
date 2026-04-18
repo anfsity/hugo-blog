@@ -77,17 +77,23 @@
         <li class="menu-bottom-section">
             <ol class="menu">
                 {{- $currentLanguageCode := .Language.Lang -}}
+                {{- $currentUrl := .RelPermalink -}}
                 {{ if ( compare.Gt .Site.Home.AllTranslations.Len 1 ) }}
-                    {{ with .Site.Home.AllTranslations }}
-                        {{ range . }}
-                            {{ if ne .Language.Lang $currentLanguageCode }}
-                                <li id="i18n-switch">  
-                                    <a href="{{ .RelPermalink }}" style="display: flex; align-items: center; gap: var(--menu-icon-separation); color: inherit; text-decoration: none; padding: 0; width: 100%;">
-                                        {{ partial "helper/icon" "language" }}
-                                        <span style="translate: none; margin: 0; padding: 0;">{{ .Language.LanguageName }}</span>
-                                    </a>
-                                </li>
+                    {{ range .Site.Home.AllTranslations }}
+                        {{ if ne .Language.Lang $currentLanguageCode }}
+                            {{ $targetUrl := "" }}
+                            {{ if eq .Language.Lang "en" }}
+                                {{ $targetUrl = print "/en" $currentUrl }}
+                            {{ else }}
+                                {{ $targetUrl = strings.TrimPrefix "/en" $currentUrl }}
+                                {{ if eq $targetUrl "" }}{{ $targetUrl = "/" }}{{ end }}
                             {{ end }}
+                            <li id="i18n-switch">  
+                                <a href="{{ $targetUrl }}" data-no-swup style="display: flex; align-items: center; gap: var(--menu-icon-separation); color: inherit; text-decoration: none; padding: 0; width: 100%;">
+                                    {{ partial "helper/icon" "language" }}
+                                    <span style="translate: none; margin: 0; padding: 0;">{{ .Language.LanguageName }}</span>
+                                </a>
+                            </li>
                         {{ end }}
                     {{ end }}
                 {{ end }}

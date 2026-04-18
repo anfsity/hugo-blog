@@ -5,8 +5,9 @@
 </div>
 
 <script>
-document.addEventListener ("DOMContentLoaded", function() {
+(function() {
     const quoteElement = document.getElementById("dynamic-quote");
+    if (!quoteElement) return;
     // default quote
     const fallbackQuote = '今天的会长也很可爱';
 
@@ -72,5 +73,5 @@ document.addEventListener ("DOMContentLoaded", function() {
     }
 
     fetchRandomQuote();
-});
+})();
 </script>

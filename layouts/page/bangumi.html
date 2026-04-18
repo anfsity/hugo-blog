@@ -24,4 +24,5 @@
 
 {{ $bangumiScript := resources.Get "ts/custom-bangumi.ts" | js.Build | minify }}
 <script src="{{ $bangumiScript.RelPermalink }}" defer></script>
+{{ partialCached "footer/footer" . }}
 {{ end }}
