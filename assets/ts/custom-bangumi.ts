@@ -71,8 +71,7 @@ class BangumiApp {
       "tabs",
       "toolbar",
       "grid",
-      "sidebar",
-      "pagination",
+            "pagination",
     ];
     ids.forEach(
       (id) =>
@@ -148,13 +147,19 @@ class BangumiApp {
     if (this.els.content) this.els.content.style.display = "flex";
     this.renderTabs();
     this.renderToolbar();
-    this.renderSidebar();
+    
     this.renderGrid();
   }
 
   private renderTabs() {
     if (!this.els.tabs) return;
     this.els.tabs.innerHTML = "";
+
+    const headAnime = document.getElementById("bangumi-head-anime");
+    if (headAnime) {
+        const isZh = getLanguage() === "zh";
+        headAnime.innerHTML = (isZh ? "动画 " : "Anime ") + `<span>${this.data.length}</span>`;
+    }
 
     const counts: Record<string, number> = { all: this.data.length };
     this.data.forEach(
@@ -167,13 +172,12 @@ class BangumiApp {
       if (key !== "all" && count === 0) return;
       const btn = document.createElement("button");
       btn.className = `bangumi-tab-btn ${this.activeTab === key ? "active" : ""}`;
-      btn.innerText = `${COLLECTION_STATUS_MAP[key]} ${key !== "all" ? `(${count})` : ""}`;
+      btn.innerText = `${COLLECTION_STATUS_MAP[key]} ${key !== "all" ? `(${count})` : `(${count})`}`;
       btn.addEventListener("click", () => {
         this.activeTab = key;
         this.activeTag = null;
         this.currentPage = 1;
         this.renderTabs();
-        this.renderSidebar();
         this.renderGrid();
       });
       this.els.tabs!.appendChild(btn);
@@ -218,56 +222,6 @@ class BangumiApp {
     const sortDirLabel = document.createElement("span");
     sortDirLabel.innerText = isZh ? " 排序" : " Sort";
     this.els.toolbar.appendChild(sortDirLabel);
-  }
-
-  private renderSidebar() {
-    if (!this.els.sidebar) return;
-    this.els.sidebar.innerHTML = "";
-
-    const isZh = getLanguage() === "zh";
-    const title = document.createElement("h3");
-    title.innerText = isZh ? "追番" : "Watching";
-    this.els.sidebar.appendChild(title);
-
-    const filtered =
-      this.activeTab === "all"
-        ? this.data
-        : this.data.filter((i) => String(i.type) === this.activeTab);
-    const tagCounts: Record<string, number> = {};
-
-    filtered.forEach((item) => {
-      if (item.subject.tags) {
-        item.subject.tags.forEach((t) => {
-          tagCounts[t.name] = (tagCounts[t.name] || 0) + 1;
-        });
-      }
-    });
-
-    const sortedTags = Object.entries(tagCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 30);
-
-    if (sortedTags.length === 0) {
-      this.els.sidebar.style.display = "none";
-      return;
-    }
-    this.els.sidebar.style.display = "block";
-
-    const tagList = document.createElement("div");
-    tagList.className = "bangumi-tag-list";
-    sortedTags.forEach(([name, count]) => {
-      const tagBtn = document.createElement("button");
-      tagBtn.className = `bangumi-tag-btn ${this.activeTag === name ? "active" : ""}`;
-      tagBtn.innerHTML = `<span>${name}</span><span class="count">${count}</span>`;
-      tagBtn.addEventListener("click", () => {
-        this.activeTag = this.activeTag === name ? null : name;
-        this.currentPage = 1;
-        this.renderSidebar();
-        this.renderGrid();
-      });
-      tagList.appendChild(tagBtn);
-    });
-    this.els.sidebar.appendChild(tagList);
   }
 
   private renderGrid() {
@@ -330,14 +284,50 @@ class BangumiApp {
         const score = item.rate || item.subject.score;
 
         const scoreHtml = score ? `<div class="bangumi-card-score">★ ${score}</div>` : '';
+        
+        // Status label (e.g., 想看, 在看)
+        const typeStr = String(item.type);
+        const statusText = COLLECTION_STATUS_MAP[typeStr] || "未知";
+        // Create an alias for CSS styling classes based on type
+        const statusHtml = `<div class="bangumi-card-status status-${typeStr}">${statusText}</div>`;
+
+        // Date (Year)
+        const year = item.subject.date ? item.subject.date.slice(0, 4) : "-";
+
+        // Tags
+        let tagsHtml = ``;
+        if (item.subject.tags && item.subject.tags.length > 0) {
+            // e.g. ["漫画改", "TV", "..."] plus "+X"
+            let tagNames = item.subject.tags.map(t => t.name);
+            const MAX_TAGS = 3;
+            let displayTags = tagNames.slice(0, MAX_TAGS);
+            let moreCount = tagNames.length > MAX_TAGS ? tagNames.length - MAX_TAGS : 0;
+            
+            tagsHtml = `<div class="bangumi-card-tags">`;
+            displayTags.forEach(t => {
+                tagsHtml += `<span class="bangumi-card-tag">${t}</span>`;
+            });
+            if (moreCount > 0) {
+                tagsHtml += `<span class="bangumi-card-tag">+ ${moreCount}</span>`;
+            }
+            tagsHtml += `</div>`;
+        }
 
         el.innerHTML = `
-                    <div class="bangumi-card-cover" style="background-image: url('${item.subject.images?.large || ''}')">
-                        <div class="bangumi-card-overlay">
-                            ${scoreHtml}
+            <div class="bangumi-card-cover-container">
+                <div class="bangumi-card-cover" style="background-image: url('${item.subject.images?.large || ''}')">
+                    <div class="bangumi-card-overlay">
+                        ${statusHtml}
+                        ${scoreHtml}
+                        <div class="bangumi-card-bottom-info">
                             <div class="bangumi-card-title">${title}</div>
+                            <div class="bangumi-card-year">${year}</div>
                         </div>
-                    </div>`;
+                    </div>
+                </div>
+            </div>
+            ${tagsHtml}
+        `;
         this.els.grid!.appendChild(el);
       });
     }
