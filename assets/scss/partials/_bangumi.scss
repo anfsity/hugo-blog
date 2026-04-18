@@ -1,7 +1,7 @@
 .bangumi-container {
     max-width: 100%;
     margin: 0 auto;
-    font-family: var(--sys-font-family);
+    font-family: inherit;
 
     .bangumi-loading, .bangumi-error {
         text-align: center;
