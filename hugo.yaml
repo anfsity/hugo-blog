@@ -208,6 +208,14 @@ params:
         content:
             enabled: true
 
+    music_player:
+        enabled: true
+        api: "https://api.injahow.cn/meting/"
+        urls:
+            - "https://music.163.com/#/playlist?id=2921261234"
+        autoPlay: false
+        theme: "#2980b9"
+
 ### Custom menu
 ### See https://stack.jimmycai.com/config/menu
 ### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter

@@ -5,3 +5,17 @@
 
 <!-- 霞鹜文楷 (LXGW WenKai) Web Font -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<!-- Swup V4 & Scripts Plugin & Body/Head Plugins -->
+<script src="https://cdn.jsdelivr.net/npm/swup@4/dist/Swup.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@swup/scripts-plugin@2/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@swup/body-class-plugin@3/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@swup/head-plugin@2/dist/index.umd.js"></script>
+
+<!-- APlayer -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<script>
+    window.MusicConfig = {{ site.Params.music_player | jsonify | safeJS }};
+</script>

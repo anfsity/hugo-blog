@@ -1,3 +1,4 @@
+(() => {
 const BANGUMI_API_BASE = "https://api.bgm.tv/v0";
 const ITEMS_PER_PAGE = 30;
 
@@ -328,10 +329,12 @@ class BangumiApp {
           : item.subject.name;
         const score = item.rate || item.subject.score;
 
+        const scoreHtml = score ? `<div class="bangumi-card-score">★ ${score}</div>` : '';
+
         el.innerHTML = `
                     <div class="bangumi-card-cover" style="background-image: url('${item.subject.images?.large || ''}')">
                         <div class="bangumi-card-overlay">
-                            ${score ? `<div class="bangumi-card-score">★ ${score}</div>` : ''}
+                            ${scoreHtml}
                             <div class="bangumi-card-title">${title}</div>
                         </div>
                     </div>`;
@@ -402,4 +405,9 @@ class BangumiApp {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => new BangumiApp());
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => new BangumiApp());
+} else {
+    new BangumiApp();
+}
+})();

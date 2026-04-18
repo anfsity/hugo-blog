@@ -140,6 +140,185 @@ function initHorizontalScroll() {
 }
 
 /* ===========================================================
+   5) Music Player Toggle Logic & Meting Fetch
+   =========================================================== */
+
+interface ParsedUrl {
+    server: string;
+    type: string;
+    id: string;
+}
+
+const URL_RULES: [RegExp, string, string][] = [
+    [/music\.163\.com.*song.*id=(\d+)/, 'netease', 'song'],
+    [/music\.163\.com.*album.*id=(\d+)/, 'netease', 'album'],
+    [/music\.163\.com.*playlist.*id=(\d+)/, 'netease', 'playlist'],
+    [/music\.163\.com.*discover\/toplist.*id=(\d+)/, 'netease', 'playlist'],
+    [/y\.qq\.com.*song\/(\w+)/, 'tencent', 'song'],
+    [/y\.qq\.com.*album\/(\w+)/, 'tencent', 'album'],
+    [/y\.qq\.com.*playsquare\/(\w+)/, 'tencent', 'playlist'],
+    [/y\.qq\.com.*playlist\/(\w+)/, 'tencent', 'playlist'],
+];
+
+function parseMusicUrl(url: string): ParsedUrl | null {
+    for (const [regex, server, type] of URL_RULES) {
+        const match = url.match(regex);
+        if (match?.[1]) {
+            return { server, type, id: match[1] };
+        }
+    }
+    return null;
+}
+
+async function fetchMeting(server: string, type: string, id: string, apiUrl: string): Promise<any[]> {
+    const url = new URL(apiUrl);
+    const params = new URLSearchParams({ server, type, id });
+    url.search = params.toString();
+    
+    try {
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+    } catch {
+        return [];
+    }
+}
+
+async function initMusicPlayer() {
+    const musicBtn = document.getElementById('music-player-widget');
+    const musicPanel = document.getElementById('music-panel');
+    const aplayerContainer = document.getElementById('aplayer-container');
+    
+    if (!musicBtn || !musicPanel || !aplayerContainer) return;
+    
+    if (musicBtn.dataset.bound === 'true') return;
+    musicBtn.dataset.bound = 'true';
+
+    musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        musicPanel.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!musicBtn.contains(e.target as Node) && !musicPanel.contains(e.target as Node)) {
+            musicPanel.classList.remove('show');
+        }
+    });
+
+    const config = (window as any).MusicConfig;
+    if (!config || !config.urls || !Array.isArray(config.urls)) return;
+
+    const urls: string[] = config.urls;
+    const apiUrl = config.api || 'https://api.injahow.cn/meting/';
+
+    const allSongsArrays = await Promise.all(
+        urls.map((url) => {
+            const parsed = parseMusicUrl(url);
+            if (!parsed) return Promise.resolve([]);
+            return fetchMeting(parsed.server, parsed.type, parsed.id, apiUrl);
+        })
+    );
+
+    const audioList = allSongsArrays.flat().filter(song => song && song.url);
+
+    if (audioList.length > 0 && typeof (window as any).APlayer !== 'undefined') {
+        const ap = new (window as any).APlayer({
+            container: aplayerContainer,
+            audio: audioList,
+            theme: config.theme || '#2980b9',
+            autoplay: config.autoPlay || false,
+            loop: 'all',
+            order: 'list',
+            preload: 'auto',
+            mutex: true,
+            listFolded: true
+        });
+
+        ap.on('play', () => musicBtn.setAttribute('data-play', 'true'));
+        ap.on('pause', () => musicBtn.removeAttribute('data-play'));
+    }
+}
+
+/* ===========================================================
+   6) Swup V4 SPA Navigation
+   =========================================================== */
+function initSwup() {
+    if (typeof (window as any).Swup === 'undefined') return;
+
+    // Check if we already have swup running
+    if ((window as any)._swup_instance) return;
+
+    console.log("Starting Swup init...");
+    try {
+        const plugins = [];
+        if (typeof (window as any).SwupScriptsPlugin !== 'undefined') {
+            plugins.push(new (window as any).SwupScriptsPlugin({
+                head: true,
+                body: true,
+                optin: false
+            }));
+        } else {
+            console.error("SwupScriptsPlugin is not defined on window!");
+        }
+
+        if (typeof (window as any).SwupBodyClassPlugin !== 'undefined') {
+            plugins.push(new (window as any).SwupBodyClassPlugin());
+        }
+
+        if (typeof (window as any).SwupHeadPlugin !== 'undefined') {
+            plugins.push(new (window as any).SwupHeadPlugin());
+        }
+
+        // Fallback or guarantee body class and title syncing
+        const manualSync = (visit: any) => {
+            if (visit.to && visit.to.document && visit.to.document.body) {
+                document.body.className = visit.to.document.body.className;
+                document.title = visit.to.document.title;
+            }
+        };
+        const swup = new (window as any).Swup({
+            containers: ["#swup"],
+            plugins: plugins
+        });
+
+        (window as any)._swup_instance = swup;
+
+        swup.hooks.on('content:replace', manualSync);
+
+        swup.hooks.on('page:view', () => {
+            // Re-initialize Stack theme
+            if ((window as any).Stack && typeof (window as any).Stack.init === 'function') {
+                (window as any).Stack.init(); 
+            }
+            
+            // Re-initialize our custom scripts
+            initTocHide();
+            initCodeMoreBox();
+            initBackToTop();
+            initHorizontalScroll();
+
+            // Re-initialize KaTeX (Math typesetting)
+            if (typeof (window as any).renderMathInElement === 'function') {
+                const articleContent = document.querySelector('.article-content');
+                if (articleContent) {
+                    (window as any).renderMathInElement(articleContent, {
+                        delimiters: [
+                            { left: "$$", right: "$$", display: true },
+                            { left: "$", right: "$", display: false },
+                            { left: "\\(", right: "\\)", display: false },
+                            { left: "\\[", right: "\\]", display: true }
+                        ]
+                    });
+                }
+            }
+        });
+    } catch (err) {
+        console.error('Swup init failed:', err);
+    }
+}
+
+/* ===========================================================
    Main entry
    =========================================================== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -148,7 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
         initCodeMoreBox();
         initBackToTop();
         initHorizontalScroll();
+        initMusicPlayer();
+        initSwup();
     } catch (e) {
         console.error(e);
     }
 });
+console.log("Custom script loaded!");

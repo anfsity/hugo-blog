@@ -330,7 +330,7 @@ html[data-scheme="dark"] {
       }
       
       &:hover {
-        transform: translateY(-5px);
+        
         box-shadow: var(--shadow-l2);
       }
     }
@@ -413,21 +413,64 @@ html[data-scheme="dark"] {
 }
 
 .sidebar-btn:hover {
-    transform: translateY(-2px);
+    
     box-shadow: 0 8px 16px rgba(231, 124, 142, 0.25);
     border-color: #e77c8e;
     color: #e77c8e;
 }
 
-#music-btn svg {
-    width: 22px;
-    height: 22px;
+.music-widget-wrapper { position: relative; }
+
+#music-player-widget {
+    position: relative;
+    /* ensure the icon is centered in this button */
 }
 
-#music-btn[data-play="true"] {
+#music-player-widget svg.icon-music {
+    width: 22px;
+    height: 22px;
+    transition: all 0.3s ease;
+}
+
+#music-player-widget[data-play="true"] svg.icon-music {
     color: #e77c8e;
     animation: rotate-btn 3s linear infinite;
 }
+
+.music-panel {
+    position: absolute;
+    bottom: 0;
+    right: 60px; /* Expand to the left of the button */
+    width: 320px;
+    background: var(--card-background);
+    border: 1px solid var(--body-background);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(20px) scale(0.95);
+    transform-origin: bottom right;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.music-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) scale(1);
+}
+
+/* Optional: hide the lyrics toggle inside APlayer, it's too big */
+.music-panel .aplayer .aplayer-lrc {
+    display: none;
+}
+.music-panel .aplayer {
+    margin: 0;
+    border-radius: 12px;
+    box-shadow: none;
+}
+
 @keyframes rotate-btn { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 #back-to-top {
@@ -550,7 +593,7 @@ body code,
       z-index: 1;
 
       &:hover {
-        transform: translateY(-2px);
+        
         box-shadow: var(--shadow-md);
       }
     }
@@ -586,3 +629,17 @@ body code,
   }
 }
 @import "partials/bangumi";
+
+/* ===========================================================
+   Swup SPA Transitions
+   =========================================================== */
+html.is-animating .transition-fade {
+    opacity: 0;
+}
+html.is-leaving .transition-fade {
+    opacity: 0;
+}
+.transition-fade {
+    transition: 0.4s opacity ease;
+    opacity: 1;
+}
