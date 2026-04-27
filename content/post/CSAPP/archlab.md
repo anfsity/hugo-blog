@@ -89,7 +89,7 @@ part-a 不算很难，在 Bomb Lab 里面看了那么多 x86-64 assembly，而�
 
 我们对照书上的 4.15 节的代码照葫芦画瓢就行。
 
-![[Pasted image 20251121083726.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121083726.png)
 
 编写 `sum.ys` 和 `rsum.ys`：
 
@@ -249,7 +249,7 @@ stack:
 
 prat-b 需要修改以下文件 ：
 
-![[Pasted image 20251121090126.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121090126.png)
 
 hcl-rs 的语法在 `archlab/archlab-project/assets/hcl-rs.pdf` 里面有详细叙述。
 
@@ -257,17 +257,17 @@ hcl-rs 的语法在 `archlab/archlab-project/assets/hcl-rs.pdf` 里面有详细�
 
 Lab 里面有一个十分 nice 的功能，你可以使用 `ysim` 生成架构内部的详细依赖。
 
-![[Pasted image 20251121174422.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121174422.png)
 在浏览器里面打开：
 
-![[Pasted image 20251121174511.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121174511.png)
 当你的鼠标移到某个节点时，就像一个聚光灯让所有包含这个节点的链路高亮，依赖关系一目了然，真的很好用。
 
 ### IOPQ
 
 首先我们需要在 `seq_full.rs` 里面添加 $IOPQ$ 功能，模仿书上的格式，可以总结出 $IOPQ$ 的行为：
 
-![[Pasted image 20251121090438.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121090438.png)
 
 在 `fetch` 阶段，需要 `valC`，做出改动如下 ：
 
@@ -528,7 +528,7 @@ instruction3 true
 
 pipes3d 介绍了一个没有在书上出现的概念 --- structural hazard。
 
-![[Pasted image 20251121113716.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121113716.png)
 
 结构冒险发生在同时对寄存器进行读取，比如上图， `M` 和 `F` 同时对 `rA` 或 `rB` 访问，这就导致了结构冒险。
 
@@ -582,11 +582,11 @@ u64 d_valB = [
 
 由于新增了 `M` 阶段， `ret hazard` 需要做出修改，具体行为如下图所示：
 
-![[Pasted image 20251121165600.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121165600.png)
 
 对比一下 CSAPP ：
 
-![[Pasted image 20251121163346.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121163346.png)
 
 你会发现 Lab 实现了$M \rightarrow F$ 转发，注意到这一点花了我不少功夫🙂。而书上等待了一个周期。
 
@@ -596,13 +596,13 @@ u64 d_valB = [
 
 其具体行为如下：
 
-![[Pasted image 20251121165125.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121165125.png)
 
 当发生 `load/use hazard` 时，暂停下一个指令的 `D` 和下下个指令的 `F`，向下一个指令的 `E` 插入 `bubble`。强制暂停整个流水线一个周期后，将 `m_valM` 转发给 `d_valA/B` 。
 
 为了性能，我们是不会去暂停不必要的寄存器的。
 
-![[Pasted image 20251121165313.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121165313.png)
 
 
 ```rust
@@ -669,19 +669,19 @@ pipe4b 开始的版本没有修改 `e_cnd` ，硬控我不少时间😇。虽然
 
 修改前：
 
-![[Pasted image 20251121170832.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121170832.png)
 
 不需要考虑 `instructionI` 是不是 `ret` ，因为根本不影响。流水线只会浪费掉一个周期。
 
 而修改后：
 
-![[Pasted image 20251121170945.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121170945.png)
 
 要等到 `M` 阶段才会进行转发，此时流水线会浪费两个周期，加载两个无效指令。
 
 同时引入了一个新的问题，如果 `instructionI` 是 `ret` ，那么 `ret hazard` 也必须要被触发。
 
-![[Pasted image 20251121171656.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121171656.png)
 
 由图逻辑可以写出代码：
 
@@ -735,7 +735,7 @@ bool e_bubble = branch_mispred || load_use_harzard;
 
 你可能会疑惑，这个 `D` 里面的 `bubble` 能不能去掉呢，它看起来很没必要，事实上是可以的。
 
-![[Pasted image 20251121173211.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121173211.png)
 
 不过在如上特殊情况，流水线又要多暂停一个周期，多少有点得不偿失。
 
@@ -743,7 +743,7 @@ bool e_bubble = branch_mispred || load_use_harzard;
 
 pipes4c 告诉我们需要整合 `D.vaP` 到 `d_valA` 里面，这个要求很简单。
 
-![[Pasted image 20251121173914.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121173914.png)
 
 ```rust
 // What address should instruction be fetched at?
@@ -901,7 +901,7 @@ aph.html
 
 可以看到 `lv.4` 里面有 `cond e_cnd d_bubble e_bubble e_dstE d_valA d_valB`。
 
-![[Pasted image 20251121210522.png]]
+![](/post/CSAPP/images/Pasted%20image%2020251121210522.png)
 
 `d_valA d_valB` 依赖 `e_dstE`，`d_bubble e_bubble` 依赖  `e_cnd` ，`e_dstE` 依赖 `e_cnd`。
 

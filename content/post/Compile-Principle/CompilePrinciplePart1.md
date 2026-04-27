@@ -23,13 +23,13 @@ image = ""
 
 anyway，在线渲染网址：https://dreampuf.github.io/GraphvizOnline/
 
-![[graphviz.svg]]
+![](/post/Compile-Principle/images/graphviz.svg)
 
 > 你可以使用 `bison --graph sysy.y` 生成 gv 文件，然后用 graphviz 渲染它。
 
 - 比较抽象的树状图演示：
 
-![[new.svg]]
+![](/post/Compile-Principle/images/new.svg)
 
 - 很舒服的[铁路图](https://www.bottlecaps.de/rr/ui)演示：
 
