@@ -2,3 +2,5 @@ public/
 resources/
 GEMINI.md
 .hugo_build.lock
+.codex
+scripts
