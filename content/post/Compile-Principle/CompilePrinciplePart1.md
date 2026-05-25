@@ -1,5 +1,5 @@
 +++
-title = "Compiler Principle Part1: Quickly Skip The First Half"
+title = "编译原理完结篇"
 date = 2026-02-24T13:12:21+08:00
 draft = false
 author = "Anfsity"
@@ -13,85 +13,75 @@ description = ""
 image = ""
 +++
 
-由于直到 lv8 之前都比较轻松（个人认为，相对于 lv8 lv9）。
+稍微填一下坑，最近重新写了一遍，感悟又有所不同。
 
-在这之前，让我们看看图，有一个直观演示：
+~~啊嘞啊嘞嘞，怎么直接从准备到完结了~~
 
-- 由 bison 生成的状态机图（窝觉得有点变态）
+按照教程的顺序，应该是先写前端解析出 AST 然后再遍历出 koopa ir 最后进行代码生成。流程很短，事实上少了优化的过程，确实非常简单。
 
-> 不行了，分享网址太长了（x hhh
+在函数之前的内容就不赘述了，教程写的很完善，实际也不难。由于不需要考虑浮点数和整数之间的转换，中期的短路求值其实很好写，写一个 if-else 就解决了。
 
-anyway，在线渲染网址：https://dreampuf.github.io/GraphvizOnline/
+在写 while 和 if 时，需要注意处理 break 和 continue 语句，我们可以根据代码的层级嵌套关系，使用栈来维护一个 scope 栈来管理基本块，进入 basic block 就 push 进去，离开 bb 就 pop。在 sysy 中，只有这四种情况会产生 scope：
 
-![](/post/Compile-Principle/images/graphviz.svg)
+- function 内部是一个 scope
+- if 内部是一个 scope，else 内部是一个基本块
+- while 内部是一个 scope
+- 空的 `{}` 是一个 scope
 
-> 你可以使用 `bison --graph sysy.y` 生成 gv 文件，然后用 graphviz 渲染它。
+我们在全局用一个栈来维护这种 scope 之间的嵌套关系，然后再 visit scope 内部的基本块，比直接在基本块中处理 break 和 continue 要好些的多。~~可能说的比较抽象~~。
 
-- 比较抽象的树状图演示：
+在写函数和全局变量时，教程中介绍了寄存器分配：完全不分配。这个部分比较有意思，可以看看 R 大的回答：https://www.zhihu.com/question/29355187/answer/51935409
 
-![](/post/Compile-Principle/images/new.svg)
+工业上一般采用改进后的线性扫描算法，比如 llvm 就是基于变量权重使用优先队列来进行遍历的。
 
-- 很舒服的[铁路图](https://www.bottlecaps.de/rr/ui)演示：
+在我体感中，数组的初始化和访问是教程中最复杂的部分。sysy 数组的初始化和 c 标准相同。
 
-```
-CompUnit ::= (Decl | FuncDef)+
+由于教程中写的不是很详细，我想仔细讲讲这个部分。
 
-Decl ::= ConstDecl | VarDecl
+举个例子，这个初始化 `int a[2][2] = {1, {1, 2}}` 是正确的吗？
 
-ConstDecl ::= 'const' Btype ConstDef (',' ConstDef)* ';'
+这个 `int a[2][2] = {{1}, {1, 2}}` 呢？
 
-ConstDef ::= IDENT '=' Expr
-           | IDENT ArraySuffix '=' InitVal
+下面这个更加复杂的呢？
 
-ArraySuffix ::= ('[' Expr ']')+
-
-InitVal ::= Expr
-          | '{' (InitVal (',' InitVal)*)? '}'
-
-VarDecl ::= Btype VarDef (',' VarDef)* ';'
-
-VarDef ::= IDENT ('=' Expr)?
-         | IDENT ArraySuffix ('=' InitVal)?
-
-Btype ::= 'int' | 'void'
-
-FuncDef ::= Btype IDENT '(' FuncFParams? ')' Block
-
-FuncFParams ::= FuncFParam (',' FuncFParam)*
-
-FuncFParam ::= 'const'? Btype IDENT ParamArraySuffix?
-
-ParamArraySuffix ::= '[' ']' ArraySuffix?
-
-Block ::= '{' BlockItem* '}'
-
-BlockItem ::= Decl | Stmt
-
-Stmt ::= LVal '=' Expr ';'
-       | Block
-       | Expr? ';'
-       | 'return' Expr? ';'
-       | 'break' ';'
-       | 'continue' ';'
-       | 'while' '(' Expr ')' Stmt
-       | 'if' '(' Expr ')' Stmt ('else' Stmt)?
-
-Expr ::= Number
-       | '(' Expr ')'
-       | LVal
-       | IDENT '(' FuncRParams? ')'
-       | ('!' | '+' | '-') Expr
-       | Expr ('+' | '-' | '*' | '/' | '%' | '<' | '>' | '<=' | '>=' | '==' | '!=' | '&&' | '||') Expr
-
-Number ::= INT_CONST
-
-LVal ::= IDENT ArraySuffix?
-
-FuncRParams ::= Expr (',' Expr)*
+```c
+int arr[2][3][4] = {
+        {1, 2, 3, 4},
+        {5}, 
+        {6},
+    {
+	    {1, 2, 3, 4},
+        {1, 2, 3, 4}, 
+        {1, 2, 3, 4} 
+    }
+};
 ```
 
-复制上面的这段代码并用上方的网址打开渲染就可以看到了~
+以及教程中这个 `int arr[2][3][4] = {1, 2, 3, 4, {5}, {6}, {7, 8}};` 例子呢？
 
-- [抽象语法树设计结构](https://mermaid.live/edit#pako:eNqtVk1rE0EY_ivLgKA1DZuPpslSCk2qIIiKtQoSCJPNJBm6O7vOzJbG2tBDRTzoTQ8eSm_1UrH0ohTxz9gt_gtnPzuT7qbGuqfJ-8zzfsz7lW1gOj0EDGBakLFVDAcU2m2iiS-UaE3I0MraE207Egbf0hLsMk6hyZeXI-mOzLiz5dLZGGvc5rMxVlH_bwjR4cYN7fz00H_78-z1yfnJaSRM4lp6NT-fuJyBxK5lIJELGUDLsd11gnNodz1i5lID8BEUGcgzaVohEmHJs4VY03LMjZSmQCuM4QFRIlHwIPp89DHiHp3CblIEN_LhlkM4Jh7Kv_FsiK0p8L3-FEw881NopReiK3FxRPkzoQWp_OAyukIpHCVgBCfVm-ajBS0rJSvoOoF0pJSOAjfxdPyBZ3dRDnZfRCU5FVTw8en5p72z431_91C76R9899990diIjYoj7de3I4H5-3u_dw_O3vzwP3z133_2Px7dkltGKku5b25vIpM7dOwR_MJDHZfTcVxz47GGObLZRDdF2i7KWFEmOhCTgdblIxddFuMeInyqabkBhH03ODKJEbs2p3WDcs_1LFFxDd-6jmNpmHVMh7AsOQxKZ2oscUJFGOHdDvP6fbyV6XPSvP8hMfGMUDTlxZLzIpcNR5kWdnuon21W7rNZbE8-e_xocxoWpdrZhFamNalvr2NstpyFFHXiXOGmelnxNI0TicNUl1QlQe4DkxZOApx8GnnYKybjmTKnWam_ea5M6JQWxFVBTDCV5TEjV14sCXXiysRyybklL5hsH0S99LKmDBOk7Mz2_0kfHyLSuVCqgshiqJNrUVpFWVNtttIeZDexvNAUIyHw0NUcd7YM4jyFEZKr0RqyLDEdZvudblLFBiZcy-vMuBeu_5KXBjsogAHFPWBw6qECsBG1YfAThKbaQJSAjdrAEEcxTKFn8TZok4DmQvLcceyESR1vMARGH4qyKADP7UGO4v_nqZQi0kO05XiEA6Na1kMlwNgGW8Co1GrFSqNe1yuLJb1RWVwogBEw5kv1arHcqOqNxYauVxp6rbxTAC9Du7ViaaFe0mt1vVYq66VqfWHnDxBmzy4)
+一步一步来，事实上，一个 `{}` 就对应一个数组：`int a[2] = {1, 2};` 中，`{}` 对应 `int[]`；`int a[2] = {{1, 2}, {1, 2}};` 中，最外面的 `{}` 对应着 `int[][]`，里面的 `{}` 对应着 `int[]`。
 
-> 之后我找个时间优化一下图片显示，现在可能只能 f12 或者去我的 github repo 看比较舒服 :)
+一个好的数组初始化，它 `{}` 的嵌套关系和数组维度应该是严格对应的。但数组初始化没有这么简单。如果我没有写 `{}` 呢？多写了一个 `{}` 呢，又或者我没有填充满呢？
+
+但事实上，c 标准没有严格要求一一对应，比如 `int x = {4};` 是正常写法，可以编译通过的，这就引申出一条非常重要的规则：「当 `{}` 高于当前对应的数组维度时，把这个大括号当作对当前单个标量的初始化」。也就是说，`int x = {4}` 和正常的 `int x = 4;` 没有区别，但是 `int x = {1, 2};` 就不被允许。`int x = {{4}}` 也不行，因为外面的 `{}` 对齐到了标量，内部的 `{4}` 完全没有坑给他。
+
+而另一方面，如果我少写了 `{}`，比如 `int x[2][2] = {1, 2, 3, 4}`，他也会正确初始化成 `int x[2][2] = {{1, 2}, {3, 4}}`。这个规则可以总结成为：「如果缺少大括号，会按照平坦的内存顺序，从 [0][0] 开始填充」。
+
+这个例子则可以说明缺少 `{}` 时的另一个规则 `int x[2][2] = {1, 2, {3, 4}}`。「当遇到一个左大括号时，编译器会贪心的将这个子数组内容对齐到当前维度下最适合的子维度」。结合上面刚提到的规则，`1, 2` 填充给了 `[0][0]` 和 `[0][1]`。`{3, 4}` 则刚好适合 `x[1]`。
+
+这两个规则同样也可以解释这个例子 `int a[2][3][4] = {1, 2, 3, 4, {5}}`。`1, 2, 3, 4` 刚好填充 `int a[0][0]`。这时的 `{5}` 则适合对应 `int a[0][1]`。最终结果就是 `int a[2][3][4] = {{{1, 2, 3, 4}, {5, 0, 0, 0}, ...}, ...}`。
+
+这个例子则很好的结合了前面提到的所有规则 `int x[2][2] = {1, {1, 2}}`。首先 `1` 会被填充到 `[0][0]` 位置处，然后遇到了一个 `{`。现在的问题是，由于只填充了 `[0][0]`, `{1, 2}` 没有办法给 `x[1]`，只能给 `x[0][1]`。则就是前面提到过的 `int a = {1, 2}` 的错误。这个初始化是不正确的。而 `int x[2][2] = {1, {5}, {1, 2}}` 则是正确的。
+
+到了这里，很多东西都能解释的比较通顺了，但你可能会产生疑问 `int x[2][2] = {1, {1, 2}}` 为什么不能解释成 `int x[2][2] = {{1, 0}, {1, 2}}` 呢？这就要揭示我们之前隐含的一个东西，我们实际上是在维护一个指针从头开始扫的，这个指针在的维度就是 `{}` 要贪心填充的维度的父维度。同样是这个例子 `int x[2][2] = {1, {1, 2}}`。我们是维护一个指针 p 填充，当 `1` 填充给了 `[0][0]` 后，这个指针是指向 `[0][1]` 的，所以 `{1, 2}` 只能填充给 `[0][1]`。而这个例子中 `int a[2][3][4] = {1, 2, 3, 4, {5}}` 中，填充完 `1, 2, 3, 4` 后，指针是在 `[0][1]` 这里的，所以 `{5}` 才能填充给 `[0][1]`。
+
+当然，还有一个补零的规则我没有说，但这个其实很显然的。总结一下，我们总共有四条规则：
+
+- 线性填充，如果你不使用内部的大括号，那么会按照平坦的顺序从 [0][0][0] 开始填充。
+- 子对象对齐，当遇到一个左大括号 `{` 时，他会尝试将这个 `{` 对应的数组填充到当前指针指向的位置。如果当前指针恰好是一个数组的开头位置（对齐），那么这个 `{` 就负责初始化这整个子数组，如果不是，则是下面的规则。填充这个子数组的规则同样是这四条。
+- 标量括号限制，当你在非对齐的位置遇到了左大括号 `{`，他不能把这个 `{` 给子数组，因为没有对齐。他只能把这个 `{` 给到当前的标量 `int/float`。
+- 自动补零，只要当前的数组被部分初始化了，所有未显示指定的元素都会被初始化成 0
+
+emmm，就是这样，也许我讲的不是很清楚，~~我自认为还算清楚~~。写法是一个递归的过程，过程就和我叙述的一样，当然有一些细节需要处理。
+
+好啦，最难的部分就是这样，如果你还想继续研究编译器，可以看看 MaxXing 后面的进阶篇。当然，那些内容还不足以说明编译器的广度和深度，但也是一个很好的入门部分呢。

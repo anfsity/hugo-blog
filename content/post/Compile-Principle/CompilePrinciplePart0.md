@@ -1,5 +1,5 @@
 +++
-title = "Compile Principle Part 0 : Before Everything Begins"
+title = "编译原理准备篇"
 date = 2025-12-17T13:57:23+08:00
 draft = false
 author = "Anfsity"
