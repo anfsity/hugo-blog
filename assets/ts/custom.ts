@@ -244,6 +244,55 @@ async function initMusicPlayer() {
 /* ===========================================================
    6) Swup V4 SPA Navigation
    =========================================================== */
+const KATEX_AUTORENDER_SELECTOR = 'script[src*="katex"][src*="auto-render"]';
+let katexReadyPromise: Promise<boolean> | null = null;
+
+function waitForKaTeXReady(): Promise<boolean> {
+    if (typeof (window as any).renderMathInElement === 'function') {
+        return Promise.resolve(true);
+    }
+
+    if (katexReadyPromise) {
+        return katexReadyPromise;
+    }
+
+    const autoRenderScript = document.querySelector(KATEX_AUTORENDER_SELECTOR) as HTMLScriptElement | null;
+    if (!autoRenderScript) {
+        return Promise.resolve(false);
+    }
+
+    katexReadyPromise = new Promise<boolean>((resolve) => {
+        const onReady = () => resolve(typeof (window as any).renderMathInElement === 'function');
+        autoRenderScript.addEventListener('load', onReady, { once: true });
+        autoRenderScript.addEventListener('error', () => resolve(false), { once: true });
+    }).then((ready) => {
+        if (!ready) katexReadyPromise = null;
+        return ready;
+    });
+
+    return katexReadyPromise ?? Promise.resolve(false);
+}
+
+function renderMathInSelectors(selectors: string[]) {
+    if (typeof (window as any).renderMathInElement !== 'function') return;
+    const options = {
+        delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+        ],
+        ignoredClasses: ["gist"]
+    };
+
+    selectors.forEach(selector => {
+        const element = document.querySelector(selector);
+        if (element) {
+            (window as any).renderMathInElement(element, options);
+        }
+    });
+}
+
 function initSwup() {
     if (typeof (window as any).Swup === 'undefined') return;
 
@@ -300,19 +349,10 @@ function initSwup() {
             initHorizontalScroll();
 
             // Re-initialize KaTeX (Math typesetting)
-            if (typeof (window as any).renderMathInElement === 'function') {
-                const articleContent = document.querySelector('.article-content');
-                if (articleContent) {
-                    (window as any).renderMathInElement(articleContent, {
-                        delimiters: [
-                            { left: "$$", right: "$$", display: true },
-                            { left: "$", right: "$", display: false },
-                            { left: "\\(", right: "\\)", display: false },
-                            { left: "\\[", right: "\\]", display: true }
-                        ]
-                    });
-                }
-            }
+            waitForKaTeXReady().then((ready) => {
+                if (!ready) return;
+                renderMathInSelectors([".main-article", ".widget--toc"]);
+            });
         });
     } catch (err) {
         console.error('Swup init failed:', err);
