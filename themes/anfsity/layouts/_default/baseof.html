@@ -27,43 +27,6 @@
     </div>
     {{ partial "footer/include.html" . }}
     {{ partial "global_lightbox.html" . }}
-    
-    {{ if .Store.Get "hasMermaid" }}
-    {{/* Load both Mermaid and the SVG Pan Zoom library */}}
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3/dist/svg-pan-zoom.min.js"></script>
-
-    <script>
-        mermaid.initialize({ startOnLoad: false });
-
-        window.addEventListener('load', async () => {
-            try {
-                const mermaidElements = document.querySelectorAll("div.mermaid");
-                if (mermaidElements.length) {
-
-                    await mermaid.run({ nodes: mermaidElements });
-
-                    const containers = document.querySelectorAll(".mermaid-container");
-                    containers.forEach(container => {
-                        const svg = container.querySelector('svg');
-                        if (svg) {
-                            svgPanZoom(svg, {
-                                zoomEnabled: true,
-                                fit: false,
-                                center: true,
-                                contain: true,
-                                minZoom: 0.2,
-                                maxZoom: 10,
-                            });
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error("Could not initialize Mermaid or SVG Pan Zoom:", error);
-            }
-        });
-    </script>
-    {{ end }}
 </body>
 
 </html>

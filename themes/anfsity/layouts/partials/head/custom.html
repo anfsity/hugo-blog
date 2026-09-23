@@ -12,10 +12,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@swup/body-class-plugin@3/dist/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@swup/head-plugin@2/dist/index.umd.js"></script>
 
-<!-- APlayer -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-
-<script>
-    window.MusicConfig = {{ site.Params.music_player | jsonify | safeJS }};
-</script>
+{{ with .Site.Params.music_player }}
+    {{ if .enabled }}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+        <script id="music-config" type="application/json">{{ . | jsonify | safeJS }}</script>
+    {{ end }}
+{{ end }}
