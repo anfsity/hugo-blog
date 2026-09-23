@@ -1,0 +1,75 @@
+:root {
+  --code-fade-color: white;
+  --code-btn-bg: #f0f0f5;
+  --code-btn-icon-color: #333;
+}
+
+html[data-scheme="dark"] {
+  --code-fade-color: #2e2e2e;
+  --code-btn-bg: #424242;
+  --code-btn-icon-color: #c5c5c5;
+}
+
+.highlight {
+  border-radius: var(--card-border-radius);
+  max-width: 100%;
+  box-shadow: none;
+  max-height: 400px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease-in-out;
+  margin: 0 !important;
+}
+
+.highlight .copy-code-button,
+.highlight button {
+    box-shadow: none !important;
+}
+
+.highlight.code-show {
+  max-height: none !important;
+}
+
+.code-more-box {
+  width: 100%;
+  padding-top: 78px;
+  background-image: linear-gradient(to bottom, transparent, var(--code-fade-color));
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transition: background-image 0.3s;
+  pointer-events: none;
+}
+
+.highlight.code-show .code-more-box {
+  background-image: none;
+}
+
+.code-more-btn {
+  display: block;
+  margin: auto;
+  width: 44px;
+  height: 22px;
+  background: var(--code-btn-bg);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding-top: 6px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: background-color 0.3s;
+  pointer-events: auto;
+  border: 0;
+  color: inherit;
+}
+
+.code-more-img {
+  display: block;
+  margin: auto;
+  width: 22px;
+  height: 16px;
+  color: var(--code-btn-icon-color);
+  stroke: currentColor;
+}

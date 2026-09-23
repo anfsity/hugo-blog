@@ -1,0 +1,12 @@
+:root {
+  --base-font-family: 'Jost', 'LXGW WenKai', sans-serif;
+  --article-font-family: 'Jost', 'LXGW WenKai', sans-serif;
+
+  --heading-font-family: 'Cormorant Garamond', 'LXGW WenKai', serif;
+
+  --code-font-family: 'Neo Code Roman', 'LXGW WenKai', monospace;
+}
+
+h1, h2, h3, h4, h5, h6, .article-title, .section-title {
+  font-family: var(--heading-font-family) !important;
+}

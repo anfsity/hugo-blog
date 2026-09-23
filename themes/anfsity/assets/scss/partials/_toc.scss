@@ -1,0 +1,12 @@
+#TableOfContents>ul,
+#TableOfContents>ol {
+
+  ul,
+  ol {
+    display: none;
+  }
+
+  .open {
+    display: block;
+  }
+}
