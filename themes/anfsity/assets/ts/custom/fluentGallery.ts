@@ -59,6 +59,8 @@ const providers: ImageProvider[] = [
 
 const maxConcurrentRequests = 3;
 const maxQueuedRequests = 6;
+const providerTimeoutMs = 8000;
+const imageTimeoutMs = 15000;
 let activeGalleryCleanup: (() => void) | null = null;
 let activeGalleryRoot: HTMLElement | null = null;
 
@@ -87,9 +89,15 @@ export function initFluentGallery(): void {
   let loaderVisible = false;
   let disposed = false;
   let queueTimer: number | null = null;
+  let pointerFrame: number | null = null;
+  let pendingPointer: { target: Element; x: number; y: number } | null = null;
 
   const cardObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => entry.target.classList.toggle("visible", entry.isIntersecting));
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("visible");
+      cardObserver.unobserve(entry.target);
+    });
   }, { threshold: 0.05, rootMargin: "50px" });
 
   const loaderObserver = new IntersectionObserver((entries) => {
@@ -114,8 +122,15 @@ export function initFluentGallery(): void {
 
   async function fetchOneImage(): Promise<string | null> {
     const provider = providers[Math.floor(Math.random() * providers.length)];
+    if (abortController.signal.aborted) return null;
+
+    const requestController = new AbortController();
+    const abortRequest = (): void => requestController.abort();
+    abortController.signal.addEventListener("abort", abortRequest, { once: true });
+    const timeoutId = window.setTimeout(abortRequest, providerTimeoutMs);
+
     try {
-      const response = await fetch(provider.getUrl(), { signal: abortController.signal });
+      const response = await fetch(provider.getUrl(), { signal: requestController.signal });
       if (!response.ok) return null;
 
       const url = provider.parse(await response.json() as unknown);
@@ -124,6 +139,9 @@ export function initFluentGallery(): void {
       return url;
     } catch {
       return null;
+    } finally {
+      window.clearTimeout(timeoutId);
+      abortController.signal.removeEventListener("abort", abortRequest);
     }
   }
 
@@ -139,18 +157,32 @@ export function initFluentGallery(): void {
 
     const image = new Image();
     image.alt = "Artwork";
+    image.loading = "eager";
+    image.decoding = "async";
+    image.setAttribute("fetchpriority", "low");
+
+    const inner = card.querySelector<HTMLElement>(".fluent-card-inner");
+    if (!inner) {
+      card.remove();
+      return;
+    }
+    inner.appendChild(image);
 
     const loaded = await new Promise<boolean>((resolve) => {
+      let timeoutId: number | null = null;
       const finish = (result: boolean): void => {
         image.onload = null;
         image.onerror = null;
         abortController.signal.removeEventListener("abort", onAbort);
+        if (timeoutId !== null) window.clearTimeout(timeoutId);
+        if (!result) image.removeAttribute("src");
         resolve(result);
       };
       const onAbort = (): void => finish(false);
       image.onload = () => finish(true);
       image.onerror = () => finish(false);
       abortController.signal.addEventListener("abort", onAbort, { once: true });
+      timeoutId = window.setTimeout(() => finish(false), imageTimeoutMs);
       if (abortController.signal.aborted) finish(false);
       else image.src = url;
     });
@@ -162,7 +194,14 @@ export function initFluentGallery(): void {
 
     card.classList.remove("skeleton");
     card.classList.add("loaded");
-    card.querySelector(".fluent-card-inner")?.appendChild(image);
+  }
+
+  function scheduleQueue(): void {
+    if (queueTimer !== null || disposed) return;
+    queueTimer = window.setTimeout(() => {
+      queueTimer = null;
+      processQueue();
+    }, 300);
   }
 
   function processQueue(): void {
@@ -182,7 +221,7 @@ export function initFluentGallery(): void {
         if (loaderVisible) loadBatch(3);
       }
 
-      queueTimer = window.setTimeout(processQueue, 300);
+      scheduleQueue();
     });
 
     processQueue();
@@ -195,12 +234,22 @@ export function initFluentGallery(): void {
 
   const handleMouseMove = (event: MouseEvent): void => {
     if (!(event.target instanceof Element)) return;
-    const card = event.target.closest<HTMLElement>(".fluent-card:not(.skeleton)");
-    if (!card || !galleryElement.contains(card)) return;
+    pendingPointer = { target: event.target, x: event.clientX, y: event.clientY };
+    if (pointerFrame !== null) return;
 
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty("--mouse-x", event.clientX - rect.left + "px");
-    card.style.setProperty("--mouse-y", event.clientY - rect.top + "px");
+    pointerFrame = window.requestAnimationFrame(() => {
+      pointerFrame = null;
+      const pointer = pendingPointer;
+      pendingPointer = null;
+      if (!pointer) return;
+
+      const card = pointer.target.closest<HTMLElement>(".fluent-card:not(.skeleton)");
+      if (!card || !galleryElement.contains(card)) return;
+
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--mouse-x", pointer.x - rect.left + "px");
+      card.style.setProperty("--mouse-y", pointer.y - rect.top + "px");
+    });
   };
 
   wrapper.addEventListener("mousemove", handleMouseMove, { signal: abortController.signal });
@@ -211,6 +260,8 @@ export function initFluentGallery(): void {
     disposed = true;
     abortController.abort();
     if (queueTimer !== null) window.clearTimeout(queueTimer);
+    if (pointerFrame !== null) window.cancelAnimationFrame(pointerFrame);
+    pendingPointer = null;
     cardObserver.disconnect();
     loaderObserver.disconnect();
     loaderElement.style.opacity = "0";

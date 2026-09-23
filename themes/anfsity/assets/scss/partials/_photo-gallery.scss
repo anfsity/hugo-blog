@@ -46,7 +46,6 @@
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out, box-shadow 0.2s;
-  will-change: opacity, transform;
 }
 
 .fluent-card.visible {
