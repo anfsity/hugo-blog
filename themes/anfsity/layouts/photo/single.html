@@ -1,10 +1,15 @@
+{{- define "body-class" -}}photo-page{{- end -}}
+
 {{- define "main" -}}
-<article class="main-article photo-gallery-page">
-  <header class="main-article-header">
-    {{ partial "article/components/header" . }}
+<article class="photo-gallery-page">
+  <header class="photo-page-header">
+    <h3 class="section-title">{{ .Title }}</h3>
+    {{ with .Params.description }}
+    <p class="photo-page-subtitle">{{ . }}</p>
+    {{ end }}
   </header>
 
-  <section class="main-article-content">
+  <section class="photo-page-content">
     {{ .Content }}
 
     <div class="gallery-wrapper" id="fluent-gallery-wrapper">
@@ -17,6 +22,6 @@
     </div>
   </section>
 
-  <footer class="main-article-footer">{{ partial "footer/footer" . }}</footer>
+  <footer class="photo-page-footer">{{ partial "footer/footer" . }}</footer>
 </article>
 {{- end -}}
