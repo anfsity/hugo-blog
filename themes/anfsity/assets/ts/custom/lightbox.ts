@@ -43,8 +43,21 @@ export function initLightbox(): void {
   let currentImages: HTMLImageElement[] = [];
   let currentIndex = 0;
   let previousFocus: HTMLElement | null = null;
+  let imageRequestVersion = 0;
+  let pendingFullResolutionImage: HTMLImageElement | null = null;
+
+  elements.image.loading = "eager";
+  elements.image.decoding = "async";
+  elements.image.setAttribute("fetchpriority", "high");
+
+  const cancelFullResolutionLoad = (): void => {
+    imageRequestVersion += 1;
+    pendingFullResolutionImage?.removeAttribute("src");
+    pendingFullResolutionImage = null;
+  };
 
   const close = (): void => {
+    cancelFullResolutionLoad();
     elements.root.classList.remove("active");
     elements.root.inert = true;
     elements.root.setAttribute("aria-hidden", "true");
@@ -57,10 +70,29 @@ export function initLightbox(): void {
 
   const showImage = (index: number): void => {
     if (currentImages.length === 0) return;
+    cancelFullResolutionLoad();
     currentIndex = (index + currentImages.length) % currentImages.length;
     const image = currentImages[currentIndex];
-    elements.image.src = image.currentSrc || image.src;
+    const previewUrl = image.currentSrc || image.src;
+    elements.image.src = previewUrl;
     elements.image.alt = image.alt;
+
+    if (image.src === previewUrl) return;
+
+    const requestVersion = imageRequestVersion;
+    const fullResolutionImage = new Image();
+    fullResolutionImage.decoding = "async";
+    fullResolutionImage.setAttribute("fetchpriority", "high");
+    fullResolutionImage.src = image.src;
+    pendingFullResolutionImage = fullResolutionImage;
+
+    void fullResolutionImage.decode().then(() => {
+      if (requestVersion === imageRequestVersion && elements.root.classList.contains("active")) {
+        elements.image.src = fullResolutionImage.src;
+      }
+    }).catch(() => undefined).finally(() => {
+      if (pendingFullResolutionImage === fullResolutionImage) pendingFullResolutionImage = null;
+    });
   };
 
   const showPrevious = (event?: Event): void => {
@@ -84,15 +116,13 @@ export function initLightbox(): void {
     if (index < 0) return;
 
     event.preventDefault();
-    currentIndex = index;
     previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    elements.image.src = clickedImage.currentSrc || clickedImage.src;
-    elements.image.alt = clickedImage.alt;
     elements.root.classList.add("active");
     elements.root.inert = false;
     elements.root.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
     elements.root.focus();
+    showImage(index);
   });
 
   const markImageForZoom = (event: Event): void => {

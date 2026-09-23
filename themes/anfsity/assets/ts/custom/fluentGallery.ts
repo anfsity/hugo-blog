@@ -57,8 +57,9 @@ const providers: ImageProvider[] = [
   },
 ];
 
-const maxConcurrentRequests = 3;
+const maxConcurrentRequests = 4;
 const maxQueuedRequests = 6;
+const maxConsecutiveCardFailures = 3;
 const providerTimeoutMs = 8000;
 const imageTimeoutMs = 15000;
 let activeGalleryCleanup: (() => void) | null = null;
@@ -76,6 +77,8 @@ export function initFluentGallery(): void {
   }
   const galleryElement = gallery;
   const loaderElement = loader;
+  const retryButton = loaderElement.querySelector<HTMLButtonElement>("#fluent-gallery-retry");
+  const loaderStatus = loaderElement.querySelector<HTMLElement>("#fluent-gallery-status");
 
   if (activeGalleryRoot === galleryElement) return;
   activeGalleryCleanup?.();
@@ -87,8 +90,9 @@ export function initFluentGallery(): void {
   let queuedRequests = 0;
   let activeRequests = 0;
   let loaderVisible = false;
+  let autoLoadingPaused = false;
+  let consecutiveCardFailures = 0;
   let disposed = false;
-  let queueTimer: number | null = null;
   let pointerFrame: number | null = null;
   let pendingPointer: { target: Element; x: number; y: number } | null = null;
 
@@ -103,9 +107,17 @@ export function initFluentGallery(): void {
   const loaderObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       loaderVisible = entry.isIntersecting;
-      if (loaderVisible) loadBatch(3);
+      if (loaderVisible && !autoLoadingPaused) loadBatch(3);
     });
   }, { rootMargin: "300px" });
+
+  function updateLoader(): void {
+    const loading = activeRequests > 0 || queuedRequests > 0;
+    loaderElement.classList.toggle("is-paused", autoLoadingPaused);
+    loaderElement.style.opacity = loading || autoLoadingPaused ? "1" : "0";
+    if (loaderStatus) loaderStatus.textContent = autoLoadingPaused ? "Image loading paused." : "Loading...";
+    if (retryButton) retryButton.hidden = !autoLoadingPaused;
+  }
 
   function createSkeletonCard(): HTMLElement {
     const card = document.createElement("div");
@@ -118,6 +130,11 @@ export function initFluentGallery(): void {
     galleryElement.appendChild(card);
     cardObserver.observe(card);
     return card;
+  }
+
+  function removeCard(card: HTMLElement): void {
+    cardObserver.unobserve(card);
+    card.remove();
   }
 
   async function fetchOneImage(): Promise<string | null> {
@@ -145,28 +162,27 @@ export function initFluentGallery(): void {
     }
   }
 
-  async function loadCard(card: HTMLElement): Promise<void> {
+  async function loadCard(card: HTMLElement): Promise<boolean> {
     let url: string | null = null;
     for (let attempt = 0; attempt < 2 && !url && !disposed; attempt += 1) {
       url = await fetchOneImage();
     }
     if (!url || disposed) {
-      card.remove();
-      return;
+      removeCard(card);
+      return false;
     }
 
     const image = new Image();
     image.alt = "Artwork";
     image.loading = "eager";
     image.decoding = "async";
-    image.setAttribute("fetchpriority", "low");
+    image.setAttribute("fetchpriority", card.getBoundingClientRect().top < window.innerHeight ? "high" : "low");
 
     const inner = card.querySelector<HTMLElement>(".fluent-card-inner");
     if (!inner) {
-      card.remove();
-      return;
+      removeCard(card);
+      return false;
     }
-    inner.appendChild(image);
 
     const loaded = await new Promise<boolean>((resolve) => {
       let timeoutId: number | null = null;
@@ -188,49 +204,67 @@ export function initFluentGallery(): void {
     });
 
     if (!loaded || disposed) {
-      card.remove();
-      return;
+      removeCard(card);
+      return false;
     }
 
+    const width = image.naturalWidth;
+    const height = image.naturalHeight;
+    if (width === 0 || height === 0) {
+      removeCard(card);
+      return false;
+    }
+
+    image.width = width;
+    image.height = height;
+    card.style.aspectRatio = `${width} / ${height}`;
+    inner.appendChild(image);
     card.classList.remove("skeleton");
     card.classList.add("loaded");
-  }
-
-  function scheduleQueue(): void {
-    if (queueTimer !== null || disposed) return;
-    queueTimer = window.setTimeout(() => {
-      queueTimer = null;
-      processQueue();
-    }, 300);
+    return true;
   }
 
   function processQueue(): void {
-    if (disposed || activeRequests >= maxConcurrentRequests || queuedRequests <= 0) return;
+    if (disposed || autoLoadingPaused || activeRequests >= maxConcurrentRequests || queuedRequests <= 0) return;
 
     activeRequests += 1;
     queuedRequests -= 1;
-    loaderElement.style.opacity = "1";
+    updateLoader();
 
     const card = createSkeletonCard();
-    loadCard(card).finally(() => {
+    void loadCard(card).catch(() => false).then((loaded) => {
+      if (disposed) return;
+      consecutiveCardFailures = loaded ? 0 : consecutiveCardFailures + 1;
+      if (consecutiveCardFailures >= maxConsecutiveCardFailures) {
+        autoLoadingPaused = true;
+        queuedRequests = 0;
+      }
+    }).finally(() => {
       activeRequests -= 1;
       if (disposed) return;
 
-      if (activeRequests === 0 && queuedRequests === 0) {
-        loaderElement.style.opacity = "0";
-        if (loaderVisible) loadBatch(3);
-      }
+      if (queuedRequests === 0 && loaderVisible && !autoLoadingPaused) loadBatch(3);
+      else processQueue();
 
-      scheduleQueue();
+      updateLoader();
     });
 
     processQueue();
   }
 
   function loadBatch(count = 3): void {
+    if (autoLoadingPaused) return;
     queuedRequests = Math.min(maxQueuedRequests, queuedRequests + count);
     processQueue();
   }
+
+  retryButton?.addEventListener("click", () => {
+    if (disposed) return;
+    consecutiveCardFailures = 0;
+    autoLoadingPaused = false;
+    loadBatch(3);
+    updateLoader();
+  }, { signal: abortController.signal });
 
   const handleMouseMove = (event: MouseEvent): void => {
     if (!(event.target instanceof Element)) return;
@@ -255,11 +289,11 @@ export function initFluentGallery(): void {
   wrapper.addEventListener("mousemove", handleMouseMove, { signal: abortController.signal });
   loaderObserver.observe(loaderElement);
   loadBatch(6);
+  updateLoader();
 
   activeGalleryCleanup = () => {
     disposed = true;
     abortController.abort();
-    if (queueTimer !== null) window.clearTimeout(queueTimer);
     if (pointerFrame !== null) window.cancelAnimationFrame(pointerFrame);
     pendingPointer = null;
     cardObserver.disconnect();

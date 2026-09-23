@@ -44,7 +44,7 @@ class StackGallery {
                 w: parseInt(img.getAttribute('width')),
                 h: parseInt(img.getAttribute('height')),
                 src: img.src,
-                msrc: img.getAttribute('data-thumb') || img.src,
+                msrc: img.getAttribute('data-thumb') || img.currentSrc || img.src,
                 el: el
             }
 

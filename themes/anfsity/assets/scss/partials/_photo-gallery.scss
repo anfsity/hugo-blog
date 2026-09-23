@@ -152,6 +152,24 @@
   opacity: 0;
   transition: opacity 0.3s;
 }
+.loading-more.is-paused .spinner {
+  display: none;
+}
+
+.fluent-gallery-retry {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.fluent-gallery-retry[hidden] {
+  display: none;
+}
+
 
 .spinner {
   width: 28px;
