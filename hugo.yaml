@@ -1,5 +1,5 @@
 baseurl: https://anfsity.com/
-languageCode: zh-cn
+locale: zh-cn
 theme: anfsity
 title: Anfsity
 copyright: Anfsity
@@ -14,7 +14,7 @@ hasCJKLanguage: true
 
 languages:
     en:
-        languageName: English
+        label: English
         title: Anfsity
         weight: 1
         params:
@@ -22,8 +22,8 @@ languages:
                 subtitle: There is a will, there is a way.
 
     zh-cn:
-        languageName: 中文
-        languageCode: zh-cn
+        label: 中文
+        locale: zh-cn
         title: Anfsity
         weight: 2
         params:
@@ -71,8 +71,8 @@ params:
         subtitle: There is a will, there is a way.
         avatar:
             enabled: true
-            local: true
-            src: img/avatar.png
+            local: false
+            src: /avatar.png
 
     article:
         math: true
