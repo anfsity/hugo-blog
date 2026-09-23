@@ -14,7 +14,7 @@
             {{ end }}
         </h3>
 
-        <div class="section-card enhanced-header">
+        <div class="section-card enhanced-header{{ if $isTopic }} topic-category-header{{ end }}"{{ if and $isTopic .Params.style }} style="--topic-accent: {{ .Params.style.background }};"{{ end }}>
             <div class="section-details">
                 <h3 class="section-count">
                     {{ if $isTopic }}
@@ -100,7 +100,13 @@
         </section>
     {{ end }}
 
-    {{- partial "pagination.html" . -}}
+    {{- if and $isTopic (gt .Paginator.TotalPages 1) -}}
+        <div class="topic-pagination">
+            {{- partial "pagination.html" . -}}
+        </div>
+    {{- else -}}
+        {{- partial "pagination.html" . -}}
+    {{- end -}}
 
     {{ partialCached "footer/footer" . }}
 {{ end }}

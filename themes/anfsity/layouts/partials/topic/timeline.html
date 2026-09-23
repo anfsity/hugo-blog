@@ -2,7 +2,7 @@
 {{ $pages := .Pages }}
 {{ $paginator := $page.Paginate $pages.ByDate }}
 
-<section class="article-list--timeline">
+<section class="article-list--timeline"{{ with $page.Params.style }} style="--topic-accent: {{ .background }};"{{ end }}>
     {{ range $paginator.Pages }}
         {{ partial "article-list/timeline" . }}
     {{ end }}

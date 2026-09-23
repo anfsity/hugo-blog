@@ -5,21 +5,40 @@
     {{ end }}
 {{ end }}
 
-{{ $paginator := .Paginate $topicCategories }}
+<header class="topic-directory-header">
+    <h3 class="section-title">{{ .Title }}</h3>
+</header>
 
-<section class="article-list">
-    {{ range $categoryPage := $paginator.Pages }}
-        <article>
-            <div class="article-content">
-                <h2 class="article-title">
-                    <a href="{{ $categoryPage.RelPermalink }}">{{ $categoryPage.Title }}</a>
-                </h2>
-                {{ with $categoryPage.Params.description }}
-                <p>{{ . }}</p>
-                {{ end }}
-            </div>
-        </article>
-    {{ end }}
-</section>
-
-{{- partial "pagination.html" . -}}
+<div class="topic-directory">
+    <div class="topic-directory-scroll" role="region" tabindex="0" aria-label="{{ .Title }}">
+        <div class="topic-directory-list">
+            {{ range $topicCategories }}
+                <article class="topic-card"{{ with .Params.style }} style="--topic-accent: {{ .background }};"{{ end }}>
+                    <div class="article-content">
+                        <h2 class="article-title">
+                            <a href="{{ .RelPermalink }}">
+                                {{- $words := split .Title " " -}}
+                                {{- range $index, $word := $words -}}
+                                    {{- if gt $index 0 }} {{ end -}}
+                                    {{- if $word -}}
+                                        <span class="first-letter-accent">{{ substr $word 0 1 }}</span>{{- substr $word 1 -}}
+                                    {{- end -}}
+                                {{- end -}}
+                            </a>
+                        </h2>
+                        {{ with .Params.description }}
+                        <p>{{ . }}</p>
+                        {{ end }}
+                    </div>
+                    <footer class="topic-card-footer">
+                        <span class="topic-card-count">{{ T "list.page" (len .Pages) }}</span>
+                        <span class="topic-card-arrow" aria-hidden="true">
+                            {{- partial "helper/icon" "chevron-right" -}}
+                        </span>
+                    </footer>
+                </article>
+            {{ end }}
+        </div>
+    </div>
+    <div class="topic-directory-fade" aria-hidden="true"></div>
+</div>
