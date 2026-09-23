@@ -45,18 +45,20 @@ class BangumiApp {
 
   private showLoading(): void {
     this.elements.loading.hidden = false;
+    this.elements.loading.classList.toggle("is-refreshing", this.data.length > 0);
     this.elements.error.hidden = true;
-    this.elements.content.hidden = true;
+    this.elements.content.hidden = this.data.length === 0;
   }
 
-  private showError(): void {
+  private showError(keepContent = false): void {
     this.elements.loading.hidden = true;
     this.elements.error.hidden = false;
-    this.elements.content.hidden = true;
+    this.elements.content.hidden = !keepContent;
   }
 
   private render(): void {
     this.elements.loading.hidden = true;
+    this.elements.loading.classList.remove("is-refreshing");
     this.elements.error.hidden = true;
     this.elements.content.hidden = false;
 
@@ -94,26 +96,34 @@ class BangumiApp {
     }
 
     const requestVersion = ++this.requestVersion;
-    this.showLoading();
 
     if (!force) {
       const cached = readBangumiCache(this.cacheKey, this.cacheDays);
       if (cached) {
-        this.data = cached;
+        this.data = cached.data;
         this.render();
-        return;
+        if (cached.fresh) return;
       }
     }
 
+    this.showLoading();
+
     try {
-      const data = await fetchUserCollections(this.userId);
+      const data = await fetchUserCollections(this.userId, (partialData) => {
+        if (requestVersion !== this.requestVersion) return;
+        this.data = partialData;
+        this.render();
+      });
       if (requestVersion !== this.requestVersion) return;
       this.data = data;
       writeBangumiCache(this.cacheKey, data);
       this.render();
     } catch {
       if (requestVersion !== this.requestVersion) return;
-      if (this.data.length > 0) this.render();
+      if (this.data.length > 0) {
+        this.render();
+        this.showError(true);
+      }
       else this.showError();
     }
   }

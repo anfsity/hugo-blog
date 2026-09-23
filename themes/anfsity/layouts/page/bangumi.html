@@ -1,7 +1,7 @@
 {{ define "main" }}
 <div class="article-content">
     <div class="bangumi-container" data-userid="{{ .Site.Params.bangumi.userId }}" data-cachedays="{{ .Site.Params.bangumi.cacheDays | default 1 }}">
-        <div id="bangumi-loading" class="bangumi-loading">Loading...</div>
+        <div id="bangumi-loading" class="bangumi-loading" role="status" aria-live="polite">Loading...</div>
         <div id="bangumi-error" class="bangumi-error" hidden>
             Failed to load Bangumi data. <button id="bangumi-retry" type="button">Retry</button>
         </div>

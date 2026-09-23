@@ -101,8 +101,20 @@ function createBangumiCard(item: BangumiItem, language: BangumiLanguage): HTMLAn
   coverContainer.className = "bangumi-card-cover-container";
   const cover = document.createElement("div");
   cover.className = "bangumi-card-cover";
-  const imageUrl = safeImageUrl(item.subject.images?.large);
-  if (imageUrl) cover.style.backgroundImage = "url(" + JSON.stringify(imageUrl) + ")";
+  const imageUrl = safeImageUrl(item.subject.images?.common) ??
+    safeImageUrl(item.subject.images?.medium) ??
+    safeImageUrl(item.subject.images?.small) ??
+    safeImageUrl(item.subject.images?.large);
+  if (imageUrl) {
+    const image = document.createElement("img");
+    image.className = "bangumi-card-cover-image";
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.setAttribute("fetchpriority", "low");
+    image.src = imageUrl;
+    cover.appendChild(image);
+  }
 
   const overlay = document.createElement("div");
   overlay.className = "bangumi-card-overlay";

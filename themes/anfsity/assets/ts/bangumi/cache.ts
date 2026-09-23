@@ -5,6 +5,11 @@ interface BangumiCache {
   data: BangumiItem[];
 }
 
+export interface CachedBangumiData {
+  data: BangumiItem[];
+  fresh: boolean;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -15,7 +20,7 @@ function isBangumiItem(value: unknown): value is BangumiItem {
     typeof value.subject.id === "number" && typeof value.subject.name === "string";
 }
 
-export function readBangumiCache(key: string, maxAgeDays: number): BangumiItem[] | null {
+export function readBangumiCache(key: string, maxAgeDays: number): CachedBangumiData | null {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
@@ -26,10 +31,11 @@ export function readBangumiCache(key: string, maxAgeDays: number): BangumiItem[]
     }
 
     const age = Date.now() - parsed.timestamp;
-    if (age < 0 || age >= maxAgeDays * 86400000) return null;
+    if (age < 0) return null;
 
     const items = parsed.data.filter(isBangumiItem);
-    return items.length === parsed.data.length ? items : null;
+    if (items.length !== parsed.data.length) return null;
+    return { data: items, fresh: age < maxAgeDays * 86400000 };
   } catch {
     return null;
   }
