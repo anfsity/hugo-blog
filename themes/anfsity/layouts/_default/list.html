@@ -1,7 +1,9 @@
 {{ define "main" }}
+    {{ $isTopic := .Params.on_topic }}
+
     <header>
         <h3 class="section-title">
-            {{ if .Params.on_topic }}
+            {{ if $isTopic }}
                 TOPIC
             {{ else }}
                 {{ if eq .Parent (.GetPage "/") }}
@@ -15,7 +17,7 @@
         <div class="section-card enhanced-header">
             <div class="section-details">
                 <h3 class="section-count">
-                    {{ if .Params.on_topic }}
+                    {{ if $isTopic }}
                         {{ len .Pages }} PAGES
                     {{ else }}
                         {{ T "list.page" (len .Pages) }}
@@ -87,13 +89,8 @@
     {{- end -}}
     
     {{/* List only pages that are not a subsection */}}
-    {{ if .Params.on_topic }}
-        {{ $paginator := .Paginate $pages.ByDate }}
-        <section class="article-list--timeline">
-            {{ range $paginator.Pages }}
-                {{ partial "article-list/timeline" . }}
-            {{ end }}
-        </section>
+    {{ if $isTopic }}
+        {{ partial "topic/timeline.html" (dict "Page" . "Pages" $pages) }}
     {{ else }}
         {{ $paginator := .Paginate $pages }}
         <section class="article-list--compact">

@@ -1,0 +1,25 @@
+{{ $topicCategories := slice }}
+{{ range .Site.Taxonomies.categories }}
+    {{ if .Page.Params.on_topic }}
+        {{ $topicCategories = $topicCategories | append .Page }}
+    {{ end }}
+{{ end }}
+
+{{ $paginator := .Paginate $topicCategories }}
+
+<section class="article-list">
+    {{ range $categoryPage := $paginator.Pages }}
+        <article>
+            <div class="article-content">
+                <h2 class="article-title">
+                    <a href="{{ $categoryPage.RelPermalink }}">{{ $categoryPage.Title }}</a>
+                </h2>
+                {{ with $categoryPage.Params.description }}
+                <p>{{ . }}</p>
+                {{ end }}
+            </div>
+        </article>
+    {{ end }}
+</section>
+
+{{- partial "pagination.html" . -}}

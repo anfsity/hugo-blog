@@ -1,0 +1,9 @@
+{{ $page := .Page }}
+{{ $pages := .Pages }}
+{{ $paginator := $page.Paginate $pages.ByDate }}
+
+<section class="article-list--timeline">
+    {{ range $paginator.Pages }}
+        {{ partial "article-list/timeline" . }}
+    {{ end }}
+</section>
