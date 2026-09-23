@@ -1,6 +1,6 @@
 baseurl: https://anfsity.com/
 languageCode: zh-cn
-theme: hugo-theme-stack
+theme: anfsity
 title: Anfsity
 copyright: Anfsity
 
