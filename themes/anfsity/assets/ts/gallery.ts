@@ -1,7 +1,10 @@
 declare global {
     interface Window {
         PhotoSwipe: any;
-        PhotoSwipeUI_Default: any
+        PhotoSwipeUI_Default: any;
+        __anfsityLightbox?: {
+            openImage(image: HTMLImageElement): boolean;
+        };
     }
 }
 
@@ -19,11 +22,6 @@ class StackGallery {
     private items: PhotoSwipeItem[] = [];
 
     constructor(container: HTMLElement, galleryUID = 1) {
-        if (window.PhotoSwipe == undefined || window.PhotoSwipeUI_Default == undefined) {
-            console.error("PhotoSwipe lib not loaded.");
-            return;
-        }
-
         this.galleryUID = galleryUID;
 
         StackGallery.createGallery(container);
@@ -155,6 +153,16 @@ class StackGallery {
     }
 
     public open(index: number) {
+        const img = this.items[index]?.el.querySelector('img');
+        if (img && window.__anfsityLightbox?.openImage(img)) {
+            return;
+        }
+
+        if (window.PhotoSwipe == undefined || window.PhotoSwipeUI_Default == undefined) {
+            console.error("PhotoSwipe lib not loaded.");
+            return;
+        }
+
         const pswp = document.querySelector('.pswp') as HTMLDivElement;
         const ps = new window.PhotoSwipe(pswp, window.PhotoSwipeUI_Default, this.items, {
             index: index,
@@ -177,6 +185,7 @@ class StackGallery {
 
             a.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.open(index);
             })
         }
