@@ -6,11 +6,9 @@ export interface ParsedMusicUrl {
 
 export interface MetingTrack {
   url: string;
-  name?: string;
-  artist?: string;
+  title: string;
+  artist: string;
   cover?: string;
-  lrc?: string;
-  [key: string]: unknown;
 }
 
 const REQUEST_TIMEOUT_MS = 8000;
@@ -25,6 +23,23 @@ const urlRules: Array<[RegExp, ParsedMusicUrl["server"], ParsedMusicUrl["type"]]
   [/y\.qq\.com.*playsquare\/(\w+)/, "tencent", "playlist"],
   [/y\.qq\.com.*playlist\/(\w+)/, "tencent", "playlist"],
 ];
+
+function asNonEmptyString(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function normalizeTrackUrl(value: unknown): string | undefined {
+  const raw = asNonEmptyString(value);
+  if (!raw) return undefined;
+  try {
+    const url = new URL(raw.startsWith("//") ? "https:" + raw : raw, document.baseURI);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export function parseMusicUrl(url: string): ParsedMusicUrl | null {
   for (const [pattern, server, type] of urlRules) {
@@ -55,10 +70,21 @@ export async function fetchMetingTracks(
     const payload: unknown = await response.json();
     if (!Array.isArray(payload)) return [];
 
-    return payload.filter((track): track is MetingTrack => {
-      return typeof track === "object" && track !== null &&
-        "url" in track && typeof track.url === "string" && track.url.length > 0;
-    });
+    const tracks: MetingTrack[] = [];
+    for (const entry of payload) {
+      if (typeof entry !== "object" || entry === null) continue;
+      const record = entry as Record<string, unknown>;
+      const trackUrl = normalizeTrackUrl(record.url);
+      if (!trackUrl) continue;
+
+      tracks.push({
+        url: trackUrl,
+        title: asNonEmptyString(record.title) ?? asNonEmptyString(record.name) ?? "Untitled",
+        artist: asNonEmptyString(record.author) ?? asNonEmptyString(record.artist) ?? "Unknown",
+        cover: normalizeTrackUrl(record.pic) ?? normalizeTrackUrl(record.cover),
+      });
+    }
+    return tracks;
   } catch {
     return [];
   } finally {

@@ -14,8 +14,6 @@
 
 {{ with .Site.Params.music_player }}
     {{ if .enabled }}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer data-swup-ignore-script></script>
         <script id="music-config" type="application/json" data-swup-ignore-script>{{ . | jsonify | safeJS }}</script>
     {{ end }}
 {{ end }}
