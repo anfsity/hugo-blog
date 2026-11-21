@@ -1,4 +1,4 @@
-const imageSelector = ".article-content img:not(.no-lightbox), .fluent-card img";
+const imageSelector = ".article-content img:not(.no-lightbox), .photo-tile img";
 const excludedImageAncestors = "button, .highlight, .chroma, .copy-code, .icon, nav, header";
 
 const MIN_SCALE = 1;
