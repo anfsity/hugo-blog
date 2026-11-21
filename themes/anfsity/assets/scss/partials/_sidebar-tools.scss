@@ -11,6 +11,8 @@
   --tools-row-sep: rgba(52, 73, 94, 0.07);
   --tools-row-hover: rgba(52, 73, 94, 0.06);
   --tools-row-active: rgba(52, 73, 94, 0.09);
+  --tools-play-bg: rgba(52, 73, 94, 0.085);
+  --tools-play-bg-hover: rgba(52, 73, 94, 0.15);
   --tools-radius: 12px;
 
   position: fixed;
@@ -43,6 +45,8 @@
   --tools-row-sep: rgba(255, 255, 255, 0.07);
   --tools-row-hover: rgba(255, 255, 255, 0.07);
   --tools-row-active: rgba(255, 255, 255, 0.11);
+  --tools-play-bg: rgba(255, 255, 255, 0.1);
+  --tools-play-bg-hover: rgba(255, 255, 255, 0.17);
 }
 
 .sidebar-btn {
@@ -255,29 +259,29 @@
 }
 
 .mp-main {
-  padding: 14px 14px 12px;
+  padding: 14px 15px 12px;
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 10px;
 }
 
 .mp-head {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 12px;
 }
 
 .mp-cover {
   position: relative;
-  flex: 0 0 60px;
-  width: 60px;
-  height: 60px;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 0;
-  border-radius: 10px;
+  border-radius: 9px;
   overflow: hidden;
   background: var(--body-background);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 0 0 1px var(--tools-border);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--tools-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -315,13 +319,14 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .mp-title {
   color: var(--card-text-color-main);
   font-size: 1.4rem;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.32;
   letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -329,7 +334,6 @@
 }
 
 .mp-artist {
-  margin-top: 2px;
   color: var(--card-text-color-tertiary);
   font-size: 1.2rem;
   line-height: 1.3;
@@ -338,30 +342,106 @@
   text-overflow: ellipsis;
 }
 
-.mp-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 8px;
+.mp-list-toggle {
+  flex-shrink: 0;
 }
 
-.mp-transport,
-.mp-utils {
+/* Integrated Progress Scrubber */
+.mp-scrubber {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mp-progress-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 6px 4px;
+  cursor: pointer;
+  touch-action: none;
+
+  &:hover .mp-progress-thumb,
+  &.is-seeking .mp-progress-thumb {
+    transform: translateY(-50%) scale(1.22);
+  }
+}
+
+.mp-progress-track {
+  position: relative;
+  width: 100%;
+  height: 3.5px;
+  border-radius: 999px;
+  background: var(--tools-track-bg);
+}
+
+.mp-progress-buffered {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 999px;
+  background: var(--tools-track-loaded);
+}
+
+.mp-progress-played {
+  position: relative;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--accent-color);
+}
+
+.mp-progress-thumb {
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%) scale(1);
+  transition: transform 0.14s ease;
+}
+
+.mp-time {
+  flex-shrink: 0;
+  color: var(--card-text-color-tertiary);
+  font-size: 1.1rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+/* Balanced Transport & Utility Row */
+.mp-controls {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-top: -2px;
+}
+
+.mp-transport {
+  justify-self: center;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
+}
+
+.mp-mode {
+  justify-self: end;
 }
 
 .mp-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: 0;
-  border-radius: 7px;
+  border-radius: 8px;
   background: transparent;
   color: var(--card-text-color-secondary);
   cursor: pointer;
@@ -381,16 +461,16 @@
 }
 
 .mp-play {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--accent-color);
-  color: var(--accent-color-text);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--tools-play-bg);
+  color: var(--accent-color);
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background: var(--accent-color-darker);
-      color: var(--accent-color-text);
+      background: var(--tools-play-bg-hover);
+      color: var(--accent-color);
       transform: scale(1.04);
     }
   }
@@ -398,6 +478,7 @@
 
 /* Volume Popover Slider */
 .mp-volume-wrap {
+  justify-self: start;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -460,74 +541,6 @@
   height: 70%;
   border-radius: 999px;
   background: var(--accent-color);
-}
-
-/* Full-width Progress Scrubber */
-.mp-scrubber {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.mp-progress-wrap {
-  padding: 5px 0;
-  cursor: pointer;
-  touch-action: none;
-
-  &:hover .mp-progress-thumb,
-  &.is-seeking .mp-progress-thumb {
-    transform: translateY(-50%) scale(1.25);
-  }
-}
-
-.mp-progress-track {
-  position: relative;
-  width: 100%;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--tools-track-bg);
-}
-
-.mp-progress-buffered {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  border-radius: 999px;
-  background: var(--tools-track-loaded);
-}
-
-.mp-progress-played {
-  position: relative;
-  height: 100%;
-  width: 0;
-  border-radius: 999px;
-  background: var(--accent-color);
-}
-
-.mp-progress-thumb {
-  position: absolute;
-  top: 50%;
-  right: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-color);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
-  transform: translateY(-50%) scale(1);
-  transition: transform 0.14s ease;
-}
-
-.mp-times {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--card-text-color-tertiary);
-  font-size: 1.05rem;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-  user-select: none;
 }
 
 /* Collapsible Playlist Drawer */

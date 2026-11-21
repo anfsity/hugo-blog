@@ -14,10 +14,10 @@ const VOLUME_STORAGE_KEY = "anfsity_music_volume";
 const MODE_STORAGE_KEY = "anfsity_music_mode";
 
 const ICONS = {
-  play: '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M7 5.14v13.72a1 1 0 0 0 1.52.85l10.86-6.86a1 1 0 0 0 0-1.7L8.52 4.29A1 1 0 0 0 7 5.14z" /></svg>',
-  pause: '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1.2" /><rect x="14" y="4.5" width="4" height="15" rx="1.2" /></svg>',
-  prev: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 6l-9 6l9 6z" /><path d="M5 6v12" /></svg>',
-  next: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6l9 6l-9 6z" /><path d="M19 6v12" /></svg>',
+  play: '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true" style="transform:translateX(0.75px)"><path d="M7 5.14v13.72a1 1 0 0 0 1.52.85l10.86-6.86a1 1 0 0 0 0-1.7L8.52 4.29A1 1 0 0 0 7 5.14z" /></svg>',
+  pause: '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1.2" /><rect x="14" y="4.5" width="4" height="15" rx="1.2" /></svg>',
+  prev: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 6l-9 6l9 6z" /><path d="M5 6v12" /></svg>',
+  next: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6l9 6l-9 6z" /><path d="M19 6v12" /></svg>',
   volumeHigh: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>',
   volumeLow: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>',
   volumeMute: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /><path d="M16 10l4 4m0 -4l-4 4" /></svg>',
@@ -231,38 +231,34 @@ class NativeMusicPlayer {
           <div class="mp-meta">
             <div class="mp-title"></div>
             <div class="mp-artist"></div>
-            <div class="mp-controls">
-              <div class="mp-transport">
-                <button type="button" class="mp-btn mp-prev" aria-label="Previous track" title="Previous">${ICONS.prev}</button>
-                <button type="button" class="mp-btn mp-play" aria-label="Play" title="Play">${ICONS.play}</button>
-                <button type="button" class="mp-btn mp-next" aria-label="Next track" title="Next">${ICONS.next}</button>
-              </div>
-              <div class="mp-utils">
-                <div class="mp-volume-wrap">
-                  <button type="button" class="mp-btn mp-volume-btn" aria-label="Mute or unmute" title="Volume"></button>
-                  <div class="mp-volume-popover" role="slider" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" tabindex="0">
-                    <div class="mp-volume-track">
-                      <div class="mp-volume-fill"></div>
-                    </div>
-                  </div>
-                </div>
-                <button type="button" class="mp-btn mp-mode" aria-label="Switch play mode"></button>
-                <button type="button" class="mp-btn mp-list-toggle" aria-label="Toggle playlist" aria-expanded="false" title="Playlist">${ICONS.playlist}</button>
-              </div>
-            </div>
           </div>
+          <button type="button" class="mp-btn mp-list-toggle" aria-label="Toggle playlist" aria-expanded="false" title="Playlist">${ICONS.playlist}</button>
         </div>
         <div class="mp-scrubber">
+          <span class="mp-time mp-time-current">00:00</span>
           <div class="mp-progress-wrap" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
             <div class="mp-progress-track">
               <div class="mp-progress-buffered"></div>
               <div class="mp-progress-played"><span class="mp-progress-thumb"></span></div>
             </div>
           </div>
-          <div class="mp-times">
-            <span class="mp-time-current">00:00</span>
-            <span class="mp-time-duration">00:00</span>
+          <span class="mp-time mp-time-duration">00:00</span>
+        </div>
+        <div class="mp-controls">
+          <div class="mp-volume-wrap">
+            <button type="button" class="mp-btn mp-volume-btn" aria-label="Mute or unmute" title="Volume"></button>
+            <div class="mp-volume-popover" role="slider" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" tabindex="0">
+              <div class="mp-volume-track">
+                <div class="mp-volume-fill"></div>
+              </div>
+            </div>
           </div>
+          <div class="mp-transport">
+            <button type="button" class="mp-btn mp-prev" aria-label="Previous track" title="Previous">${ICONS.prev}</button>
+            <button type="button" class="mp-btn mp-play" aria-label="Play" title="Play">${ICONS.play}</button>
+            <button type="button" class="mp-btn mp-next" aria-label="Next track" title="Next">${ICONS.next}</button>
+          </div>
+          <button type="button" class="mp-btn mp-mode" aria-label="Switch play mode"></button>
         </div>
       </div>
       <div class="mp-playlist" hidden>
