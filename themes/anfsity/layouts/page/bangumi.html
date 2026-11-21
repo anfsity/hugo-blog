@@ -1,26 +1,51 @@
-{{ define "main" }}
-<header class="bangumi-page-header">
-    <h3 class="section-title">{{ .Title }}</h3>
-</header>
-<div class="article-content">
-    <div class="bangumi-container" data-userid="{{ .Site.Params.bangumi.userId }}" data-cachedays="{{ .Site.Params.bangumi.cacheDays | default 1 }}">
-        <div id="bangumi-loading" class="bangumi-loading" role="status" aria-live="polite">Loading...</div>
-        <div id="bangumi-error" class="bangumi-error" hidden>
-            Failed to load Bangumi data. <button id="bangumi-retry" type="button">Retry</button>
-        </div>
-        <div id="bangumi-content" class="bangumi-content" hidden>
-            <div class="bangumi-head">
-                <span class="bangumi-head-item active" id="bangumi-head-anime"></span>
-            </div>
-            <div id="bangumi-tabs" class="bangumi-tabs"></div>
-            <div id="bangumi-toolbar" class="bangumi-toolbar"></div>
-            <div id="bangumi-grid" class="bangumi-grid"></div>
-            <div id="bangumi-pagination" class="bangumi-pagination"></div>
-        </div>
-    </div>
-</div>
+{{ define "body-class" }}bangumi-page-view{{ end }}
 
-{{ $bangumiScript := resources.Get "ts/custom-bangumi.ts" | js.Build | minify | fingerprint }}
-<script src="{{ $bangumiScript.RelPermalink }}" defer data-swup-reload-script></script>
-{{ partialCached "footer/footer" . }}
+{{ define "main" }}
+<article class="bangumi-page">
+    <header class="bangumi-page-header">
+        <div class="bangumi-header-bar">
+            <div class="bangumi-header-title">
+                <h3 class="section-title">{{ .Title }}</h3>
+                <span class="bangumi-header-count" id="bangumi-head-anime" aria-live="polite"></span>
+            </div>
+        </div>
+    </header>
+
+    <section class="bangumi-page-content">
+        <div class="bangumi-container" data-userid="{{ .Site.Params.bangumi.userId }}" data-cachedays="{{ .Site.Params.bangumi.cacheDays | default 1 }}">
+            <div id="bangumi-loading" class="bangumi-loading" role="status" aria-live="polite">
+                <div class="bangumi-skeleton-grid" aria-hidden="true">
+                    {{- range seq 10 }}
+                    <div class="bangumi-skeleton-card">
+                        <div class="bangumi-skeleton-poster"></div>
+                        <div class="bangumi-skeleton-meta">
+                            <div class="bangumi-skeleton-line"></div>
+                            <div class="bangumi-skeleton-line is-short"></div>
+                        </div>
+                    </div>
+                    {{- end }}
+                </div>
+                <span class="bangumi-loading-text">Loading collection...</span>
+            </div>
+
+            <div id="bangumi-error" class="bangumi-error" hidden>
+                <span>Failed to load Bangumi data.</span>
+                <button id="bangumi-retry" type="button">Retry</button>
+            </div>
+
+            <div id="bangumi-content" class="bangumi-content" hidden>
+                <div class="bangumi-controls">
+                    <div id="bangumi-tabs" class="bangumi-tabs" role="tablist" aria-label="Collection status"></div>
+                    <div id="bangumi-toolbar" class="bangumi-toolbar" role="group" aria-label="Sort order"></div>
+                </div>
+                <div id="bangumi-grid" class="bangumi-grid"></div>
+                <nav id="bangumi-pagination" class="bangumi-pagination" aria-label="Pagination"></nav>
+            </div>
+        </div>
+    </section>
+
+    {{ $bangumiScript := resources.Get "ts/custom-bangumi.ts" | js.Build | minify | fingerprint }}
+    <script src="{{ $bangumiScript.RelPermalink }}" defer data-swup-reload-script></script>
+    <footer class="bangumi-page-footer">{{ partialCached "footer/footer" . }}</footer>
+</article>
 {{ end }}

@@ -2,8 +2,8 @@ import { getBangumiLanguage, getSortLabel, getStatusLabel, type BangumiLanguage 
 import { paginateItems, selectBangumiItems, itemsPerPage } from "./model";
 import type { BangumiElements, BangumiItem, BangumiState, CollectionStatus, SortField } from "./types";
 
-const statusKeys: CollectionStatus[] = ["all", "1", "2", "3", "4", "5"];
-const sortFields: SortField[] = ["rate", "updated_at", "date", "name"];
+const statusKeys: CollectionStatus[] = ["all", "3", "2", "1", "4", "5"];
+const sortFields: SortField[] = ["updated_at", "rate", "date", "name"];
 
 function countStatuses(items: BangumiItem[]): Record<CollectionStatus, number> {
   const counts: Record<CollectionStatus, number> = {
@@ -23,10 +23,9 @@ function countStatuses(items: BangumiItem[]): Record<CollectionStatus, number> {
 }
 
 function renderHeading(element: HTMLElement, count: number, language: BangumiLanguage): void {
-  element.replaceChildren(document.createTextNode(language === "zh" ? "动画 " : "Anime "));
-  const countElement = document.createElement("span");
-  countElement.textContent = String(count);
-  element.appendChild(countElement);
+  element.textContent = language === "zh"
+    ? `动画 · ${count}`
+    : `${count} Anime`;
 }
 
 function renderTabs(
@@ -43,10 +42,20 @@ function renderTabs(
     if (status !== "all" && counts[status] === 0) return;
 
     const button = document.createElement("button");
+    const active = state.activeStatus === status;
     button.type = "button";
-    button.className = "bangumi-tab-btn" + (state.activeStatus === status ? " active" : "");
-    button.textContent = getStatusLabel(status, language) + " (" + counts[status] + ")";
-    button.setAttribute("aria-pressed", String(state.activeStatus === status));
+    button.role = "tab";
+    button.className = "bangumi-tab-btn" + (active ? " active" : "");
+    button.setAttribute("aria-selected", String(active));
+
+    const label = document.createElement("span");
+    label.textContent = getStatusLabel(status, language);
+
+    const countEl = document.createElement("span");
+    countEl.className = "bangumi-tab-count";
+    countEl.textContent = String(counts[status]);
+
+    button.append(label, countEl);
     button.addEventListener("click", () => onChange(status));
     element.appendChild(button);
   });
@@ -60,24 +69,33 @@ function renderToolbar(
 ): void {
   element.replaceChildren();
 
-  const label = document.createElement("span");
-  label.textContent = language === "zh" ? "按 " : "By ";
-  element.appendChild(label);
-
   sortFields.forEach((field) => {
     const button = document.createElement("button");
     const active = state.sortBy === field;
     button.type = "button";
     button.className = "bangumi-sort-btn" + (active ? " active" : "");
-    button.textContent = getSortLabel(field, language);
     button.setAttribute("aria-pressed", String(active));
+
+    const label = document.createElement("span");
+    label.textContent = getSortLabel(field, language);
+    button.appendChild(label);
+
+    if (active) {
+      const dir = document.createElement("span");
+      dir.className = "bangumi-sort-dir" + (state.sortOrder === "asc" ? " is-asc" : "");
+      dir.setAttribute("aria-hidden", "true");
+      dir.innerHTML =
+        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M12 5v14" />' +
+        '<path d="M16 15l-4 4" />' +
+        '<path d="M8 15l4 4" />' +
+        "</svg>";
+      button.appendChild(dir);
+    }
+
     button.addEventListener("click", () => onChange(field));
     element.appendChild(button);
   });
-
-  const direction = document.createElement("span");
-  direction.textContent = language === "zh" ? " 排序" : " Sort";
-  element.appendChild(direction);
 }
 
 function safeImageUrl(value: string | undefined): string | null {
@@ -97,10 +115,9 @@ function createBangumiCard(item: BangumiItem, language: BangumiLanguage): HTMLAn
   card.target = "_blank";
   card.rel = "noopener noreferrer";
 
-  const coverContainer = document.createElement("div");
-  coverContainer.className = "bangumi-card-cover-container";
   const cover = document.createElement("div");
   cover.className = "bangumi-card-cover";
+
   const imageUrl = safeImageUrl(item.subject.images?.common) ??
     safeImageUrl(item.subject.images?.medium) ??
     safeImageUrl(item.subject.images?.small) ??
@@ -116,61 +133,70 @@ function createBangumiCard(item: BangumiItem, language: BangumiLanguage): HTMLAn
     cover.appendChild(image);
   }
 
-  const overlay = document.createElement("div");
-  overlay.className = "bangumi-card-overlay";
+  const badges = document.createElement("div");
+  badges.className = "bangumi-card-badges";
 
   const status = String(item.type);
   const statusLabel = ["1", "2", "3", "4", "5"].includes(status)
     ? getStatusLabel(status as CollectionStatus, language)
     : language === "zh" ? "未知" : "Unknown";
-  const statusElement = document.createElement("div");
+  const statusElement = document.createElement("span");
   statusElement.className = "bangumi-card-status status-" + status;
-  statusElement.textContent = statusLabel;
-  overlay.appendChild(statusElement);
+
+  const statusDot = document.createElement("span");
+  statusDot.className = "bangumi-status-dot";
+  statusDot.setAttribute("aria-hidden", "true");
+  statusElement.append(statusDot, document.createTextNode(statusLabel));
+  badges.appendChild(statusElement);
 
   const score = item.rate || item.subject.score;
   if (score) {
-    const scoreElement = document.createElement("div");
+    const scoreElement = document.createElement("span");
     scoreElement.className = "bangumi-card-score";
-    scoreElement.textContent = "★ " + score;
-    overlay.appendChild(scoreElement);
+    const star = document.createElement("span");
+    star.className = "bangumi-score-star";
+    star.setAttribute("aria-hidden", "true");
+    star.textContent = "★";
+    scoreElement.append(star, document.createTextNode(String(score)));
+    badges.appendChild(scoreElement);
   }
 
-  const bottomInfo = document.createElement("div");
-  bottomInfo.className = "bangumi-card-bottom-info";
+  cover.appendChild(badges);
+  card.appendChild(cover);
+
+  const body = document.createElement("div");
+  body.className = "bangumi-card-body";
+
   const title = document.createElement("div");
   title.className = "bangumi-card-title";
   title.textContent = language === "zh"
     ? item.subject.name_cn || item.subject.name
     : item.subject.name;
-  const year = document.createElement("div");
-  year.className = "bangumi-card-year";
-  year.textContent = item.subject.date ? item.subject.date.slice(0, 4) : "-";
-  bottomInfo.append(title, year);
-  overlay.appendChild(bottomInfo);
+  body.appendChild(title);
 
-  cover.appendChild(overlay);
-  coverContainer.appendChild(cover);
-  card.appendChild(coverContainer);
+  const metaRow = document.createElement("div");
+  metaRow.className = "bangumi-card-meta-row";
+
+  const year = document.createElement("span");
+  year.className = "bangumi-card-year";
+  year.textContent = item.subject.date ? item.subject.date.slice(0, 4) : "—";
+  metaRow.appendChild(year);
 
   const tags = item.subject.tags ?? [];
   if (tags.length > 0) {
     const tagContainer = document.createElement("div");
     tagContainer.className = "bangumi-card-tags";
-    tags.slice(0, 3).forEach((tag) => {
+    tags.slice(0, 2).forEach((tag) => {
       const tagElement = document.createElement("span");
       tagElement.className = "bangumi-card-tag";
       tagElement.textContent = tag.name;
       tagContainer.appendChild(tagElement);
     });
-    if (tags.length > 3) {
-      const more = document.createElement("span");
-      more.className = "bangumi-card-tag";
-      more.textContent = "+ " + (tags.length - 3);
-      tagContainer.appendChild(more);
-    }
-    card.appendChild(tagContainer);
+    metaRow.appendChild(tagContainer);
   }
+
+  body.appendChild(metaRow);
+  card.appendChild(body);
 
   return card;
 }
@@ -190,7 +216,7 @@ function renderGrid(
   if (pageItems.length === 0) {
     const empty = document.createElement("p");
     empty.className = "bangumi-empty";
-    empty.textContent = language === "zh" ? "没有数据" : "No data";
+    empty.textContent = language === "zh" ? "暂无条目" : "No entries";
     element.appendChild(empty);
   } else {
     pageItems.forEach((item) => element.appendChild(createBangumiCard(item, language)));
@@ -210,11 +236,14 @@ function renderPagination(
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   if (totalPages <= 1) return;
 
-  const addButton = (page: number, label: string): void => {
+  const addButton = (page: number, content: string | HTMLElement, ariaLabel?: string): void => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "bangumi-page-btn" + (state.currentPage === page ? " active" : "");
-    button.textContent = label;
+    if (typeof content === "string") button.textContent = content;
+    else button.appendChild(content);
+    if (ariaLabel) button.setAttribute("aria-label", ariaLabel);
+
     if (state.currentPage === page) {
       button.setAttribute("aria-current", "page");
     } else {
@@ -223,17 +252,46 @@ function renderPagination(
     element.appendChild(button);
   };
 
-  if (state.currentPage > 1) addButton(state.currentPage - 1, language === "zh" ? "上一页" : "Prev");
+  const addEllipsis = (): void => {
+    const span = document.createElement("span");
+    span.className = "bangumi-page-ellipsis";
+    span.setAttribute("aria-hidden", "true");
+    span.textContent = "…";
+    element.appendChild(span);
+  };
+
+  const makeChevron = (direction: "prev" | "next"): HTMLElement => {
+    const wrap = document.createElement("span");
+    wrap.style.display = "inline-flex";
+    wrap.innerHTML = direction === "prev"
+      ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6" /></svg>'
+      : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>';
+    return wrap;
+  };
+
+  if (state.currentPage > 1) {
+    addButton(
+      state.currentPage - 1,
+      makeChevron("prev"),
+      language === "zh" ? "上一页" : "Previous page",
+    );
+  }
 
   const start = Math.max(1, state.currentPage - 2);
   const end = Math.min(totalPages, state.currentPage + 2);
   if (start > 1) addButton(1, "1");
-  if (start > 2) element.appendChild(document.createTextNode("..."));
+  if (start > 2) addEllipsis();
   for (let page = start; page <= end; page += 1) addButton(page, String(page));
-  if (end < totalPages - 1) element.appendChild(document.createTextNode("..."));
+  if (end < totalPages - 1) addEllipsis();
   if (end < totalPages) addButton(totalPages, String(totalPages));
 
-  if (state.currentPage < totalPages) addButton(state.currentPage + 1, language === "zh" ? "下一页" : "Next");
+  if (state.currentPage < totalPages) {
+    addButton(
+      state.currentPage + 1,
+      makeChevron("next"),
+      language === "zh" ? "下一页" : "Next page",
+    );
+  }
 }
 
 export function renderBangumiView(
