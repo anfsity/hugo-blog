@@ -11,6 +11,7 @@ interface MusicConfig {
 
 interface APlayerInstance {
   on(event: "play" | "pause" | "ended" | "error", callback: () => void): void;
+  volume(percentage: number, nostorage?: boolean, nonotice?: boolean): number;
 }
 
 interface APlayerOptions {
@@ -169,6 +170,65 @@ async function mountPlayer(container: HTMLElement, config: MusicConfig): Promise
   player.on("pause", () => setPlayingState(false));
   player.on("ended", () => setPlayingState(false));
   player.on("error", () => setPlayingState(false));
+
+  installFixedVolumeSlider(container, player);
+}
+
+/**
+ * APlayer computes volume coordinates via offsetTop - documentElement.scrollTop when
+ * options.fixed is false, which breaks inside a position:fixed host container once the
+ * page scrolls. Intercept slider interactions in capture phase and use getBoundingClientRect().
+ */
+function installFixedVolumeSlider(container: HTMLElement, player: APlayerInstance): void {
+  const volumeWrap = container.querySelector<HTMLElement>(".aplayer-volume-wrap");
+  const volumeBarWrap = container.querySelector<HTMLElement>(".aplayer-volume-bar-wrap");
+  const volumeBar = container.querySelector<HTMLElement>(".aplayer-volume-bar");
+  if (!volumeWrap || !volumeBarWrap || !volumeBar || typeof player.volume !== "function") return;
+
+  const setVolumeFromClientY = (clientY: number): void => {
+    const rect = volumeBar.getBoundingClientRect();
+    if (rect.height <= 0) return;
+    const percentage = Math.min(1, Math.max(0, (rect.bottom - clientY) / rect.height));
+    player.volume(percentage, false, true);
+  };
+
+  let activePointerId: number | null = null;
+
+  // Block APlayer's legacy mousedown/touchstart slider handlers (which use scrollTop math).
+  const blockLegacyHandler = (event: Event): void => {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  };
+  volumeBarWrap.addEventListener("mousedown", blockLegacyHandler, { capture: true });
+  volumeBarWrap.addEventListener("touchstart", blockLegacyHandler, { capture: true });
+  volumeBarWrap.addEventListener("click", (event) => event.stopPropagation());
+
+  volumeBarWrap.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 && event.pointerType === "mouse") return;
+    event.preventDefault();
+    event.stopPropagation();
+    activePointerId = event.pointerId;
+    volumeWrap.classList.add("is-dragging");
+    volumeBarWrap.setPointerCapture(event.pointerId);
+    setVolumeFromClientY(event.clientY);
+  });
+
+  volumeBarWrap.addEventListener("pointermove", (event) => {
+    if (event.pointerId !== activePointerId) return;
+    setVolumeFromClientY(event.clientY);
+  });
+
+  const endDrag = (event: PointerEvent): void => {
+    if (event.pointerId !== activePointerId) return;
+    activePointerId = null;
+    volumeWrap.classList.remove("is-dragging");
+    if (volumeBarWrap.hasPointerCapture(event.pointerId)) {
+      volumeBarWrap.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  volumeBarWrap.addEventListener("pointerup", endDrag);
+  volumeBarWrap.addEventListener("pointercancel", endDrag);
 }
 
 export async function initMusicPlayer(): Promise<void> {
