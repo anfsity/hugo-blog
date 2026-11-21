@@ -214,7 +214,7 @@ params:
         urls:
             - "https://music.163.com/#/playlist?id=2921261234"
         autoPlay: false
-        theme: "#2980b9"
+        theme: "#34495e"
 
 ### Custom menu
 ### See https://stack.jimmycai.com/config/menu

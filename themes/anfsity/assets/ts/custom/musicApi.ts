@@ -6,8 +6,14 @@ export interface ParsedMusicUrl {
 
 export interface MetingTrack {
   url: string;
+  name?: string;
+  artist?: string;
+  cover?: string;
+  lrc?: string;
   [key: string]: unknown;
 }
+
+const REQUEST_TIMEOUT_MS = 8000;
 
 const urlRules: Array<[RegExp, ParsedMusicUrl["server"], ParsedMusicUrl["type"]]> = [
   [/music\.163\.com.*song.*id=(\d+)/, "netease", "song"],
@@ -32,6 +38,9 @@ export async function fetchMetingTracks(
   request: ParsedMusicUrl,
   apiUrl: string,
 ): Promise<MetingTrack[]> {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
   try {
     const url = new URL(apiUrl, document.baseURI);
     url.search = new URLSearchParams({
@@ -40,7 +49,7 @@ export async function fetchMetingTracks(
       id: request.id,
     }).toString();
 
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: controller.signal });
     if (!response.ok) return [];
 
     const payload: unknown = await response.json();
@@ -52,5 +61,7 @@ export async function fetchMetingTracks(
     });
   } catch {
     return [];
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 }
