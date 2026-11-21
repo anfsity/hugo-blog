@@ -24,15 +24,15 @@
             <div class="search-result--list article-list--compact"></div>
         </div>
         
-        <script>
+        <script data-swup-reload-script>
             window.searchResultTitleTemplate = "{{ T `search.resultTitle` }}"
         </script>
 
         {{- $opts := dict "minify" hugo.IsProduction "JSXFactory" "createElement" -}}
         {{- $searchScript := resources.Get "ts/search.tsx" | js.Build $opts -}}
-        <script type="text/javascript" src="{{ $searchScript.RelPermalink }}" defer></script>
+        <script type="text/javascript" src="{{ $searchScript.RelPermalink }}" defer data-swup-reload-script></script>
 
-        <script>
+        <script data-swup-reload-script>
             const wrongUrl = new URL(window.location.href);
 
             /// Get the search keyword from the wrong URL by removing all slashes and dashes

@@ -4,6 +4,7 @@ declare global {
         PhotoSwipeUI_Default: any;
         __anfsityLightbox?: {
             openImage(image: HTMLImageElement): boolean;
+            close(): void;
         };
     }
 }

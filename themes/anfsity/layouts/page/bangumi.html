@@ -21,6 +21,6 @@
 </div>
 
 {{ $bangumiScript := resources.Get "ts/custom-bangumi.ts" | js.Build | minify | fingerprint }}
-<script src="{{ $bangumiScript.RelPermalink }}" defer></script>
+<script src="{{ $bangumiScript.RelPermalink }}" defer data-swup-reload-script></script>
 {{ partialCached "footer/footer" . }}
 {{ end }}

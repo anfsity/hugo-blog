@@ -10,7 +10,7 @@ import { getColor } from 'ts/color';
 import menu from 'ts/menu';
 import createElement from 'ts/createElement';
 import StackColorScheme from 'ts/colorScheme';
-import { setupScrollspy } from 'ts/scrollspy';
+import { setupScrollspy, cleanupScrollspy } from 'ts/scrollspy';
 import { setupSmoothAnchors } from "ts/smoothAnchors";
 
 let Stack = {
@@ -25,6 +25,8 @@ let Stack = {
             new StackGallery(articleContent);
             setupSmoothAnchors();
             setupScrollspy();
+        } else {
+            cleanupScrollspy();
         }
 
         /**
@@ -67,6 +69,8 @@ let Stack = {
             copiedText = `Copied!`;
 
         highlights.forEach(highlight => {
+            if (highlight.querySelector('.copyCodeButton')) return;
+
             const copyButton = document.createElement('button');
             copyButton.innerHTML = copyText;
             copyButton.classList.add('copyCodeButton');

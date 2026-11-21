@@ -1,4 +1,4 @@
-import { initBackToTop } from "./custom/backToTop";
+import { initBackToTop, updateBackToTop } from "./custom/backToTop";
 import { initCodeBlockToggles } from "./custom/codeBlocks";
 import { initDynamicQuote } from "./custom/dynamicQuote";
 import { initFluentGallery } from "./custom/fluentGallery";
@@ -18,6 +18,7 @@ declare global {
 }
 
 function initPageFeatures(): void {
+  updateBackToTop();
   initTableOfContents();
   initCodeBlockToggles();
   initSubsectionScroll();

@@ -15,38 +15,44 @@
     data-loading="{{- .loading -}}"
     crossorigin="anonymous"
     async
+    data-swup-reload-script
 ></script>
-<script>
-    function setGiscusTheme(theme) {
-        let giscus = document.querySelector("iframe.giscus-frame");
-        if (giscus) {
-            giscus.contentWindow.postMessage(
-                {
-                    giscus: {
-                        setConfig: {
-                            theme: theme,
+<script data-swup-reload-script>
+    (function () {
+        function setGiscusTheme(theme) {
+            const giscus = document.querySelector("iframe.giscus-frame");
+            if (giscus && giscus.contentWindow) {
+                giscus.contentWindow.postMessage(
+                    {
+                        giscus: {
+                            setConfig: {
+                                theme: theme,
+                            },
                         },
                     },
-                },
-                "https://giscus.app"
-            );
+                    "https://giscus.app"
+                );
+            }
         }
-    }
 
-    (function () {
-        addEventListener("message", (e) => {
-            if (event.origin !== "https://giscus.app") return;
-            handler();
-        });
-        window.addEventListener("onColorSchemeChange", handler);
-
-        function handler() {
+        function syncGiscusTheme() {
             if (document.documentElement.dataset.scheme === "light") {
                 setGiscusTheme('{{- default "light" .lightTheme -}}');
             } else {
                 setGiscusTheme('{{- default "dark_dimmed" .darkTheme -}}');
             }
         }
+
+        if (!window.__anfsityGiscusBound) {
+            window.__anfsityGiscusBound = true;
+            window.addEventListener("message", function (e) {
+                if (e.origin !== "https://giscus.app") return;
+                syncGiscusTheme();
+            });
+            window.addEventListener("onColorSchemeChange", syncGiscusTheme);
+        }
+
+        syncGiscusTheme();
     })();
 </script>
 {{- end -}}

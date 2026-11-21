@@ -13,6 +13,7 @@ declare global {
   interface Window {
     __anfsityLightbox?: {
       openImage(image: HTMLImageElement): boolean;
+      close(): void;
     };
   }
 }
@@ -428,6 +429,7 @@ export function initLightbox(): void {
 
   window.__anfsityLightbox = {
     openImage: openForImage,
+    close,
   };
 
   elements.image.addEventListener("load", () => {

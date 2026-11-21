@@ -29,7 +29,10 @@ function handleTocClick(event: MouseEvent): void {
 
   event.preventDefault();
   target.scrollIntoView({ behavior: "smooth" });
-  history.replaceState(null, "", "#" + targetId);
+  const state = window.history.state && typeof window.history.state === "object"
+    ? { ...window.history.state }
+    : window.history.state;
+  history.replaceState(state, "", "#" + targetId);
 }
 
 let scrollListenerInstalled = false;

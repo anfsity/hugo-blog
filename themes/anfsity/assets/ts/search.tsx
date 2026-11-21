@@ -319,21 +319,29 @@ declare global {
     }
 }
 
-window.addEventListener('load', () => {
-    setTimeout(function () {
-        const searchForm = document.querySelector('.search-form') as HTMLFormElement,
-            searchInput = searchForm.querySelector('input') as HTMLInputElement,
-            searchResultList = document.querySelector('.search-result--list') as HTMLDivElement,
-            searchResultTitle = document.querySelector('.search-result--title') as HTMLHeadingElement;
+function initSearchPage() {
+    const searchForm = document.querySelector('.search-form') as HTMLFormElement | null;
+    if (!searchForm || searchForm.dataset.searchInitialized === 'true') return;
 
-        new Search({
-            form: searchForm,
-            input: searchInput,
-            list: searchResultList,
-            resultTitle: searchResultTitle,
-            resultTitleTemplate: window.searchResultTitleTemplate
-        });
-    }, 0);
-})
+    const searchInput = searchForm.querySelector('input') as HTMLInputElement | null,
+        searchResultList = document.querySelector('.search-result--list') as HTMLDivElement | null,
+        searchResultTitle = document.querySelector('.search-result--title') as HTMLHeadingElement | null;
+    if (!searchInput || !searchResultList || !searchResultTitle) return;
+
+    searchForm.dataset.searchInitialized = 'true';
+    new Search({
+        form: searchForm,
+        input: searchInput,
+        list: searchResultList,
+        resultTitle: searchResultTitle,
+        resultTitleTemplate: window.searchResultTitleTemplate
+    });
+}
+
+if (document.readyState === 'loading') {
+    window.addEventListener('load', () => setTimeout(initSearchPage, 0), { once: true });
+} else {
+    setTimeout(initSearchPage, 0);
+}
 
 export default Search;

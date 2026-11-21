@@ -1,5 +1,7 @@
 type colorScheme = 'light' | 'dark' | 'auto';
 
+let activeMatchMediaCleanup: (() => void) | null = null;
+
 class StackColorScheme {
     private localStorageKey = 'StackColorScheme';
     private currentScheme: colorScheme;
@@ -15,8 +17,10 @@ class StackColorScheme {
 
         this.dispatchEvent(document.documentElement.dataset.scheme as colorScheme);
 
-        if (toggleEl)
+        if (toggleEl && toggleEl.dataset.colorSchemeBound !== 'true') {
+            toggleEl.dataset.colorSchemeBound = 'true';
             this.bindClick(toggleEl);
+        }
 
         if (document.body.style.transition == '')
             document.body.style.setProperty('transition', 'background-color .3s ease');
@@ -77,7 +81,13 @@ class StackColorScheme {
     }
 
     private bindMatchMedia() {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (activeMatchMediaCleanup) {
+            activeMatchMediaCleanup();
+            activeMatchMediaCleanup = null;
+        }
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const onChange = (e: MediaQueryListEvent) => {
             if (e.matches) {
                 this.systemPreferScheme = 'dark';
             }
@@ -85,7 +95,10 @@ class StackColorScheme {
                 this.systemPreferScheme = 'light';
             }
             this.setBodyClass();
-        });
+        };
+
+        mediaQuery.addEventListener('change', onChange);
+        activeMatchMediaCleanup = () => mediaQuery.removeEventListener('change', onChange);
     }
 }
 

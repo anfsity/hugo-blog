@@ -50,22 +50,30 @@ function computeOffsets(headers: NodeListOf<Element>) {
     return sectionsOffsets;
 }
 
+let activeCleanup: (() => void) | null = null;
+
+function cleanupScrollspy() {
+    if (activeCleanup) {
+        activeCleanup();
+        activeCleanup = null;
+    }
+}
+
 function setupScrollspy() {
+    cleanupScrollspy();
+
     let headers = document.querySelectorAll(headersQuery);
-    if (!headers) {
-        console.warn("No header matched query", headers);
+    if (!headers.length) {
         return;
     }
 
     let scrollableNavigation = document.querySelector(tocQuery) as HTMLElement | undefined;
     if (!scrollableNavigation) {
-        console.warn("No toc matched query", tocQuery);
         return;
     }
 
     let navigation = document.querySelectorAll(navigationQuery);
-    if (!navigation) {
-        console.warn("No navigation matched query", navigationQuery);
+    if (!navigation.length) {
         return;
     }
 
@@ -74,8 +82,10 @@ function setupScrollspy() {
     // We need to avoid scrolling when the user is actively interacting with the ToC. Otherwise, if the user clicks on a link in the ToC,
     // we would scroll their view, which is not optimal usability-wise.
     let tocHovered: boolean = false;
-    scrollableNavigation.addEventListener("mouseenter", debounced(() => tocHovered = true));
-    scrollableNavigation.addEventListener("mouseleave", debounced(() => tocHovered = false));
+    const onTocEnter = debounced(() => tocHovered = true);
+    const onTocLeave = debounced(() => tocHovered = false);
+    scrollableNavigation.addEventListener("mouseenter", onTocEnter);
+    scrollableNavigation.addEventListener("mouseleave", onTocLeave);
 
     let activeSectionLink: Element;
 
@@ -119,7 +129,8 @@ function setupScrollspy() {
         }
     }
 
-    window.addEventListener("scroll", debounced(scrollHandler));
+    const debouncedScroll = debounced(scrollHandler);
+    window.addEventListener("scroll", debouncedScroll, { passive: true });
     
     // Resizing may cause the offset values to change: recompute them.
     function resizeHandler() {
@@ -127,14 +138,25 @@ function setupScrollspy() {
         scrollHandler();
     }
 
+    const debouncedResize = debounced(resizeHandler);
+
     // Use ResizeObserver to detect changes in the size of .article-content
+    let resizeObserver: ResizeObserver | null = null;
     const articleContent = document.querySelector(".article-content");
     if (articleContent) {
-        const resizeObserver = new ResizeObserver(debounced(resizeHandler));
+        resizeObserver = new ResizeObserver(debouncedResize);
         resizeObserver.observe(articleContent);
     }
 
-    window.addEventListener("resize", debounced(resizeHandler));
+    window.addEventListener("resize", debouncedResize);
+
+    activeCleanup = () => {
+        window.removeEventListener("scroll", debouncedScroll);
+        window.removeEventListener("resize", debouncedResize);
+        scrollableNavigation.removeEventListener("mouseenter", onTocEnter);
+        scrollableNavigation.removeEventListener("mouseleave", onTocLeave);
+        resizeObserver?.disconnect();
+    };
 }
 
-export { setupScrollspy };
+export { setupScrollspy, cleanupScrollspy };

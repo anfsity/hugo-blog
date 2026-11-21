@@ -22,8 +22,9 @@ function setupSmoothAnchors() {
             clickEvent.preventDefault();
 
             const targetId = decodeURI(href.substring(1)),
-                target = document.getElementById(targetId) as HTMLElement,
-                offset = target.getBoundingClientRect().top - document.documentElement.getBoundingClientRect().top;
+                target = document.getElementById(targetId) as HTMLElement | null;
+            if (!target) return;
+            const offset = target.getBoundingClientRect().top - document.documentElement.getBoundingClientRect().top;
 
             // Turbo Drive stores metadata in history.state. Overwriting it (e.g. with {}) can break back/forward.
             const currentState = window.history.state;

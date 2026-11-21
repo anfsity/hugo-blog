@@ -1,7 +1,7 @@
 {{- $defaultColorScheme := default "auto" .Site.Params.colorScheme.default -}}
 {{- if not (default false .Site.Params.colorScheme.toggle) -}}
     {{/* If toggle is disabled, force default scheme */}}
-    <script>
+    <script data-swup-ignore-script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
             localStorage.setItem(colorSchemeKey, "{{ $defaultColorScheme }}");
@@ -9,7 +9,7 @@
     </script>
 {{- else -}}
     {{/* Otherwise set to default scheme only if no preference is set by user */}}
-    <script>
+    <script data-swup-ignore-script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
             if(!localStorage.getItem(colorSchemeKey)){
@@ -19,7 +19,7 @@
     </script>
 {{- end -}}
 
-<script>
+<script data-swup-ignore-script>
     (function() {
         const colorSchemeKey = 'StackColorScheme';
         const colorSchemeItem = localStorage.getItem(colorSchemeKey);

@@ -1,4 +1,4 @@
-function updateBackToTop(): void {
+export function updateBackToTop(): void {
   const button = document.getElementById("back-to-top");
   if (!button) return;
 
@@ -6,8 +6,10 @@ function updateBackToTop(): void {
   const validHeight = document.documentElement.scrollHeight - window.innerHeight;
   const progress = button.querySelector<HTMLElement>(".progress-num");
 
-  if (progress && validHeight > 0) {
-    const percent = Math.min(100, Math.max(0, Math.round((scrollTop / validHeight) * 100)));
+  if (progress) {
+    const percent = validHeight > 0
+      ? Math.min(100, Math.max(0, Math.round((scrollTop / validHeight) * 100)))
+      : 0;
     progress.textContent = percent + "%";
   }
 

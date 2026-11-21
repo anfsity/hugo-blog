@@ -5,6 +5,7 @@ interface SwupVisit {
 }
 
 interface SwupHooks {
+  on(name: "visit:start", callback: () => void): void;
   on(name: "content:replace", callback: (visit: SwupVisit) => void): void;
   on(name: "page:view", callback: () => void): void;
 }
@@ -43,7 +44,9 @@ export function initSwup(onPageView: PageInitializer): void {
 
   const plugins: object[] = [];
   if (swupWindow.SwupScriptsPlugin) {
-    plugins.push(new swupWindow.SwupScriptsPlugin({ head: true, body: true, optin: false }));
+    // Only re-run page-local scripts explicitly opted in with data-swup-reload-script,
+    // so global head/footer scripts (Swup, APlayer, main.js, custom.js) never re-execute.
+    plugins.push(new swupWindow.SwupScriptsPlugin({ head: false, body: true, optin: true }));
   }
   if (swupWindow.SwupBodyClassPlugin) plugins.push(new swupWindow.SwupBodyClassPlugin());
   if (swupWindow.SwupHeadPlugin) plugins.push(new swupWindow.SwupHeadPlugin());
@@ -51,6 +54,9 @@ export function initSwup(onPageView: PageInitializer): void {
   try {
     const swup = new Swup({ containers: ["#swup"], plugins });
     swupWindow.__anfsitySwup = swup;
+    swup.hooks.on("visit:start", () => {
+      window.__anfsityLightbox?.close();
+    });
     swup.hooks.on("content:replace", syncDocumentMetadata);
     swup.hooks.on("page:view", () => {
       const stackWindow = window as Window & { Stack?: { init?: () => void } };
