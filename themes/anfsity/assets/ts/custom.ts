@@ -2,6 +2,7 @@ import { initBackToTop } from "./custom/backToTop";
 import { initCodeBlockToggles } from "./custom/codeBlocks";
 import { initDynamicQuote } from "./custom/dynamicQuote";
 import { initFluentGallery } from "./custom/fluentGallery";
+import { initImageCaptions } from "./custom/imageCaptions";
 import { initLightbox } from "./custom/lightbox";
 import { renderPageMath } from "./custom/math";
 import { initMermaid } from "./custom/mermaid";
@@ -21,6 +22,7 @@ function initPageFeatures(): void {
   initCodeBlockToggles();
   initSubsectionScroll();
   initFluentGallery();
+  initImageCaptions();
   initDynamicQuote();
   void initMermaid();
   void renderPageMath();

@@ -25,6 +25,8 @@
 	{{- end -}}
 {{- end -}}
 
+{{- $showCaption := and (not $galleryImage) $alt (ne $alt "image") (not (or (strings.HasPrefix $alt "http://") (strings.HasPrefix $alt "https://"))) -}}
+
 <img src="{{ $Permalink }}"
 	{{ with $Width }}width="{{ . }}"{{ end }}
 	{{ with $Height }}height="{{ . }}"{{ end }}
@@ -32,6 +34,9 @@
 	loading="lazy"
 	{{ with $alt }}
 		alt="{{ . }}"
+	{{ end }}
+	{{ if $showCaption }}
+		data-caption="{{ $alt }}"
 	{{ end }}
 	{{ if $galleryImage }}
 		class="gallery-image" 
