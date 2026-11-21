@@ -76,20 +76,10 @@ function updateStatus(mode: "loading" | "error" | "hidden", message = ""): void 
 
 function setPlayingState(playing: boolean): void {
   const button = document.getElementById("music-player-widget");
-  const panel = document.getElementById("music-panel");
-  const label = document.getElementById("music-panel-label");
+  if (!button) return;
 
-  if (button) {
-    if (playing) button.setAttribute("data-play", "true");
-    else button.removeAttribute("data-play");
-  }
-  if (panel) {
-    if (playing) panel.setAttribute("data-play", "true");
-    else panel.removeAttribute("data-play");
-  }
-  if (label) {
-    label.textContent = playing ? "NOW PLAYING" : "PLAYLIST";
-  }
+  if (playing) button.setAttribute("data-play", "true");
+  else button.removeAttribute("data-play");
 }
 
 function installPanelHandlers(onRetry: () => void): void {
@@ -99,7 +89,6 @@ function installPanelHandlers(onRetry: () => void): void {
   document.addEventListener("click", (event) => {
     const button = document.getElementById("music-player-widget");
     const panel = document.getElementById("music-panel");
-    const closeButton = document.getElementById("music-panel-close");
     const retryButton = document.getElementById("music-retry");
     if (!button || !panel) return;
 
@@ -114,11 +103,6 @@ function installPanelHandlers(onRetry: () => void): void {
 
     if (isInside(retryButton)) {
       onRetry();
-      return;
-    }
-
-    if (isInside(closeButton)) {
-      setPanelOpen(false);
       return;
     }
 
