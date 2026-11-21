@@ -1,0 +1,3 @@
+{{- $pages := .Pages | complement .Sections -}}
+{{- $notHidden := where $pages "Params.hidden" "!=" true -}}
+{{- return (.Paginate $notHidden.ByDate 12) -}}

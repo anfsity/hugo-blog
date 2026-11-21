@@ -19,8 +19,12 @@
     <!-- Taxonomy page -->
 
     <!-- Build paginator -->
-    {{ $notHidden := where .Pages "Params.hidden" "!=" true }}
-    {{ $pag := .Paginate ($notHidden) }}
+    {{- if .Params.on_topic -}}
+        {{ $pag := partial "topic/paginator.html" . }}
+    {{- else -}}
+        {{ $notHidden := where .Pages "Params.hidden" "!=" true }}
+        {{ $pag := .Paginate ($notHidden) }}
+    {{- end -}}
 
     <!-- {TAXONOMY_TYPE}: {TAXONOMY_TERM} -->
     {{ $title = slice (title .Data.Singular) ": " $title }}

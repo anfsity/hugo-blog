@@ -1,9 +1,8 @@
-{{ $page := .Page }}
-{{ $pages := .Pages }}
-{{ $paginator := $page.Paginate $pages.ByDate }}
+{{- $paginator := partial "topic/paginator.html" . -}}
+{{- $offset := mul (sub $paginator.PageNumber 1) $paginator.PagerSize -}}
 
-<section class="article-list--timeline"{{ with $page.Params.style }} style="--topic-accent: {{ .background }};"{{ end }}>
-    {{ range $paginator.Pages }}
-        {{ partial "article-list/timeline" . }}
-    {{ end }}
+<section class="article-list--timeline"{{ with .Params.style }} style="--topic-accent: {{ .background }};"{{ end }}>
+    {{- range $index, $item := $paginator.Pages -}}
+        {{- partial "article-list/timeline" (dict "Page" $item "Index" (add $offset (add $index 1)) "TopicTitle" $.Title) -}}
+    {{- end -}}
 </section>
