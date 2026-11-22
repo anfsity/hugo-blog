@@ -9,7 +9,7 @@
         {{ with .Site.Params.sidebar.avatar }}
             {{ if (default true .enabled) }}
             <figure class="site-avatar">
-                <a href="{{ .Site.BaseURL | relLangURL }}">
+                <a href="{{ $.Site.BaseURL | relLangURL }}">
                 {{ if not .local }}
                     <img src="{{ .src }}" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
                 {{ else }}
@@ -77,17 +77,16 @@
         <li class="menu-bottom-section">
             <ol class="menu">
                 {{- $currentLanguageCode := .Language.Lang -}}
-                {{- $currentUrl := .RelPermalink -}}
                 {{ if ( compare.Gt .Site.Home.AllTranslations.Len 1 ) }}
                     {{ range .Site.Home.AllTranslations }}
                         {{ if ne .Language.Lang $currentLanguageCode }}
-                            {{ $targetUrl := "" }}
-                            {{ if eq .Language.Lang "en" }}
-                                {{ $targetUrl = print "/en" $currentUrl }}
-                            {{ else }}
-                                {{ $targetUrl = strings.TrimPrefix "/en" $currentUrl }}
-                                {{ if eq $targetUrl "" }}{{ $targetUrl = "/" }}{{ end }}
-                            {{ end }}
+                            {{- $langCode := .Language.Lang -}}
+                            {{- $targetUrl := .RelPermalink -}}
+                            {{- range $currentPage.Translations -}}
+                                {{- if eq .Language.Lang $langCode -}}
+                                    {{- $targetUrl = .RelPermalink -}}
+                                {{- end -}}
+                            {{- end -}}
                             <li id="i18n-switch">  
                                 <a href="{{ $targetUrl }}" data-no-swup style="display: flex; align-items: center; gap: var(--menu-icon-separation); color: inherit; text-decoration: none; padding: 0; width: 100%;">
                                     {{ partial "helper/icon" "language" }}

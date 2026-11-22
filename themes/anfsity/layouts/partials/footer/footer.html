@@ -24,15 +24,12 @@
 
     <!-- Add total page and word count time -->
     <section class="totalcount">
-        {{$scratch := newScratch}}
-        {{ range (where .Site.Pages "Kind" "page" )}}
-        {{$scratch.Add "total" .WordCount}}
-        {{ end }}
-        Published {{ len (where .Site.RegularPages "Section" "post") }} aritcles ·
-        {{ $totalWordCount := 0 }}
-        {{ range (where .Site.RegularPages "Section" "post") }}
-            {{ $totalWordCount = add $totalWordCount .WordCount }}
-        {{ end }}
+        {{- $posts := where .Site.RegularPages "Section" "post" -}}
+        {{- $totalWordCount := 0 -}}
+        {{- range $posts -}}
+            {{- $totalWordCount = add $totalWordCount .WordCount -}}
+        {{- end -}}
+        Published {{ len $posts }} articles ·
         Total {{ div $totalWordCount 1000.0 | lang.FormatNumber 2 }}k words
     </section>
 
