@@ -1,7 +1,5 @@
 declare global {
     interface Window {
-        PhotoSwipe: any;
-        PhotoSwipeUI_Default: any;
         __anfsityLightbox?: {
             openImage(image: HTMLImageElement): boolean;
             close(): void;
@@ -9,50 +7,10 @@ declare global {
     }
 }
 
-interface PhotoSwipeItem {
-    w: number;
-    h: number;
-    src: string;
-    msrc: string;
-    title?: string;
-    el: HTMLElement;
-}
-
 class StackGallery {
-    private galleryUID: number;
-    private items: PhotoSwipeItem[] = [];
-
-    constructor(container: HTMLElement, galleryUID = 1) {
-        this.galleryUID = galleryUID;
-
+    constructor(container: HTMLElement) {
         StackGallery.createGallery(container);
-        this.loadItems(container);
-        this.bindClick();
-    }
-
-    private loadItems(container: HTMLElement) {
-        this.items = [];
-
-        const figures = container.querySelectorAll('figure.gallery-image');
-
-        for (const el of figures) {
-            const figcaption = el.querySelector('figcaption'),
-                img = el.querySelector('img');
-
-            let aux: PhotoSwipeItem = {
-                w: parseInt(img.getAttribute('width')),
-                h: parseInt(img.getAttribute('height')),
-                src: img.src,
-                msrc: img.getAttribute('data-thumb') || img.currentSrc || img.src,
-                el: el
-            }
-
-            if (figcaption) {
-                aux.title = figcaption.innerHTML;
-            }
-
-            this.items.push(aux);
-        }
+        this.bindClick(container);
     }
 
     public static createGallery(container: HTMLElement) {
@@ -153,42 +111,19 @@ class StackGallery {
         }
     }
 
-    public open(index: number) {
-        const img = this.items[index]?.el.querySelector('img');
-        if (img && window.__anfsityLightbox?.openImage(img)) {
-            return;
-        }
-
-        if (window.PhotoSwipe == undefined || window.PhotoSwipeUI_Default == undefined) {
-            console.error("PhotoSwipe lib not loaded.");
-            return;
-        }
-
-        const pswp = document.querySelector('.pswp') as HTMLDivElement;
-        const ps = new window.PhotoSwipe(pswp, window.PhotoSwipeUI_Default, this.items, {
-            index: index,
-            galleryUID: this.galleryUID,
-            getThumbBoundsFn: (index) => {
-                const thumbnail = this.items[index].el.getElementsByTagName('img')[0],
-                    pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
-                    rect = thumbnail.getBoundingClientRect();
-
-                return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
-            }
-        });
-
-        ps.init();
-    }
-
-    private bindClick() {
-        for (const [index, item] of this.items.entries()) {
-            const a = item.el.querySelector('a');
+    private bindClick(container: HTMLElement) {
+        const figures = container.querySelectorAll('figure.gallery-image');
+        for (const figure of figures) {
+            const a = figure.querySelector('a');
+            const img = figure.querySelector('img');
+            if (!a || !img) continue;
 
             a.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.open(index);
-            })
+                if (window.__anfsityLightbox?.openImage(img)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
         }
     }
 }
