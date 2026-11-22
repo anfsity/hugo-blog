@@ -17,34 +17,11 @@ function updateOpenBranches(): void {
   }
 }
 
-function handleTocClick(event: MouseEvent): void {
-  if (!(event.target instanceof Element)) return;
-
-  const link = event.target.closest<HTMLAnchorElement>('a[href^="#"]');
-  if (!link || !link.closest("#TableOfContents")) return;
-
-  const targetId = link.hash.slice(1);
-  const target = document.getElementById(targetId);
-  if (!target) return;
-
-  event.preventDefault();
-  target.scrollIntoView({ behavior: "smooth" });
-  const state = window.history.state && typeof window.history.state === "object"
-    ? { ...window.history.state }
-    : window.history.state;
-  history.replaceState(state, "", "#" + targetId);
-}
-
 let scrollListenerInstalled = false;
 
 export function initTableOfContents(): void {
   const toc = document.querySelector<HTMLElement>(".widget--toc");
   if (!toc) return;
-
-  if (toc.dataset.tocBound !== "true") {
-    toc.dataset.tocBound = "true";
-    toc.addEventListener("click", handleTocClick);
-  }
 
   if (!scrollListenerInstalled) {
     scrollListenerInstalled = true;

@@ -33,6 +33,7 @@ class BangumiApp {
   };
   private data: BangumiItem[] = [];
   private requestVersion = 0;
+  private activeController: AbortController | null = null;
 
   constructor(private readonly elements: BangumiElements) {
     this.userId = elements.container.dataset.userid ?? "";
@@ -108,23 +109,34 @@ class BangumiApp {
 
     this.showLoading();
 
+    this.activeController?.abort();
+    const controller = new AbortController();
+    this.activeController = controller;
+    const abortOnLeave = (): void => controller.abort();
+    window.addEventListener("anfsity:visit-start", abortOnLeave, { once: true });
+
     try {
       const data = await fetchUserCollections(this.userId, (partialData) => {
-        if (requestVersion !== this.requestVersion) return;
+        if (requestVersion !== this.requestVersion || !this.elements.container.isConnected) return;
         this.data = partialData;
         this.render();
-      });
-      if (requestVersion !== this.requestVersion) return;
+      }, controller.signal);
+      if (requestVersion !== this.requestVersion || !this.elements.container.isConnected) return;
       this.data = data;
       writeBangumiCache(this.cacheKey, data);
       this.render();
     } catch {
-      if (requestVersion !== this.requestVersion) return;
+      if (controller.signal.aborted || requestVersion !== this.requestVersion || !this.elements.container.isConnected) {
+        return;
+      }
       if (this.data.length > 0) {
         this.render();
         this.showError(true);
       }
       else this.showError();
+    } finally {
+      window.removeEventListener("anfsity:visit-start", abortOnLeave);
+      if (this.activeController === controller) this.activeController = null;
     }
   }
 }

@@ -9,7 +9,11 @@ interface CollectionResponse {
   total: number;
 }
 
-async function fetchCollectionPage(userId: string, offset: number): Promise<CollectionResponse> {
+async function fetchCollectionPage(
+  userId: string,
+  offset: number,
+  signal?: AbortSignal,
+): Promise<CollectionResponse> {
   const url = new URL(apiBase + "/users/" + encodeURIComponent(userId) + "/collections");
   url.search = new URLSearchParams({
     subject_type: "2",
@@ -18,7 +22,13 @@ async function fetchCollectionPage(userId: string, offset: number): Promise<Coll
   }).toString();
 
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), requestTimeoutMs);
+  const abortRequest = (): void => controller.abort();
+  if (signal?.aborted) {
+    controller.abort();
+  } else {
+    signal?.addEventListener("abort", abortRequest, { once: true });
+  }
+  const timeoutId = window.setTimeout(abortRequest, requestTimeoutMs);
 
   try {
     const response = await fetch(url, { signal: controller.signal });
@@ -29,18 +39,22 @@ async function fetchCollectionPage(userId: string, offset: number): Promise<Coll
     return payload;
   } finally {
     window.clearTimeout(timeoutId);
+    signal?.removeEventListener("abort", abortRequest);
   }
 }
 
 export async function fetchUserCollections(
   userId: string,
   onProgress?: (items: BangumiItem[]) => void,
+  signal?: AbortSignal,
 ): Promise<BangumiItem[]> {
   const items: BangumiItem[] = [];
   let offset = 0;
 
   while (true) {
-    const payload = await fetchCollectionPage(userId, offset);
+    if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
+    const payload = await fetchCollectionPage(userId, offset, signal);
+    if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
     items.push(...payload.data);
     onProgress?.([...items]);
     if (payload.data.length < pageSize || items.length >= payload.total) return items;

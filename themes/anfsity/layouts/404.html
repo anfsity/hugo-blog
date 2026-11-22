@@ -8,7 +8,7 @@
     {{- $searchPage := index $query 0 -}}
 
     {{- with $searchPage -}}
-        <form action="{{ $searchPage.RelPermalink }}" class="search-form widget" {{ with .OutputFormats.Get "json" -}}data-json="{{ .Permalink }}" {{- end }}>
+        <form action="{{ $searchPage.RelPermalink }}" class="search-form widget" {{ with .OutputFormats.Get "json" -}}data-json="{{ .RelPermalink }}" {{- end }}>
             <p>
                 <label>{{ T "search.title" }}</label>
                 <input id="searchInput" name="keyword" required placeholder="{{ T `search.placeholder` }}" />
@@ -33,12 +33,18 @@
         <script type="text/javascript" src="{{ $searchScript.RelPermalink }}" defer data-swup-reload-script></script>
 
         <script data-swup-reload-script>
-            const wrongUrl = new URL(window.location.href);
+            (function () {
+                const input = document.getElementById('searchInput');
+                if (!input) return;
 
-            /// Get the search keyword from the wrong URL by removing all slashes and dashes
-            const searchKeyword = decodeURIComponent(wrongUrl.pathname).split(/[/|-]/).join(' ').trim();
+                const wrongUrl = new URL(window.location.href);
 
-            document.getElementById('searchInput').setAttribute('value', searchKeyword);
+                /// Get the search keyword from the wrong URL by removing all slashes and dashes
+                const searchKeyword = decodeURIComponent(wrongUrl.pathname).split(/[/|-]/).join(' ').trim();
+
+                input.setAttribute('value', searchKeyword);
+                input.value = searchKeyword;
+            })();
         </script>
     {{- end -}}
     {{ partialCached "footer/footer" . }}

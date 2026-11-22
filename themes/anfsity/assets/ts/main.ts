@@ -71,16 +71,18 @@ let Stack = {
         highlights.forEach(highlight => {
             if (highlight.querySelector('.copyCodeButton')) return;
 
+            const codeBlock = highlight.querySelector('code[data-lang], code');
+            if (!codeBlock) return;
+
             const copyButton = document.createElement('button');
-            copyButton.innerHTML = copyText;
+            copyButton.type = 'button';
+            copyButton.textContent = copyText;
             copyButton.classList.add('copyCodeButton');
             highlight.appendChild(copyButton);
 
-            const codeBlock = highlight.querySelector('code[data-lang]');
-            if (!codeBlock) return;
-
             copyButton.addEventListener('click', () => {
-                navigator.clipboard.writeText(codeBlock.textContent)
+                if (!navigator.clipboard?.writeText) return;
+                navigator.clipboard.writeText(codeBlock.textContent ?? '')
                     .then(() => {
                         copyButton.textContent = copiedText;
 
@@ -89,8 +91,7 @@ let Stack = {
                         }, 1000);
                     })
                     .catch(err => {
-                        alert(err)
-                        console.log('Something went wrong', err);
+                        console.error('Failed to copy code block:', err);
                     });
             });
         });

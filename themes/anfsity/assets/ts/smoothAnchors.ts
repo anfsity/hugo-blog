@@ -12,24 +12,33 @@
 
 const anchorLinksQuery = "a[href]";
 
+function decodeHashTarget(raw: string): string {
+    try {
+        return decodeURIComponent(raw);
+    } catch {
+        return raw;
+    }
+}
+
 function setupSmoothAnchors() {
-    document.querySelectorAll(anchorLinksQuery).forEach(aElement => {
+    document.querySelectorAll<HTMLAnchorElement>(anchorLinksQuery).forEach(aElement => {
+        if (aElement.dataset.smoothAnchorBound === "true") return;
         const href = aElement.getAttribute("href");
-        if (!href || href[0] !== "#") {
+        if (!href || href[0] !== "#" || href.length === 1) {
             return;
         }
+        aElement.dataset.smoothAnchorBound = "true";
         aElement.addEventListener("click", clickEvent => {
-            clickEvent.preventDefault();
-
-            const targetId = decodeURI(href.substring(1)),
-                target = document.getElementById(targetId) as HTMLElement | null;
+            const targetId = decodeHashTarget(href.substring(1));
+            const target = document.getElementById(targetId) as HTMLElement | null;
             if (!target) return;
+
+            clickEvent.preventDefault();
             const offset = target.getBoundingClientRect().top - document.documentElement.getBoundingClientRect().top;
 
-            // Turbo Drive stores metadata in history.state. Overwriting it (e.g. with {}) can break back/forward.
+            // Preserve Swup/history state metadata so back/forward navigation stays intact.
             const currentState = window.history.state;
-            const nextState = currentState && typeof currentState === 'object' ? { ...currentState } : currentState;
-            // Use replaceState for in-page hash updates to avoid polluting history and duplicating Turbo metadata.
+            const nextState = currentState && typeof currentState === "object" ? { ...currentState } : currentState;
             window.history.replaceState(nextState, "", href);
 
             scrollTo({

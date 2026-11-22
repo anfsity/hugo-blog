@@ -173,7 +173,12 @@ class Search {
                 });
             }
 
-            if (titleMatches.length > 0) result.title = Search.processMatches(result.title, titleMatches, false);
+            if (titleMatches.length > 0) {
+                result.title = Search.processMatches(result.title, titleMatches, false);
+            }
+            else {
+                result.title = replaceHTMLEnt(result.title);
+            }
             if (contentMatches.length > 0) {
                 result.preview = Search.processMatches(result.content, contentMatches);
             }
@@ -256,9 +261,21 @@ class Search {
     }
 
     private bindQueryStringChange() {
-        window.addEventListener('popstate', (e) => {
-            this.handleQueryString()
-        })
+        const onPopstate = () => {
+            if (!this.form.isConnected) {
+                window.removeEventListener('popstate', onPopstate);
+                return;
+            }
+            this.handleQueryString();
+        };
+
+        const cleanup = () => {
+            window.removeEventListener('popstate', onPopstate);
+            window.removeEventListener('anfsity:visit-start', cleanup);
+        };
+
+        window.addEventListener('popstate', onPopstate);
+        window.addEventListener('anfsity:visit-start', cleanup, { once: true });
     }
 
     private handleQueryString() {

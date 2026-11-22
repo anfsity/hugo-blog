@@ -45,7 +45,7 @@ export function initSwup(onPageView: PageInitializer): void {
   const plugins: object[] = [];
   if (swupWindow.SwupScriptsPlugin) {
     // Only re-run page-local scripts explicitly opted in with data-swup-reload-script,
-    // so global head/footer scripts (Swup, APlayer, main.js, custom.js) never re-execute.
+    // so global head/footer scripts (Swup, main.js, custom.js) never re-execute.
     plugins.push(new swupWindow.SwupScriptsPlugin({ head: false, body: true, optin: true }));
   }
   if (swupWindow.SwupBodyClassPlugin) plugins.push(new swupWindow.SwupBodyClassPlugin());
@@ -56,6 +56,7 @@ export function initSwup(onPageView: PageInitializer): void {
     swupWindow.__anfsitySwup = swup;
     swup.hooks.on("visit:start", () => {
       window.__anfsityLightbox?.close();
+      window.dispatchEvent(new CustomEvent("anfsity:visit-start"));
     });
     swup.hooks.on("content:replace", syncDocumentMetadata);
     swup.hooks.on("page:view", () => {
