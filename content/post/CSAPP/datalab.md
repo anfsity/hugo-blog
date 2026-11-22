@@ -11,7 +11,7 @@ categories = [
 ]
 description = ""
 image = ""
-hidden = "true"
+hidden = true
 +++
 
 ## 总览

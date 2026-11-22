@@ -11,7 +11,7 @@ categories = [
 ]
 description = ""
 image = ""
-hidden = "true"
+hidden = true
 +++
 
 ## $C$ [Social Distance](https://codeforces.com/contest/1367/problem/C)
