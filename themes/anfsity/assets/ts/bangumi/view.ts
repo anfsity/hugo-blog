@@ -1,5 +1,5 @@
 import { getBangumiLanguage, getSortLabel, getStatusLabel, type BangumiLanguage } from "./locale";
-import { paginateItems, selectBangumiItems, itemsPerPage } from "./model";
+import { getDisplayScore, getDisplayTitle, paginateItems, selectBangumiItems, itemsPerPage } from "./model";
 import type { BangumiElements, BangumiItem, BangumiState, CollectionStatus, SortField } from "./types";
 
 const statusKeys: CollectionStatus[] = ["all", "3", "2", "1", "4", "5"];
@@ -149,8 +149,8 @@ function createBangumiCard(item: BangumiItem, language: BangumiLanguage): HTMLAn
   statusElement.append(statusDot, document.createTextNode(statusLabel));
   badges.appendChild(statusElement);
 
-  const score = item.rate || item.subject.score;
-  if (score) {
+  const score = getDisplayScore(item);
+  if (score !== null) {
     const scoreElement = document.createElement("span");
     scoreElement.className = "bangumi-card-score";
     const star = document.createElement("span");
@@ -169,9 +169,7 @@ function createBangumiCard(item: BangumiItem, language: BangumiLanguage): HTMLAn
 
   const title = document.createElement("div");
   title.className = "bangumi-card-title";
-  title.textContent = language === "zh"
-    ? item.subject.name_cn || item.subject.name
-    : item.subject.name;
+  title.textContent = getDisplayTitle(item, language);
   body.appendChild(title);
 
   const metaRow = document.createElement("div");
@@ -210,7 +208,7 @@ function renderGrid(
   onPageChange: (page: number) => void,
 ): void {
   element.replaceChildren();
-  const sorted = selectBangumiItems(items, state);
+  const sorted = selectBangumiItems(items, state, language);
   const pageItems = paginateItems(sorted, state.currentPage);
 
   if (pageItems.length === 0) {
