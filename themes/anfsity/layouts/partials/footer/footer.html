@@ -16,7 +16,12 @@
         {{- $Generator := `<a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>` -}}
         {{- $Theme := printf `<b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener"
                 data-version="%s">Stack</a></b>` $ThemeVersion -}}
-        {{- $DesignedBy := `<a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>` -}}
+        {{- $Jimmy := `<a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>` -}}
+        {{- $Anfsity := `<a href="https://github.com/anfsity" target="_blank" rel="noopener">Anfsity</a>` -}}
+        {{- $DesignedBy := printf "%s &amp; %s" $Jimmy $Anfsity -}}
+        {{- if eq .Language.Lang "zh-cn" -}}
+            {{- $DesignedBy = printf "%s 与 %s" $Jimmy $Anfsity -}}
+        {{- end -}}
 
         {{ T "footer.builtWith" (dict "Generator" $Generator) | safeHTML }} <br />
         {{ T "footer.designedBy" (dict "Theme" $Theme "DesignedBy" $DesignedBy) | safeHTML }}
