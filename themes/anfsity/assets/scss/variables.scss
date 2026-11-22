@@ -1,3 +1,7 @@
+@use "breakpoints" as *;
+@use "partials/highlight/light" as highlight-light;
+@use "partials/highlight/dark" as highlight-dark;
+
 $defaultTagBackgrounds: #8ea885, #df7988, #0177b8, #ffb900, #6b69d6;
 $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 
@@ -155,13 +159,13 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 [data-scheme="light"] {
     --pre-text-color: #272822;
     --pre-background-color: #fafafa;
-    @import "partials/highlight/light.scss";
+    @include highlight-light.styles;
 }
 
 [data-scheme="dark"] {
     --pre-text-color: #f8f8f2;
     --pre-background-color: #272822;
-    @import "partials/highlight/dark.scss";
+    @include highlight-dark.styles;
 }
 
 :root {
