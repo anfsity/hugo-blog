@@ -28,7 +28,7 @@
         <div class="timeline-main">
             <div class="timeline-body">
                 <h2 class="timeline-title">{{- $page.Title -}}</h2>
-                {{- with $page.Params.description -}}
+                {{- with $page.Description -}}
                     <p class="timeline-description">{{ . }}</p>
                 {{- end -}}
                 {{- if gt (len $validTags) 0 -}}
