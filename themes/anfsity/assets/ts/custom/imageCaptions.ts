@@ -1,32 +1,52 @@
 /**
- * Wraps standalone captioned images (with data-caption) into <figure> + <figcaption>
- * so static and external images display visible captions without interfering with lightbox.
+ * Normalizes standalone static/external images into semantic <figure class="article-figure">
+ * elements (replacing the wrapper <p>) so captioned and uncaptioned images share identical
+ * horizontal bounds, alignment, and framing.
  */
 export function initImageCaptions(): void {
   const container = document.querySelector<HTMLElement>(".article-content");
   if (!container) return;
 
-  const images = container.querySelectorAll<HTMLImageElement>("img[data-caption]:not(.gallery-image)");
-  for (const image of images) {
-    const caption = image.dataset.caption?.trim();
-    if (!caption || image.closest("figure")) continue;
+  const paragraphs = Array.from(container.querySelectorAll<HTMLParagraphElement>("p"));
+  for (const paragraph of paragraphs) {
+    if (paragraph.textContent?.trim() !== "") continue;
 
-    const paragraph = image.closest("p");
-    if (paragraph && paragraph.textContent?.trim() !== "") continue;
+    const images = Array.from(paragraph.querySelectorAll<HTMLImageElement>("img:not(.gallery-image)"));
+    if (images.length === 0) continue;
 
-    const target: HTMLElement = image.parentElement?.tagName === "A"
-      ? image.parentElement
-      : image;
-    const parent = target.parentElement;
-    if (!parent) continue;
+    const targets: Array<{ image: HTMLImageElement; target: HTMLElement }> = [];
+    for (const image of images) {
+      if (image.closest("figure, .highlight, .chroma, button, nav")) continue;
+      const target: HTMLElement = image.parentElement?.tagName === "A"
+        ? image.parentElement
+        : image;
+      if (target.parentElement !== paragraph) continue;
+      targets.push({ image, target });
+    }
 
-    const figure = document.createElement("figure");
-    figure.className = "image-caption";
-    parent.insertBefore(figure, target);
-    figure.appendChild(target);
+    if (targets.length === 0 || targets.length !== paragraph.children.length) continue;
 
-    const figcaption = document.createElement("figcaption");
-    figcaption.textContent = caption;
-    figure.appendChild(figcaption);
+    const figures = targets.map(({ image, target }) => {
+      const figure = document.createElement("figure");
+      figure.className = "article-figure";
+      figure.appendChild(target);
+
+      const caption = image.dataset.caption?.trim();
+      if (caption) {
+        const figcaption = document.createElement("figcaption");
+        figcaption.textContent = caption;
+        figure.appendChild(figcaption);
+      }
+      return figure;
+    });
+
+    if (figures.length === 1) {
+      paragraph.replaceWith(figures[0]);
+    } else {
+      const gallery = document.createElement("div");
+      gallery.className = "gallery";
+      figures.forEach((figure) => gallery.appendChild(figure));
+      paragraph.replaceWith(gallery);
+    }
   }
 }
